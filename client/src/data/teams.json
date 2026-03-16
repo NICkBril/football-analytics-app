@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "name": "Arsenal",
+    "stadium": "Emirates Stadium"
+  },
+  {
+    "id": 2,
+    "name": "Aston Villa",
+    "stadium": "Villa Park"
+  },
+  {
+    "id": 3,
+    "name": "Bournemouth",
+    "stadium": "Vitality Stadium"
+  },
+  {
+    "id": 4,
+    "name": "Brentford",
+    "stadium": "Gtech Community Stadium"
+  },
+  {
+    "id": 5,
+    "name": "Brighton & Hove Albion",
+    "stadium": "Amex Stadium"
+  },
+  {
+    "id": 6,
+    "name": "Burnley",
+    "stadium": "Turf Moor"
+  },
+  {
+    "id": 7,
+    "name": "Chelsea",
+    "stadium": "Stamford Bridge"
+  },
+  {
+    "id": 8,
+    "name": "Crystal Palace",
+    "stadium": "Selhurst Park"
+  },
+  {
+    "id": 9,
+    "name": "Everton",
+    "stadium": "Hill Dickinson Stadium"
+  },
+  {
+    "id": 10,
+    "name": "Fulham",
+    "stadium": "Craven Cottage"
+  },
+  {
+    "id": 11,
+    "name": "Leeds United",
+    "stadium": "Elland Road"
+  },
+  {
+    "id": 12,
+    "name": "Liverpool",
+    "stadium": "Anfield"
+  },
+  {
+    "id": 13,
+    "name": "Manchester City",
+    "stadium": "Etihad Stadium"
+  },
+  {
+    "id": 14,
+    "name": "Manchester United",
+    "stadium": "Old Trafford"
+  },
+  {
+    "id": 15,
+    "name": "Newcastle United",
+    "stadium": "St James' Park"
+  },
+  {
+    "id": 16,
+    "name": "Nottingham Forest",
+    "stadium": "City Ground"
+  },
+  {
+    "id": 17,
+    "name": "Sunderland",
+    "stadium": "Stadium of Light"
+  },
+  {
+    "id": 18,
+    "name": "Tottenham Hotspur",
+    "stadium": "Tottenham Hotspur Stadium"
+  },
+  {
+    "id": 19,
+    "name": "West Ham United",
+    "stadium": "London Stadium"
+  },
+  {
+    "id": 20,
+    "name": "Wolverhampton Wanderers",
+    "stadium": "Molineux Stadium"
+  }
+]
