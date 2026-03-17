@@ -1,0 +1,48 @@
+.page-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h1, h2 {
+  color: #333;
+}
+
+.match-card {
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+}
+
+.match-of-week {
+  border: 2px solid #e74c3c;
+  background-color: #ffe6e6;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+nav button {
+  margin-right: 10px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  background-color: #3498db;
+  color: white;
+  font-weight: bold;
+}
+
+nav button:hover {
+  background-color: #2980b9;
+}
+
+footer {
+  margin-top: 40px;
+  text-align: center;
+  color: #777;
+  font-size: 14px;
+  padding: 10px 0;
+  border-top: 1px solid #ccc;
+}
