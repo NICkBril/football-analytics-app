@@ -29,9 +29,16 @@ function TeamsPage() {
       {favorites.length === 0 ? (
         <p>No favorite teams yet</p>
       ) : (
-        favorites.map((teamName) => (
-          <div key={teamName}>{teamName}</div>
-        ))
+        <ul>
+          {favorites.map((teamName) => (
+            <li key={teamName}>
+              {teamName}
+              <button onClick={() => toggleFavorite(teamName)}>
+                ❌
+              </button>
+            </li>
+          ))}
+        </ul>
       )}
 
       <h2>All Teams</h2>
