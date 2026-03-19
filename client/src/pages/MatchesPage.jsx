@@ -1,7 +1,18 @@
+import { useState } from "react";
 import matches from "../data/matches.json";
-import "../index.css"; // підключаємо CSS
+import "../index.css";
 
 function MatchesPage() {
+  const [search, setSearch] = useState("");
+
+  const filteredMatches = matches
+    .filter(
+      (m) =>
+        m.homeTeam.toLowerCase().includes(search.toLowerCase()) ||
+        m.awayTeam.toLowerCase().includes(search.toLowerCase())
+    )
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
   const matchOfTheWeek = matches.reduce((best, current) => {
     const bestGoals = best.homeScore + best.awayScore;
     const currentGoals = current.homeScore + current.awayScore;
@@ -23,8 +34,17 @@ function MatchesPage() {
         <div>Date: {matchOfTheWeek.date}</div>
       </div>
 
+      <h2>Search Matches</h2>
+      <input
+        type="text"
+        placeholder="Search by team..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{ marginBottom: "15px", padding: "5px", width: "200px" }}
+      />
+
       <h2>All Matches</h2>
-      {matches.map((match) => (
+      {filteredMatches.map((match) => (
         <div key={match.id} className="match-card">
           <strong>
             {match.homeTeam} vs {match.awayTeam}
@@ -35,7 +55,6 @@ function MatchesPage() {
           <div>Date: {match.date}</div>
         </div>
       ))}
-
     </div>
   );
 }
