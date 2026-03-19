@@ -7,6 +7,7 @@ function TeamsPage() {
     const saved = localStorage.getItem("favorites");
     return saved ? JSON.parse(saved) : [];
   });
+  const [searchTeam, setSearchTeam] = useState("");
 
   useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites));
@@ -20,11 +21,22 @@ function TeamsPage() {
     );
   };
 
+  const filteredTeams = teams.filter((team) =>
+    team.name.toLowerCase().includes(searchTeam.toLowerCase())
+  );
+
   return (
     <div className="page-container">
       <h1>Teams</h1>
 
-      {/* favorites */}
+      <input
+        type="text"
+        placeholder="Search teams..."
+        value={searchTeam}
+        onChange={(e) => setSearchTeam(e.target.value)}
+        style={{ marginBottom: "15px", padding: "5px", width: "200px" }}
+      />
+
       <h2>⭐ Favorites</h2>
       {favorites.length === 0 ? (
         <p>No favorite teams yet</p>
@@ -33,30 +45,26 @@ function TeamsPage() {
           {favorites.map((teamName) => (
             <li key={teamName}>
               {teamName}
-              <button onClick={() => toggleFavorite(teamName)}>
-                ❌
-              </button>
+              <button onClick={() => toggleFavorite(teamName)}>❌</button>
             </li>
           ))}
         </ul>
       )}
 
       <h2>All Teams</h2>
-
-      {teams.map((team) => (
-        <div key={team.id} className="match-card">
+      {filteredTeams.map((team) => (
+        <div
+          key={team.id}
+          className={`match-card ${favorites.includes(team.name) ? "favorite" : ""}`}
+        >
           <strong>{team.name}</strong> - {team.stadium}
-
           <div>
             <button onClick={() => toggleFavorite(team.name)}>
-              {favorites.includes(team.name)
-                ? "Remove from favorites"
-                : "Add to favorites"}
+              {favorites.includes(team.name) ? "Remove from favorites" : "Add to favorites"}
             </button>
           </div>
         </div>
       ))}
-
     </div>
   );
 }
