@@ -43,9 +43,14 @@ function TeamsPage() {
       ) : (
         <ul>
           {favorites.map((teamName) => (
-            <li key={teamName}>
+            <li key={teamName} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               {teamName}
-              <button onClick={() => toggleFavorite(teamName)}>❌</button>
+              <button
+                className="favorite-remove-x"
+                onClick={() => toggleFavorite(teamName)}
+              >
+                ❌
+              </button>
             </li>
           ))}
         </ul>
@@ -59,7 +64,12 @@ function TeamsPage() {
         >
           <strong>{team.name}</strong> - {team.stadium}
           <div>
-            <button onClick={() => toggleFavorite(team.name)}>
+            <button
+              className={`team-fav-button ${
+                favorites.includes(team.name) ? "remove" : "add"
+              }`}
+              onClick={() => toggleFavorite(team.name)}
+            >
               {favorites.includes(team.name) ? "Remove from favorites" : "Add to favorites"}
             </button>
           </div>
