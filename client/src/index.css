@@ -210,8 +210,10 @@ li {
 }
 
 .team-logo {
-  width: 50px;
-  height: 50px;
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
+  padding: 4px;
 }
 
 .team-info {
