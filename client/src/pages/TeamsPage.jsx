@@ -1,13 +1,23 @@
 import { useState, useEffect } from "react";
-import teams from "../data/teams.json";
+import { getTeams } from "../api/footballApi";
 import "../index.css";
 
 function TeamsPage() {
+  const [teams, setTeams] = useState([]);
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem("favorites");
     return saved ? JSON.parse(saved) : [];
   });
   const [searchTeam, setSearchTeam] = useState("");
+
+  useEffect(() => {
+    async function loadTeams() {
+      const data = await getTeams();
+      setTeams(data);
+    }
+
+    loadTeams();
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("favorites", JSON.stringify(favorites));
@@ -22,7 +32,7 @@ function TeamsPage() {
   };
 
   const filteredTeams = teams.filter((team) =>
-    team.name.toLowerCase().includes(searchTeam.toLowerCase())
+    team.team.name.toLowerCase().includes(searchTeam.toLowerCase())
   );
 
   return (
@@ -34,7 +44,6 @@ function TeamsPage() {
         placeholder="Search teams..."
         value={searchTeam}
         onChange={(e) => setSearchTeam(e.target.value)}
-        style={{ marginBottom: "15px", padding: "5px", width: "200px" }}
       />
 
       <h2>⭐ Favorites</h2>
@@ -43,7 +52,7 @@ function TeamsPage() {
       ) : (
         <ul>
           {favorites.map((teamName) => (
-            <li key={teamName} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <li key={teamName}>
               {teamName}
               <button
                 className="favorite-remove-x"
@@ -57,24 +66,35 @@ function TeamsPage() {
       )}
 
       <h2>All Teams</h2>
-      {filteredTeams.map((team) => (
-        <div
-          key={team.id}
-          className={`match-card ${favorites.includes(team.name) ? "favorite" : ""}`}
-        >
-          <strong>{team.name}</strong> - {team.stadium}
-          <div>
+
+      {filteredTeams.map((item) => {
+        const team = item.team;
+
+        return (
+          <div
+            key={team.id}
+            className={`match-card ${
+              favorites.includes(team.name) ? "favorite" : ""
+            }`}
+          >
+            <strong>{team.name}</strong>
+            <div>
+              <img src={team.logo} width="40" />
+            </div>
+
             <button
               className={`team-fav-button ${
                 favorites.includes(team.name) ? "remove" : "add"
               }`}
               onClick={() => toggleFavorite(team.name)}
             >
-              {favorites.includes(team.name) ? "Remove from favorites" : "Add to favorites"}
+              {favorites.includes(team.name)
+                ? "Remove from favorites"
+                : "Add to favorites"}
             </button>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
