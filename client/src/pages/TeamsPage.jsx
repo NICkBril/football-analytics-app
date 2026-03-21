@@ -31,9 +31,11 @@ function TeamsPage() {
     );
   };
 
-  const filteredTeams = teams.filter((team) =>
+  const filteredTeams = teams
+  .filter((team) =>
     team.team.name.toLowerCase().includes(searchTeam.toLowerCase())
-  );
+  )
+  .sort((a, b) => a.team.name.localeCompare(b.team.name));
 
   return (
     <div className="page-container">
