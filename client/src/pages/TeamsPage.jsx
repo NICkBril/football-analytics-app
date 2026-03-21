@@ -32,10 +32,10 @@ function TeamsPage() {
   };
 
   const filteredTeams = teams
-  .filter((team) =>
-    team.team.name.toLowerCase().includes(searchTeam.toLowerCase())
-  )
-  .sort((a, b) => a.team.name.localeCompare(b.team.name));
+    .filter((team) =>
+      team.team.name.toLowerCase().includes(searchTeam.toLowerCase())
+    )
+    .sort((a, b) => a.team.name.localeCompare(b.team.name));
 
   return (
     <div className="page-container">
@@ -75,25 +75,30 @@ function TeamsPage() {
         return (
           <div
             key={team.id}
-            className={`match-card ${
+            className={`team-card ${
               favorites.includes(team.name) ? "favorite" : ""
             }`}
           >
-            <strong>{team.name}</strong>
-            <div>
-              <img src={team.logo} width="40" />
-            </div>
+            <img
+              src={team.logo}
+              alt={team.name}
+              className="team-logo"
+            />
 
-            <button
-              className={`team-fav-button ${
-                favorites.includes(team.name) ? "remove" : "add"
-              }`}
-              onClick={() => toggleFavorite(team.name)}
-            >
-              {favorites.includes(team.name)
-                ? "Remove from favorites"
-                : "Add to favorites"}
-            </button>
+            <div className="team-info">
+              <strong>{team.name}</strong>
+
+              <button
+                className={`team-fav-button ${
+                  favorites.includes(team.name) ? "remove" : "add"
+                }`}
+                onClick={() => toggleFavorite(team.name)}
+              >
+                {favorites.includes(team.name)
+                  ? "Remove from favorites"
+                  : "Add to favorites"}
+              </button>
+            </div>
           </div>
         );
       })}
