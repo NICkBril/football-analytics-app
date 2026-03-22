@@ -59,7 +59,16 @@ function MatchesPage() {
               {matchOfTheWeek.goals.away}
             </div>
 
-            <div>Date: {matchOfTheWeek.fixture.date}</div>
+            <div>
+              Date: {new Date(matchOfTheWeek.fixture.date).toLocaleString([], {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: false
+              })}
+            </div>
           </div>
         </>
       )}
@@ -89,7 +98,16 @@ function MatchesPage() {
                 Score: {match.goals.home} - {match.goals.away}
               </div>
 
-              <div>Date: {match.fixture.date}</div>
+              <div>
+                Date: {new Date(match.fixture.date).toLocaleString([], {
+                  year: "numeric",
+                  month: "numeric",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: false
+                })}
+              </div>
             </div>
           ))}
         </div>
