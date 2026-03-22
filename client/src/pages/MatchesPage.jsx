@@ -30,6 +30,17 @@ function MatchesPage() {
         })
       : null;
 
+  const matchesByRound = filteredMatches.reduce((acc, match) => {
+    const round = match.league.round;
+
+    if (!acc[round]) {
+      acc[round] = [];
+    }
+
+    acc[round].push(match);
+    return acc;
+  }, {});
+
   return (
     <div className="page-container">
       <h1>Matches</h1>
@@ -64,17 +75,23 @@ function MatchesPage() {
 
       <h2>All Matches</h2>
 
-      {filteredMatches.map((match) => (
-        <div key={match.fixture.id} className="match-card">
-          <strong>
-            {match.teams.home.name} vs {match.teams.away.name}
-          </strong>
+      {Object.entries(matchesByRound).map(([round, matches]) => (
+        <div key={round}>
+          <h3>{round}</h3>
 
-          <div>
-            Score: {match.goals.home} - {match.goals.away}
-          </div>
+          {matches.map((match) => (
+            <div key={match.fixture.id} className="match-card">
+              <strong>
+                {match.teams.home.name} vs {match.teams.away.name}
+              </strong>
 
-          <div>Date: {match.fixture.date}</div>
+              <div>
+                Score: {match.goals.home} - {match.goals.away}
+              </div>
+
+              <div>Date: {match.fixture.date}</div>
+            </div>
+          ))}
         </div>
       ))}
     </div>
