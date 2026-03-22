@@ -5,6 +5,7 @@ import "../index.css";
 function MatchesPage() {
   const [matches, setMatches] = useState([]);
   const [search, setSearch] = useState("");
+  const [openRound, setOpenRound] = useState(null);
 
   useEffect(() => {
     async function loadMatches() {
@@ -42,6 +43,10 @@ function MatchesPage() {
 
     return acc;
   }, {});
+
+  const toggleRound = (round) => {
+    setOpenRound(openRound === round ? null : round);
+  };
 
   return (
     <div className="page-container">
@@ -89,31 +94,37 @@ function MatchesPage() {
 
       {Object.entries(matchesByRound).map(([round, matches]) => (
         <div key={round}>
-          <h3>{round}</h3>
+          <div
+            className="round-header"
+            onClick={() => toggleRound(round)}
+          >
+            {round} {openRound === round ? "▲" : "▼"}
+          </div>
 
-          {matches.map((match) => (
-            <div key={match.fixture.id} className="match-card">
-              <strong>
-                {match.teams.home.name} vs {match.teams.away.name}
-              </strong>
+          {openRound === round &&
+            matches.map((match) => (
+              <div key={match.fixture.id} className="match-card">
+                <strong>
+                  {match.teams.home.name} vs {match.teams.away.name}
+                </strong>
 
-              <div>
-                Score: {match.goals.home} - {match.goals.away}
+                <div>
+                  Score: {match.goals.home} - {match.goals.away}
+                </div>
+
+                <div>
+                  Date:{" "}
+                  {new Date(match.fixture.date).toLocaleString([], {
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                  })}
+                </div>
               </div>
-
-              <div>
-                Date:{" "}
-                {new Date(match.fixture.date).toLocaleString([], {
-                  year: "numeric",
-                  month: "numeric",
-                  day: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: false,
-                })}
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       ))}
     </div>

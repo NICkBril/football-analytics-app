@@ -221,3 +221,18 @@ li {
   flex-direction: column;
   gap: 6px;
 }
+
+.round-header {
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 6px;
+  background: #f0f0f0;
+  transition: background 0.2s ease;
+}
+
+.round-header:hover {
+  background: #e4e4e4;
+}
