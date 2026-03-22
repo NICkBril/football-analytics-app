@@ -31,13 +31,15 @@ function MatchesPage() {
       : null;
 
   const matchesByRound = filteredMatches.reduce((acc, match) => {
-    const round = match.league.round;
+    const roundNumber = match.league.round.split("-")[1].trim();
+    const round = `Round ${roundNumber}`;
 
     if (!acc[round]) {
       acc[round] = [];
     }
 
     acc[round].push(match);
+
     return acc;
   }, {});
 
@@ -60,13 +62,14 @@ function MatchesPage() {
             </div>
 
             <div>
-              Date: {new Date(matchOfTheWeek.fixture.date).toLocaleString([], {
+              Date:{" "}
+              {new Date(matchOfTheWeek.fixture.date).toLocaleString([], {
                 year: "numeric",
                 month: "numeric",
                 day: "numeric",
                 hour: "2-digit",
                 minute: "2-digit",
-                hour12: false
+                hour12: false,
               })}
             </div>
           </div>
@@ -82,7 +85,7 @@ function MatchesPage() {
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      <h2>All Matches</h2>
+      <h2>Rounds</h2>
 
       {Object.entries(matchesByRound).map(([round, matches]) => (
         <div key={round}>
@@ -99,13 +102,14 @@ function MatchesPage() {
               </div>
 
               <div>
-                Date: {new Date(match.fixture.date).toLocaleString([], {
+                Date:{" "}
+                {new Date(match.fixture.date).toLocaleString([], {
                   year: "numeric",
                   month: "numeric",
                   day: "numeric",
                   hour: "2-digit",
                   minute: "2-digit",
-                  hour12: false
+                  hour12: false,
                 })}
               </div>
             </div>
