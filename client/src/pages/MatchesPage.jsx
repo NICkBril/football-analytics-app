@@ -62,9 +62,7 @@ function MatchesPage() {
       />
 
       {Object.entries(matchesByRound).map(([round, matches]) => {
-
         const matchesByDate = matches.reduce((acc, match) => {
-
           const date = formatDate(match.fixture.date);
 
           if (!acc[date]) {
@@ -74,12 +72,10 @@ function MatchesPage() {
           acc[date].push(match);
 
           return acc;
-
         }, {});
 
         return (
           <div key={round}>
-
             <div
               className="round-header"
               onClick={() => toggleRound(round)}
@@ -89,7 +85,6 @@ function MatchesPage() {
 
             {openRound === round &&
               Object.entries(matchesByDate).map(([date, dateMatches]) => (
-
                 <div key={date} className="date-group">
 
                   <div className="date-header">
@@ -97,13 +92,12 @@ function MatchesPage() {
                   </div>
 
                   {dateMatches.map((match) => (
-
                     <div key={match.fixture.id} className="match-card">
 
                       <div className="match-row">
 
-                        <div className="team">
-                          {match.teams.home.name}
+                        <div className="team-home">
+                          <span>{match.teams.home.name}</span>
                           <img
                             src={match.teams.home.logo}
                             className="match-logo"
@@ -114,22 +108,19 @@ function MatchesPage() {
                           {match.goals.home} - {match.goals.away}
                         </div>
 
-                        <div className="team">
+                        <div className="team-away">
                           <img
                             src={match.teams.away.logo}
                             className="match-logo"
                           />
-                          {match.teams.away.name}
+                          <span>{match.teams.away.name}</span>
                         </div>
 
                       </div>
 
                     </div>
-
                   ))}
-
                 </div>
-
               ))}
           </div>
         );
