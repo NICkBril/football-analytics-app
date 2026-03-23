@@ -322,3 +322,19 @@ li {
   height: 24px;
   object-fit: contain;
 }
+
+.league-table tbody tr:nth-child(-n+4) {
+  border-left: 4px solid #2ecc71;
+}
+
+.league-table tbody tr:nth-child(5) {
+  border-left: 4px solid #f1c40f;
+}
+
+.league-table tbody tr:nth-child(6) {
+  border-left: 4px solid #e67e22;
+}
+
+.league-table tbody tr:nth-last-child(-n+3) {
+  border-left: 4px solid #e74c3c;
+}
