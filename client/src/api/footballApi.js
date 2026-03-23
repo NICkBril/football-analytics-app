@@ -29,3 +29,17 @@ export async function getMatches() {
   const data = await response.json();
   return data.response;
 }
+
+export async function getStandings() {
+  const response = await fetch(
+    `${BASE_URL}/standings?league=39&season=2023`,
+    {
+      headers: {
+        "x-apisports-key": API_KEY
+      }
+    }
+  );
+
+  const data = await response.json();
+  return data.response[0].league.standings[0];
+}
