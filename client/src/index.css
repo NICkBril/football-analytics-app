@@ -291,3 +291,24 @@ li {
   align-items: center;
   gap: 8px;
 }
+
+.league-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.league-table th,
+.league-table td {
+  padding: 8px;
+  text-align: center;
+}
+
+.table-team {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.table-logo {
+  width: 22px;
+}
