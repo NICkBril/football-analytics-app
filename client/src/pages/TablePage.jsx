@@ -60,6 +60,13 @@ function TablePage() {
         </tbody>
 
       </table>
+      
+      <div style={{ marginTop: "30px", fontSize: "14px" }}>
+        <div>🟢 Champions League</div>
+        <div>🟡 Europa League</div>
+        <div>🟠 Conference League</div>
+        <div>🔴 Relegation</div>
+      </div>
 
     </div>
   );
