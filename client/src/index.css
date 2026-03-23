@@ -194,13 +194,11 @@ li {
   display: flex;
   align-items: center;
   gap: 15px;
-
   margin-bottom: 15px;
   border: 1px solid #ccc;
   padding: 12px 15px;
   border-radius: 8px;
   background-color: #fafafa;
-
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -292,15 +290,25 @@ li {
   gap: 8px;
 }
 
+
 .league-table {
   width: 100%;
+  max-width: 850px;
   border-collapse: collapse;
 }
 
 .league-table th,
 .league-table td {
-  padding: 8px;
+  padding: 6px 8px;
   text-align: center;
+}
+
+.league-table thead th {
+  padding-bottom: 12px;
+}
+
+.league-table th:nth-child(2) {
+  text-align: left;
 }
 
 .table-team {
@@ -310,5 +318,7 @@ li {
 }
 
 .table-logo {
-  width: 22px;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
 }
