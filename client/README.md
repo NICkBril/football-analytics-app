@@ -1,16 +1,49 @@
-# React + Vite
+# Football Analytics App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web application for viewing football data including teams, matches and league standings.  
+The project uses a real football API to display up-to-date information about the English Premier League.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- 📊 League table with statistics
+- ⚽ Matches grouped by rounds
+- ⭐ Add teams to favorites
+- 📱 Responsive layout for desktop and mobile
 
-## React Compiler
+## Technologies Used
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- Vite
+- JavaScript 
+- CSS
+- Football API
 
-## Expanding the ESLint configuration
+## 🌐 API
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+This project uses data from the Football API to fetch:
+
+- teams
+- matches
+- standings
+
+## 📷 Application Pages
+
+- Home Page
+- Teams Page
+- Matches Page
+- League Table Page
+
+## 🎯 Project Purpose
+
+This project was created as a university coursework project for practicing:
+
+- React development
+- API integration
+- UI design
+- Git and GitHub workflow
+
+## 👨‍💻 Author
+
+Mykola Bril  
+Kyiv Polytechnic Institute  
+Group IM-52
