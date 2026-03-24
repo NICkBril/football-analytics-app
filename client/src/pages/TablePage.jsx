@@ -5,15 +5,21 @@ import "../index.css";
 function TablePage() {
 
   const [table, setTable] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadTable() {
       const data = await getStandings();
       setTable(data);
+      setLoading(false);
     }
 
     loadTable();
   }, []);
+
+  if (loading) {
+    return <p className="page-container">Loading table...</p>;
+  }
 
   return (
     <div className="page-container">
@@ -60,7 +66,7 @@ function TablePage() {
         </tbody>
 
       </table>
-      
+
       <div style={{ marginTop: "30px", fontSize: "14px" }}>
         <div>🟢 Champions League</div>
         <div>🟡 Europa League</div>

@@ -5,6 +5,8 @@ import "../index.css";
 
 function TeamsPage() {
   const [teams, setTeams] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem("favorites");
     return saved ? JSON.parse(saved) : [];
@@ -17,6 +19,7 @@ function TeamsPage() {
     async function loadTeams() {
       const data = await getTeams();
       setTeams(data);
+      setLoading(false);
     }
 
     loadTeams();
@@ -39,6 +42,10 @@ function TeamsPage() {
       team.team.name.toLowerCase().includes(searchTeam.toLowerCase())
     )
     .sort((a, b) => a.team.name.localeCompare(b.team.name));
+
+  if (loading) {
+    return <p className="page-container">Loading teams...</p>;
+  }
 
   return (
     <div className="page-container">
@@ -83,11 +90,7 @@ function TeamsPage() {
             }`}
             onClick={() => navigate(`/team/${team.id}`)}
           >
-            <img
-              src={team.logo}
-              alt={team.name}
-              className="team-logo"
-            />
+            <img src={team.logo} alt={team.name} className="team-logo" />
 
             <div className="team-info">
               <strong>{team.name}</strong>

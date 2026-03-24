@@ -4,6 +4,8 @@ import "../index.css";
 
 function MatchesPage() {
   const [matches, setMatches] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const [search, setSearch] = useState("");
   const [openRound, setOpenRound] = useState(null);
 
@@ -11,10 +13,15 @@ function MatchesPage() {
     async function loadMatches() {
       const data = await getMatches();
       setMatches(data);
+      setLoading(false);
     }
 
     loadMatches();
   }, []);
+
+  if (loading) {
+    return <p className="page-container">Loading matches...</p>;
+  }
 
   const filteredMatches = matches.filter(
     (m) =>
