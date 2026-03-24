@@ -60,6 +60,10 @@ nav button.active {
   color: white;
 }
 
+nav a {
+  text-decoration: none;
+}
+
 .match-card {
   margin-bottom: 15px;
   border: 1px solid #ccc;
@@ -337,4 +341,22 @@ li {
 
 .league-table tbody tr:nth-last-child(-n+3) {
   border-left: 4px solid #e74c3c;
+}
+
+.team-details {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.team-details-logo {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+}
+
+.team-details-info p {
+  margin: 6px 0;
+  font-size: 16px;
 }
