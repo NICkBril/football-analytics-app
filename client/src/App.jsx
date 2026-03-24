@@ -1,38 +1,42 @@
-import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+import HomePage from "./pages/HomePage";
 import TeamsPage from "./pages/TeamsPage";
 import MatchesPage from "./pages/MatchesPage";
-import HomePage from "./pages/HomePage";
-import Footer from "./components/Footer";
 import TablePage from "./pages/TablePage";
+import TeamDetailsPage from "./pages/TeamDetailsPage";
+
+import Footer from "./components/Footer";
+
+import "./index.css";
 
 function App() {
-  const [page, setPage] = useState(() => {
-    const savedPage = localStorage.getItem("currentPage");
-    return savedPage ? savedPage : "home";
-  });
-
-  useEffect(() => {
-    localStorage.setItem("currentPage", page);
-  }, [page]);
-
   return (
-    <div className="app-container">
-      <nav>
-        <button onClick={() => setPage("home")}>Home</button>
-        <button onClick={() => setPage("teams")}>Teams</button>
-        <button onClick={() => setPage("matches")}>Matches</button>
-        <button onClick={() => setPage("table")}>Table</button>
-      </nav>
+    <Router>
+      <div className="app-container">
+        
+        <nav>
+          <a href="/">Home</a>
+          <a href="/teams">Teams</a>
+          <a href="/matches">Matches</a>
+          <a href="/table">Table</a>
+        </nav>
 
-      <div className="content">
-        {page === "home" && <HomePage />}
-        {page === "teams" && <TeamsPage />}
-        {page === "matches" && <MatchesPage />}
-        {page === "table" && <TablePage />}
+        <div className="content">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/teams" element={<TeamsPage />} />
+            <Route path="/matches" element={<MatchesPage />} />
+            <Route path="/table" element={<TablePage />} />
+
+            {/* нова сторінка */}
+            <Route path="/team/:id" element={<TeamDetailsPage />} />
+          </Routes>
+        </div>
+
+        <Footer />
       </div>
-
-      <Footer />
-    </div>
+    </Router>
   );
 }
 

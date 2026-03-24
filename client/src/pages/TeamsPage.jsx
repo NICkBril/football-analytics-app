@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { getTeams } from "../api/footballApi";
 import "../index.css";
 
@@ -9,6 +10,8 @@ function TeamsPage() {
     return saved ? JSON.parse(saved) : [];
   });
   const [searchTeam, setSearchTeam] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function loadTeams() {
@@ -78,6 +81,7 @@ function TeamsPage() {
             className={`team-card ${
               favorites.includes(team.name) ? "favorite" : ""
             }`}
+            onClick={() => navigate(`/team/${team.id}`)}
           >
             <img
               src={team.logo}
@@ -92,7 +96,10 @@ function TeamsPage() {
                 className={`team-fav-button ${
                   favorites.includes(team.name) ? "remove" : "add"
                 }`}
-                onClick={() => toggleFavorite(team.name)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFavorite(team.name);
+                }}
               >
                 {favorites.includes(team.name)
                   ? "Remove from favorites"
