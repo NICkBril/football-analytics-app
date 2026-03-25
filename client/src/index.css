@@ -366,3 +366,13 @@ li {
   margin: 6px 0;
   font-size: 16px;
 }
+
+.clickable-team {
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.clickable-team:hover {
+  font-weight: 600;
+  color: #222;
+}
