@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getStandings } from "../api/footballApi";
 import "../index.css";
 
@@ -6,6 +7,8 @@ function TablePage() {
 
   const [table, setTable] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function loadTable() {
@@ -44,7 +47,12 @@ function TablePage() {
         <tbody>
 
           {table.map((team) => (
-            <tr key={team.team.id}>
+
+            <tr
+              key={team.team.id}
+              className="table-row"
+              onClick={() => navigate(`/team/${team.team.id}`)}
+            >
 
               <td>{team.rank}</td>
 
