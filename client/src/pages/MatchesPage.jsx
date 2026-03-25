@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { getMatches } from "../api/footballApi";
 import "../index.css";
 
@@ -8,6 +9,8 @@ function MatchesPage() {
 
   const [search, setSearch] = useState("");
   const [openRound, setOpenRound] = useState(null);
+  
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function loadMatches() {
@@ -103,7 +106,10 @@ function MatchesPage() {
 
                       <div className="match-row">
 
-                        <div className="team-home">
+                        <div
+                          className="team-home clickable-team"
+                          onClick={() => navigate(`/team/${match.teams.home.id}`)}
+                        >
                           <span>{match.teams.home.name}</span>
                           <img
                             src={match.teams.home.logo}
@@ -115,7 +121,10 @@ function MatchesPage() {
                           {match.goals.home} - {match.goals.away}
                         </div>
 
-                        <div className="team-away">
+                        <div
+                          className="team-away clickable-team"
+                          onClick={() => navigate(`/team/${match.teams.away.id}`)}
+                        >
                           <img
                             src={match.teams.away.logo}
                             className="match-logo"
