@@ -58,7 +58,10 @@ function TablePage() {
 
               <td className="table-team">
                 <img src={team.team.logo} className="table-logo"/>
-                {team.team.name}
+
+                <span className="clickable-team">
+                  {team.team.name}
+                </span>
               </td>
 
               <td>{team.all.played}</td>
