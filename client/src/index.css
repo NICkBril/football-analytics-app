@@ -74,8 +74,8 @@ nav a {
 }
 
 .match-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  background: #f5f5f5;
+  transition: 0.2s;
 }
 
 .match-of-week {
@@ -207,8 +207,9 @@ li {
 }
 
 .team-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  transform: scale(1.03);
+  transition: 0.2s;
+  cursor: pointer;
 }
 
 .team-logo {
@@ -325,6 +326,11 @@ li {
   width: 24px;
   height: 24px;
   object-fit: contain;
+}
+
+.table-row:hover {
+  background: #f5f5f5;
+  cursor: pointer;
 }
 
 .league-table tbody tr:nth-child(-n+4) {
