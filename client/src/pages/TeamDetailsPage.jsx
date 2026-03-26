@@ -1,30 +1,63 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getTeams } from "../api/footballApi";
+import { getTeams, getMatches, getStandings } from "../api/footballApi";
 import "../index.css";
 
 function TeamDetailsPage() {
+
   const { id } = useParams();
 
   const [team, setTeam] = useState(null);
   const [activeTab, setActiveTab] = useState("overview");
-  useEffect(() => {
-    async function loadTeam() {
-      const data = await getTeams();
 
-      const foundTeam = data.find(
+  const [matches, setMatches] = useState([]);
+  const [standings, setStandings] = useState([]);
+
+  useEffect(() => {
+
+    async function loadData() {
+
+      const teamsData = await getTeams();
+      const foundTeam = teamsData.find(
         (item) => item.team.id.toString() === id
       );
 
       setTeam(foundTeam?.team);
+
+      const matchesData = await getMatches();
+      setMatches(matchesData);
+
+      const standingsData = await getStandings();
+      setStandings(standingsData);
+
     }
 
-    loadTeam();
+    loadData();
+
   }, [id]);
 
   if (!team) {
     return <p className="page-container">Loading team data...</p>;
   }
+
+  const teamMatches = matches.filter(
+    (m) =>
+      m.teams.home.id.toString() === id ||
+      m.teams.away.id.toString() === id
+  );
+
+  const formatDate = (dateString) => {
+
+    const date = new Date(dateString);
+
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+
+  };
 
   return (
     <div className="page-container">
@@ -80,7 +113,7 @@ function TeamDetailsPage() {
 
         {activeTab === "overview" && (
 
-          <div className="team-overview">
+          <div>
 
             <h2>Overview</h2>
 
@@ -99,7 +132,43 @@ function TeamDetailsPage() {
 
           <div>
             <h2>Matches</h2>
-            <p>...</p>
+
+            {teamMatches.map((match) => (
+
+              <div key={match.fixture.id} className="match-card">
+
+                <div className="match-date">
+                  {formatDate(match.fixture.date)}
+                </div>
+
+                <div className="match-row">
+
+                  <div className="team-home">
+                    <span>{match.teams.home.name}</span>
+                    <img
+                      src={match.teams.home.logo}
+                      className="match-logo"
+                    />
+                  </div>
+
+                  <div className="match-score">
+                    {match.goals.home} - {match.goals.away}
+                  </div>
+
+                  <div className="team-away">
+                    <img
+                      src={match.teams.away.logo}
+                      className="match-logo"
+                    />
+                    <span>{match.teams.away.name}</span>
+                  </div>
+
+                </div>
+
+              </div>
+
+            ))}
+
           </div>
 
         )}
@@ -108,7 +177,57 @@ function TeamDetailsPage() {
 
           <div>
             <h2>Standings</h2>
-            <p>...</p>
+
+            <table className="league-table">
+
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Team</th>
+                  <th>P</th>
+                  <th>W</th>
+                  <th>D</th>
+                  <th>L</th>
+                  <th>GD</th>
+                  <th>Pts</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                {standings.map((row) => (
+
+                  <tr
+                    key={row.team.id}
+                    className={
+                      row.team.id.toString() === id
+                        ? "highlight-team"
+                        : ""
+                    }
+                  >
+
+                    <td>{row.rank}</td>
+
+                    <td className="table-team">
+                      <img src={row.team.logo} className="table-logo"/>
+                      {row.team.name}
+                    </td>
+
+                    <td>{row.all.played}</td>
+                    <td>{row.all.win}</td>
+                    <td>{row.all.draw}</td>
+                    <td>{row.all.lose}</td>
+                    <td>{row.goalsDiff}</td>
+                    <td>{row.points}</td>
+
+                  </tr>
+
+                ))}
+
+              </tbody>
+
+            </table>
+
           </div>
 
         )}
