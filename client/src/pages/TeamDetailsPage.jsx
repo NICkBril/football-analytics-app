@@ -16,6 +16,8 @@ function TeamDetailsPage() {
 
   useEffect(() => {
 
+    setActiveTab("overview");
+
     async function loadData() {
 
       const teamsData = await getTeams();
