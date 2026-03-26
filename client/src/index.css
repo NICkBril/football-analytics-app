@@ -376,3 +376,27 @@ li {
   font-weight: 600;
   color: #222;
 }
+
+.team-tabs {
+  display: flex;
+  gap: 15px;
+  margin-top: 25px;
+  margin-bottom: 20px;
+}
+
+.tab {
+  padding: 8px 16px;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.tab:hover {
+  background: #ddd;
+}
+
+.tab.active {
+  background: #222;
+  color: white;
+}
