@@ -78,6 +78,13 @@ nav a {
   transition: 0.2s;
 }
 
+.match-header {
+  text-align: center;
+  font-size: 14px;
+  color: #aaa;
+  margin-bottom: 6px;
+}
+
 .match-of-week {
   border: 2px solid #e74c3c;
   background: linear-gradient(120deg, #ffe6e6, #ffd6d6);

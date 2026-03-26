@@ -138,8 +138,12 @@ function TeamDetailsPage() {
 
               <div key={match.fixture.id} className="match-card">
 
-                <div className="match-date">
-                  {formatDate(match.fixture.date)}
+                <div className="match-header">
+                  {new Date(match.fixture.date).toLocaleDateString("en-US", {
+                    weekday: "short",
+                    month: "short",
+                    day: "numeric",
+                  })}
                 </div>
 
                 <div className="match-row">
