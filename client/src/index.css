@@ -400,3 +400,8 @@ li {
   background: #222;
   color: white;
 }
+
+.highlight-team {
+  background: #e8f4ff;
+  font-weight: 600;
+}
