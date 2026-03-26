@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getTeams, getMatches, getStandings } from "../api/footballApi";
 import "../index.css";
@@ -6,6 +6,7 @@ import "../index.css";
 function TeamDetailsPage() {
 
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [team, setTeam] = useState(null);
   const [activeTab, setActiveTab] = useState("overview");
@@ -144,7 +145,14 @@ function TeamDetailsPage() {
                 <div className="match-row">
 
                   <div className="team-home">
-                    <span>{match.teams.home.name}</span>
+
+                    <span
+                      className="clickable-team"
+                      onClick={() => navigate(`/team/${match.teams.home.id}`)}
+                    >
+                      {match.teams.home.name}
+                    </span>
+
                     <img
                       src={match.teams.home.logo}
                       className="match-logo"
@@ -160,7 +168,14 @@ function TeamDetailsPage() {
                       src={match.teams.away.logo}
                       className="match-logo"
                     />
-                    <span>{match.teams.away.name}</span>
+
+                    <span
+                      className="clickable-team"
+                      onClick={() => navigate(`/team/${match.teams.away.id}`)}
+                    >
+                      {match.teams.away.name}
+                    </span>
+
                   </div>
 
                 </div>
@@ -208,8 +223,16 @@ function TeamDetailsPage() {
 
                     <td>{row.rank}</td>
 
-                    <td className="table-team">
-                      <img src={row.team.logo} className="table-logo"/>
+                    <td
+                      className="table-team clickable-team"
+                      onClick={() => navigate(`/team/${row.team.id}`)}
+                    >
+
+                      <img
+                        src={row.team.logo}
+                        className="table-logo"
+                      />
+
                       {row.team.name}
                     </td>
 
@@ -236,7 +259,7 @@ function TeamDetailsPage() {
 
           <div>
             <h2>Squad</h2>
-            <p>...</p>
+            <p>Player list will be added later.</p>
           </div>
 
         )}
