@@ -412,3 +412,13 @@ li {
   background: #e8f4ff;
   font-weight: 600;
 }
+
+.country-flag {
+  width: 50px;
+  margin-right: 8px;
+}
+
+.team-country {
+  display: flex;
+  align-items: center;
+}

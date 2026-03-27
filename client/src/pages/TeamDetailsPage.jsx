@@ -62,6 +62,19 @@ function TeamDetailsPage() {
 
   };
 
+  function getCountryCode(country) {
+
+    const map = {
+      England: "gb",
+      Spain: "es",
+      Germany: "de",
+      Italy: "it",
+      France: "fr",
+    };
+
+    return map[country] || "gb";
+  }
+
   return (
     <div className="page-container">
       <h1>{team.name}</h1>
@@ -75,7 +88,16 @@ function TeamDetailsPage() {
         />
 
         <div className="team-details-info">
-          <p><strong>Country:</strong> {team.country}</p>
+          <p className="team-country">
+
+            <img
+              src={`https://flagcdn.com/w40/${getCountryCode(team.country)}.png`}
+              className="country-flag"
+            />
+
+            {team.country}
+
+          </p>
           <p><strong>Founded:</strong> {team.founded}</p>
           <p><strong>Code:</strong> {team.code}</p>
         </div>
