@@ -14,6 +14,25 @@ function TeamDetailsPage() {
   const [matches, setMatches] = useState([]);
   const [standings, setStandings] = useState([]);
 
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem("favorites");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites]);
+
+  const toggleFavorite = (teamName) => {
+    setFavorites((prev) =>
+      prev.includes(teamName)
+        ? prev.filter((t) => t !== teamName)
+        : [...prev, teamName]
+    );
+  };
+
+  const isFavorite = team && favorites.includes(team.name);
+
   useEffect(() => {
 
     setActiveTab("overview");
@@ -104,7 +123,19 @@ function TeamDetailsPage() {
 
   return (
     <div className="page-container">
-      <h1>{team.name}</h1>
+
+      <div className="team-header">
+
+        <h1>{team.name}</h1>
+
+        <button
+          className={`team-fav-button ${isFavorite ? "remove" : "add"}`}
+          onClick={() => toggleFavorite(team.name)}
+        >
+          {isFavorite ? "Remove from favorites" : "Add to favorites"}
+        </button>
+
+      </div>
 
       <div className="team-details">
 
