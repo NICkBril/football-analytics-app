@@ -43,11 +43,38 @@ function TeamDetailsPage() {
     return <p className="page-container">Loading team data...</p>;
   }
 
+  function getMatchResult(match) {
+
+    const isHome =
+      match.teams.home.id.toString() === id;
+
+    const teamGoals = isHome
+      ? match.goals.home
+      : match.goals.away;
+
+    const opponentGoals = isHome
+      ? match.goals.away
+      : match.goals.home;
+
+    if (teamGoals > opponentGoals) return "W";
+    if (teamGoals < opponentGoals) return "L";
+
+    return "D";
+  }
+
   const teamMatches = matches.filter(
     (m) =>
       m.teams.home.id.toString() === id ||
       m.teams.away.id.toString() === id
   );
+
+  const lastMatches = [...teamMatches]
+  .sort(
+    (a, b) =>
+      new Date(b.fixture.date) -
+      new Date(a.fixture.date)
+  )
+  .slice(0, 10);
 
   const formatDate = (dateString) => {
 
@@ -145,6 +172,28 @@ function TeamDetailsPage() {
             <p><strong>Country:</strong> {team.country}</p>
             <p><strong>Founded:</strong> {team.founded}</p>
             <p><strong>Code:</strong> {team.code}</p>
+            <h3>Team form</h3>
+
+              <div className="team-form">
+
+                {lastMatches.map((match) => {
+
+                  const result = getMatchResult(match);
+
+                  return (
+
+                    <span
+                      key={match.fixture.id}
+                      className={`form-badge ${result}`}
+                    >
+                      {result}
+                    </span>
+
+                  );
+
+                })}
+
+              </div>
 
             <h3>Last lineup</h3>
             <p>...</p>
