@@ -5,11 +5,13 @@ import TeamsPage from "./pages/TeamsPage";
 import MatchesPage from "./pages/MatchesPage";
 import TablePage from "./pages/TablePage";
 import TeamDetailsPage from "./pages/TeamDetailsPage";
+import { FavoritesContext, FavoritesProvider } from "./context/FavoritesContext";
 
 import Footer from "./components/Footer";
 
 function App() {
   return (
+    <FavoritesProvider>
     <Router>
       <div className="app-container">
         <nav>
@@ -43,6 +45,7 @@ function App() {
         <Footer />
       </div>
     </Router>
+    </FavoritesProvider>
   );
 }
 
