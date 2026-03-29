@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { FavoritesContext } from "../context/FavoritesContext";
 import { useNavigate } from "react-router-dom";
 import { getTeams } from "../api/footballApi";
 import "../index.css";
@@ -6,12 +7,8 @@ import "../index.css";
 function TeamsPage() {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const [favorites, setFavorites] = useState(() => {
-    const saved = localStorage.getItem("favorites");
-    return saved ? JSON.parse(saved) : [];
-  });
   const [searchTeam, setSearchTeam] = useState("");
+  const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
   const navigate = useNavigate();
 
@@ -24,18 +21,6 @@ function TeamsPage() {
 
     loadTeams();
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites]);
-
-  const toggleFavorite = (teamName) => {
-    setFavorites((prev) =>
-      prev.includes(teamName)
-        ? prev.filter((t) => t !== teamName)
-        : [...prev, teamName]
-    );
-  };
 
   const filteredTeams = teams
     .filter((team) =>
