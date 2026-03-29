@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom"; // Додали useSearchParams
 import { useState, useEffect, useContext } from "react";
 import { FavoritesContext } from "../context/FavoritesContext";
 import { getTeams, getMatches, getStandings } from "../api/footballApi";
@@ -9,9 +9,10 @@ function TeamDetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [team, setTeam] = useState(null);
-  const [activeTab, setActiveTab] = useState("overview");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get("tab") || "overview";
 
+  const [team, setTeam] = useState(null);
   const [matches, setMatches] = useState([]);
   const [standings, setStandings] = useState([]);
 
@@ -19,9 +20,11 @@ function TeamDetailsPage() {
 
   const isFavorite = team && favorites.includes(team.name);
 
-  useEffect(() => {
+  const handleTabChange = (tabName) => {
+    setSearchParams({ tab: tabName }, { replace: true });
+  };
 
-    setActiveTab("overview");
+  useEffect(() => {
 
     async function loadData() {
 
@@ -129,28 +132,28 @@ function TeamDetailsPage() {
       <div className="team-tabs">
         <button
           className={activeTab === "overview" ? "tab active" : "tab"}
-          onClick={() => setActiveTab("overview")}
+          onClick={() => handleTabChange("overview")}
         >
           Overview
         </button>
 
         <button
           className={activeTab === "matches" ? "tab active" : "tab"}
-          onClick={() => setActiveTab("matches")}
+          onClick={() => handleTabChange("matches")}
         >
           Matches
         </button>
 
         <button
           className={activeTab === "standings" ? "tab active" : "tab"}
-          onClick={() => setActiveTab("standings")}
+          onClick={() => handleTabChange("standings")}
         >
           Standings
         </button>
 
         <button
           className={activeTab === "squad" ? "tab active" : "tab"}
-          onClick={() => setActiveTab("squad")}
+          onClick={() => handleTabChange("squad")}
         >
           Squad
         </button>
