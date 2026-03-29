@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { FavoritesContext } from "../context/FavoritesContext";
 import { getTeams, getMatches, getStandings } from "../api/footballApi";
 import "../index.css";
 
@@ -14,22 +15,7 @@ function TeamDetailsPage() {
   const [matches, setMatches] = useState([]);
   const [standings, setStandings] = useState([]);
 
-  const [favorites, setFavorites] = useState(() => {
-    const saved = localStorage.getItem("favorites");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites]);
-
-  const toggleFavorite = (teamName) => {
-    setFavorites((prev) =>
-      prev.includes(teamName)
-        ? prev.filter((t) => t !== teamName)
-        : [...prev, teamName]
-    );
-  };
+  const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
   const isFavorite = team && favorites.includes(team.name);
 
@@ -40,6 +26,7 @@ function TeamDetailsPage() {
     async function loadData() {
 
       const teamsData = await getTeams();
+
       const foundTeam = teamsData.find(
         (item) => item.team.id.toString() === id
       );
@@ -64,16 +51,10 @@ function TeamDetailsPage() {
 
   function getMatchResult(match) {
 
-    const isHome =
-      match.teams.home.id.toString() === id;
+    const isHome = match.teams.home.id.toString() === id;
 
-    const teamGoals = isHome
-      ? match.goals.home
-      : match.goals.away;
-
-    const opponentGoals = isHome
-      ? match.goals.away
-      : match.goals.home;
+    const teamGoals = isHome ? match.goals.home : match.goals.away;
+    const opponentGoals = isHome ? match.goals.away : match.goals.home;
 
     if (teamGoals > opponentGoals) return "W";
     if (teamGoals < opponentGoals) return "L";
@@ -88,25 +69,8 @@ function TeamDetailsPage() {
   );
 
   const lastMatches = [...teamMatches]
-  .sort(
-    (a, b) =>
-      new Date(b.fixture.date) -
-      new Date(a.fixture.date)
-  )
-  .slice(0, 10);
-
-  const formatDate = (dateString) => {
-
-    const date = new Date(dateString);
-
-    return date.toLocaleDateString("en-US", {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-
-  };
+    .sort((a, b) => new Date(b.fixture.date) - new Date(a.fixture.date))
+    .slice(0, 10);
 
   function getCountryCode(country) {
 
@@ -122,6 +86,7 @@ function TeamDetailsPage() {
   }
 
   return (
+
     <div className="page-container">
 
       <div className="team-header">
@@ -375,6 +340,7 @@ function TeamDetailsPage() {
       </div>
 
     </div>
+
   );
 }
 
