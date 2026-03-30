@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getMatches } from "../api/footballApi";
-import "../index.css";
+import "../styles/Matches.css";
 
 function MatchesPage() {
   const [matches, setMatches] = useState([]);

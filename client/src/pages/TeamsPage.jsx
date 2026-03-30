@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { FavoritesContext } from "../context/FavoritesContext";
 import { useNavigate } from "react-router-dom";
 import { getTeams } from "../api/footballApi";
-import "../index.css";
+import "../styles/Teams.css";
 
 function TeamsPage() {
   const [teams, setTeams] = useState([]);

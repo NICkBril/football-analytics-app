@@ -1,8 +1,8 @@
-import { useParams, useNavigate, useSearchParams } from "react-router-dom"; // Додали useSearchParams
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { FavoritesContext } from "../context/FavoritesContext";
 import { getTeams, getMatches, getStandings } from "../api/footballApi";
-import "../index.css";
+import "../styles/TeamDetails.css";
 
 function TeamDetailsPage() {
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getStandings } from "../api/footballApi";
-import "../index.css";
+import "../styles/Table.css";
 
 function TablePage() {
 
