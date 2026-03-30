@@ -4,21 +4,48 @@ import { getStandings } from "../api/footballApi";
 import "../styles/Table.css";
 
 function TablePage() {
-
-  const [table, setTable] = useState([]);
-  const [loading, setLoading] = useState(true);
-
+  
   const navigate = useNavigate();
+  const [standings, setStandings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [sortConfig, setSortConfig] = useState({ key: "points", direction: "desc" });
 
   useEffect(() => {
-    async function loadTable() {
+    async function loadData() {
       const data = await getStandings();
-      setTable(data);
+      setStandings(data || []);
       setLoading(false);
     }
-
-    loadTable();
+    loadData();
   }, []);
+
+  const requestSort = (key) => {
+    let direction = "desc";
+    if (sortConfig.key === key && sortConfig.direction === "desc") {
+      direction = "asc";
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const getSortedStandings = () => {
+    const sortableItems = [...standings];
+    return sortableItems.sort((a, b) => {
+      let aValue, bValue;
+
+      switch (sortConfig.key) {
+        case "win": aValue = a.all.win; bValue = b.all.win; break;
+        case "draw": aValue = a.all.draw; bValue = b.all.draw; break;
+        case "lose": aValue = a.all.lose; bValue = b.all.lose; break;
+        case "goalsDiff": aValue = a.goalsDiff; bValue = b.goalsDiff; break;
+        case "points":
+        default: aValue = a.points; bValue = b.points;
+      }
+
+      if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
+      if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
+      return 0;
+    });
+  };
 
   if (loading) {
     return <p className="page-container">Loading table...</p>;
@@ -36,41 +63,38 @@ function TablePage() {
             <th>#</th>
             <th>Team</th>
             <th>P</th>
-            <th>W</th>
-            <th>D</th>
-            <th>L</th>
-            <th>GD</th>
-            <th>Pts</th>
+            <th onClick={() => requestSort("win")} className="sortable-header">
+              W {sortConfig.key === "win" && (sortConfig.direction === "desc" ? "▼" : "▲")}
+            </th>
+            <th onClick={() => requestSort("draw")} className="sortable-header">
+              D {sortConfig.key === "draw" && (sortConfig.direction === "desc" ? "▼" : "▲")}
+            </th>
+            <th onClick={() => requestSort("lose")} className="sortable-header">
+              L {sortConfig.key === "lose" && (sortConfig.direction === "desc" ? "▼" : "▲")}
+            </th>
+            <th onClick={() => requestSort("goalsDiff")} className="sortable-header">
+              GD {sortConfig.key === "goalsDiff" && (sortConfig.direction === "desc" ? "▼" : "▲")}
+            </th>
+            <th onClick={() => requestSort("points")} className="sortable-header">
+              Pts {sortConfig.key === "points" && (sortConfig.direction === "desc" ? "▼" : "▲")}
+            </th>
           </tr>
         </thead>
 
         <tbody>
-
-          {table.map((team) => (
-
-            <tr
-              key={team.team.id}
-              className="table-row"
-              onClick={() => navigate(`/team/${team.team.id}`)}
-            >
-
-              <td>{team.rank}</td>
-
-              <td className="table-team">
-                <img src={team.team.logo} className="table-logo"/>
-
-                <span className="clickable-team">
-                  {team.team.name}
-                </span>
+          {getSortedStandings().map((row) => (
+            <tr key={row.team.id} className="table-row">
+              <td>{row.rank}</td>
+              <td className="table-team clickable-team" onClick={() => navigate(`/team/${row.team.id}`)}>
+                <img src={row.team.logo} className="table-logo" alt="logo" />
+                {row.team.name}
               </td>
-
-              <td>{team.all.played}</td>
-              <td>{team.all.win}</td>
-              <td>{team.all.draw}</td>
-              <td>{team.all.lose}</td>
-              <td>{team.goalsDiff}</td>
-              <td>{team.points}</td>
-
+              <td>{row.all.played}</td>
+              <td>{row.all.win}</td>
+              <td>{row.all.draw}</td>
+              <td>{row.all.lose}</td>
+              <td>{row.goalsDiff}</td>
+              <td>{row.points}</td>
             </tr>
           ))}
 
