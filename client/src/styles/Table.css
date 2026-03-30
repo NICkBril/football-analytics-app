@@ -64,3 +64,13 @@
   font-weight: 600;
   color: #222;
 }
+
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s;
+}
+
+.sortable-header:hover {
+  background-color: #eee;
+}
