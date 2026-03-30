@@ -11,7 +11,6 @@ const BASE_URL = "https://v3.football.api-sports.io";
 
 function getCachedData(key) {
   const cached = localStorage.getItem(key);
-
   if (!cached) return null;
 
   const parsed = JSON.parse(cached);
@@ -39,63 +38,93 @@ function setCachedData(key, data) {
 
 export async function getTeams() {
   const cached = getCachedData("teams");
+  if (cached) return cached;
 
-  if (cached) {
-    return cached;
+  try {
+
+    const response = await fetch(
+      `${BASE_URL}/teams?league=39&season=2023`,
+      options
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch teams");
+    }
+
+    const data = await response.json();
+    const teams = data.response;
+
+    setCachedData("teams", teams);
+
+    return teams;
+
+  } catch (error) {
+
+    console.error("Error loading teams:", error);
+    return [];
+
   }
 
-  const response = await fetch(
-    `${BASE_URL}/teams?league=39&season=2023`,
-    options
-  );
-
-  const data = await response.json();
-
-  const teams = data.response;
-
-  setCachedData("teams", teams);
-
-  return teams;
 }
 
 export async function getMatches() {
   const cached = getCachedData("matches");
+  if (cached) return cached;
 
-  if (cached) {
-    return cached;
+  try {
+
+    const response = await fetch(
+      `${BASE_URL}/fixtures?league=39&season=2023`,
+      options
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch matches");
+    }
+
+    const data = await response.json();
+    const matches = data.response;
+
+    setCachedData("matches", matches);
+
+    return matches;
+
+  } catch (error) {
+
+    console.error("Error loading matches:", error);
+    return [];
+
   }
 
-  const response = await fetch(
-    `${BASE_URL}/fixtures?league=39&season=2023`,
-    options
-  );
-
-  const data = await response.json();
-
-  const matches = data.response;
-
-  setCachedData("matches", matches);
-
-  return matches;
 }
 
 export async function getStandings() {
   const cached = getCachedData("standings");
+  if (cached) return cached;
 
-  if (cached) {
-    return cached;
+  try {
+
+    const response = await fetch(
+      `${BASE_URL}/standings?league=39&season=2023`,
+      options
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch standings");
+    }
+
+    const data = await response.json();
+    const standings = data.response[0].league.standings[0];
+
+    setCachedData("standings", standings);
+
+    return standings;
+
+  } catch (error) {
+
+    console.error("Error loading standings:", error);
+    return [];
+
   }
 
-  const response = await fetch(
-    `${BASE_URL}/standings?league=39&season=2023`,
-    options
-  );
-
-  const data = await response.json();
-
-  const standings = data.response[0].league.standings[0];
-
-  setCachedData("standings", standings);
-
-  return standings;
 }
