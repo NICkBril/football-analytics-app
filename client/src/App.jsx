@@ -6,6 +6,8 @@ import MatchesPage from "./pages/MatchesPage";
 import TablePage from "./pages/TablePage";
 import TeamDetailsPage from "./pages/TeamDetailsPage";
 import { FavoritesContext, FavoritesProvider } from "./context/FavoritesContext";
+import "./styles/index.css";
+import "./styles/layout.css";
 
 import Footer from "./components/Footer";
 
