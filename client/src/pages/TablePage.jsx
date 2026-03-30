@@ -47,6 +47,14 @@ function TablePage() {
     });
   };
 
+  const getClassByRank = (rank) => {
+    if (rank <= 4) return "cl-zone";
+    if (rank === 5) return "el-zone";
+    if (rank === 6) return "conf-zone";
+    if (rank >= 18) return "rel-zone";
+    return "";
+  };
+
   if (loading) {
     return <p className="page-container">Loading table...</p>;
   }
@@ -83,7 +91,10 @@ function TablePage() {
 
         <tbody>
           {getSortedStandings().map((row) => (
-            <tr key={row.team.id} className="table-row">
+            <tr 
+              key={row.team.id} 
+              className={`table-row ${getClassByRank(row.rank)}`}
+            >
               <td>{row.rank}</td>
               <td className="table-team clickable-team" onClick={() => navigate(`/team/${row.team.id}`)}>
                 <img src={row.team.logo} className="table-logo" alt="logo" />
@@ -102,11 +113,11 @@ function TablePage() {
 
       </table>
 
-      <div style={{ marginTop: "30px", fontSize: "14px" }}>
-        <div>🟢 Champions League</div>
-        <div>🟡 Europa League</div>
-        <div>🟠 Conference League</div>
-        <div>🔴 Relegation</div>
+      <div className="legend-container">
+        <div className="legend-item"><span className="dot cl"></span> Champions League</div>
+        <div className="legend-item"><span className="dot el"></span> Europa League</div>
+        <div className="legend-item"><span className="dot conf"></span> Conference League</div>
+        <div className="legend-item"><span className="dot rel"></span> Relegation</div>
       </div>
 
     </div>
