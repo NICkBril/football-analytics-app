@@ -1,0 +1,68 @@
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+nav {
+  background-color: #3498db;
+  padding: 15px 20px;
+  display: flex;
+  gap: 10px;
+}
+
+nav button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 6px;
+  background-color: #2980b9;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+nav button:hover {
+  background-color: #1c5980;
+  transform: translateY(-1px);
+}
+
+nav button.active {
+  background-color: #1abc9c;
+  color: white;
+}
+
+nav a {
+  text-decoration: none;
+}
+
+footer {
+  text-align: center;
+  color: #777;
+  font-size: 14px;
+  padding: 20px 0;
+  border-top: 1px solid #ccc;
+  background-color: #f3f3f3;
+  margin-top: auto;
+}
+
+footer .contact-info {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #555;
+}
+
+footer a {
+  color: #3498db;
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}

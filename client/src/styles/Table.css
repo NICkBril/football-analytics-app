@@ -1,0 +1,66 @@
+.league-table {
+  width: 100%;
+  max-width: 850px;
+  border-collapse: collapse;
+}
+
+.league-table th,
+.league-table td {
+  padding: 6px 8px;
+  text-align: center;
+}
+
+.league-table thead th {
+  padding-bottom: 12px;
+}
+
+.league-table th:nth-child(2) {
+  text-align: left;
+}
+
+.table-team {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.table-logo {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.table-row:hover {
+  background: #f5f5f5;
+  cursor: pointer;
+}
+
+.league-table tbody tr:nth-child(-n+4) {
+  border-left: 4px solid #2ecc71;
+}
+
+.league-table tbody tr:nth-child(5) {
+  border-left: 4px solid #f1c40f;
+}
+
+.league-table tbody tr:nth-child(6) {
+  border-left: 4px solid #e67e22;
+}
+
+.league-table tbody tr:nth-last-child(-n+3) {
+  border-left: 4px solid #e74c3c;
+}
+
+.highlight-team {
+  background: #e8f4ff;
+  font-weight: 600;
+}
+
+.clickable-team {
+  cursor: pointer;
+}
+
+.clickable-team:hover {
+  font-weight: 600;
+  color: #222;
+}
