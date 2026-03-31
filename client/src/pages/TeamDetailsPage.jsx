@@ -107,6 +107,13 @@ function TeamDetailsPage() {
     return map[country] || "gb";
   }
 
+  const positions = [
+    { key: "Goalkeeper", title: "Goalkeepers" },
+    { key: "Defender", title: "Defenders" },
+    { key: "Midfielder", title: "Midfielders" },
+    { key: "Attacker", title: "Attackers" }
+  ];
+
   return (
 
     <div className="page-container">
@@ -358,27 +365,44 @@ function TeamDetailsPage() {
             {loadingSquad ? (
               <p>Loading squad players...</p>
             ) : (
-              <div className="squad-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: "20px", marginTop: "20px" }}>
+              <div className="squad-sections">
                 
-                {squad.map((player) => (
+                {positions.map((pos) => {
+                  const players = squad.filter(p => p.position === pos.key);
                   
-                  <div key={player.id} className="player-card" style={{ border: "1px solid #ddd", borderRadius: "8px", padding: "10px", textAlign: "center" }}>
-                    
-                    <img 
-                      src={player.photo} 
-                      alt={player.name} 
-                      style={{ width: "100%", borderRadius: "8px" }}
-                    />
-                    
-                    <div style={{ marginTop: "10px" }}>
-                      <span style={{ fontSize: "12px", color: "#3498db", fontWeight: "bold" }}>#{player.number || "N/A"}</span>
-                      <p style={{ margin: "5px 0", fontWeight: "600" }}>{player.name}</p>
-                      <p style={{ fontSize: "13px", color: "#777" }}>{player.position}</p>
+                  if (players.length === 0) return null;
+
+                  return (
+                    <div key={pos.key} className="squad-category">
+                      
+                      <h3 className="position-title">{pos.title}</h3>
+                      
+                      <div className="squad-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: "20px", marginBottom: "30px" }}>
+                        
+                        {players.map((player) => (
+                          
+                          <div key={player.id} className="player-card" style={{ border: "1px solid #ddd", borderRadius: "8px", padding: "10px", textAlign: "center" }}>
+                            
+                            <img 
+                              src={player.photo} 
+                              alt={player.name} 
+                              style={{ width: "100%", borderRadius: "8px" }}
+                            />
+                            
+                            <div style={{ marginTop: "10px" }}>
+                              <span style={{ fontSize: "12px", color: "#3498db", fontWeight: "bold" }}>#{player.number || "N/A"}</span>
+                              <p style={{ margin: "5px 0", fontWeight: "600" }}>{player.name}</p>
+                            </div>
+
+                          </div>
+
+                        ))}
+
+                      </div>
+
                     </div>
-
-                  </div>
-
-                ))}
+                  );
+                })}
 
               </div>
             )}

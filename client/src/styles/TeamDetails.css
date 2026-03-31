@@ -138,3 +138,25 @@
   color: #777;
 }
 
+.squad-section {
+  margin-top: 20px;
+}
+
+.position-title {
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  text-transform: uppercase;
+  font-size: 18px;
+  letter-spacing: 1px;
+}
+
+.player-card {
+  transition: transform 0.2s ease;
+}
+
+.player-card:hover {
+  transform: translateY(-5px);
+  border-color: #3498db !important;
+}
