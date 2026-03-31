@@ -128,3 +128,34 @@ export async function getStandings() {
   }
 
 }
+
+export async function getSquad(teamId) {
+  const cacheKey = `squad_${teamId}`;
+  const cached = getCachedData(cacheKey);
+  if (cached) return cached;
+
+  try {
+
+    const response = await fetch(
+      `${BASE_URL}/players/squads?team=${teamId}`,
+      options
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch squad");
+    }
+
+    const data = await response.json();
+    const squad = data.response[0]?.players || [];
+
+    setCachedData(cacheKey, squad);
+
+    return squad;
+
+  } catch (error) {
+
+    console.error("Error loading squad:", error);
+    return [];
+
+  }
+}
