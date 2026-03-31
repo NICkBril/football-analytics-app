@@ -1,7 +1,7 @@
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { FavoritesContext } from "../context/FavoritesContext";
-import { getTeams, getMatches, getStandings } from "../api/footballApi";
+import { getTeams, getMatches, getStandings, getSquad } from "../api/footballApi";
 import "../styles/TeamDetails.css";
 
 function TeamDetailsPage() {
@@ -15,6 +15,8 @@ function TeamDetailsPage() {
   const [team, setTeam] = useState(null);
   const [matches, setMatches] = useState([]);
   const [standings, setStandings] = useState([]);
+  const [squad, setSquad] = useState([]);
+  const [loadingSquad, setLoadingSquad] = useState(false);
 
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
@@ -47,6 +49,23 @@ function TeamDetailsPage() {
     loadData();
 
   }, [id]);
+
+  useEffect(() => {
+
+    if (activeTab === "squad" && id) {
+
+      async function loadSquadData() {
+        setLoadingSquad(true);
+        const squadData = await getSquad(id);
+        setSquad(squadData);
+        setLoadingSquad(false);
+      }
+
+      loadSquadData();
+
+    }
+
+  }, [id, activeTab]);
 
   if (!team) {
     return <p className="page-container">Loading team data...</p>;
@@ -335,7 +354,35 @@ function TeamDetailsPage() {
 
           <div>
             <h2>Squad</h2>
-            <p>Player list will be added later.</p>
+            
+            {loadingSquad ? (
+              <p>Loading squad players...</p>
+            ) : (
+              <div className="squad-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: "20px", marginTop: "20px" }}>
+                
+                {squad.map((player) => (
+                  
+                  <div key={player.id} className="player-card" style={{ border: "1px solid #ddd", borderRadius: "8px", padding: "10px", textAlign: "center" }}>
+                    
+                    <img 
+                      src={player.photo} 
+                      alt={player.name} 
+                      style={{ width: "100%", borderRadius: "8px" }}
+                    />
+                    
+                    <div style={{ marginTop: "10px" }}>
+                      <span style={{ fontSize: "12px", color: "#3498db", fontWeight: "bold" }}>#{player.number || "N/A"}</span>
+                      <p style={{ margin: "5px 0", fontWeight: "600" }}>{player.name}</p>
+                      <p style={{ fontSize: "13px", color: "#777" }}>{player.position}</p>
+                    </div>
+
+                  </div>
+
+                ))}
+
+              </div>
+            )}
+
           </div>
 
         )}
