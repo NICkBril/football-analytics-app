@@ -159,3 +159,34 @@ export async function getSquad(teamId) {
 
   }
 }
+
+export async function getMatchStatistics(fixtureId) {
+  const cacheKey = `stats_${fixtureId}`;
+  const cached = getCachedData(cacheKey);
+  if (cached) return cached;
+
+  try {
+
+    const response = await fetch(
+      `${BASE_URL}/fixtures/statistics?fixture=${fixtureId}`,
+      options
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch statistics");
+    }
+
+    const data = await response.json();
+    const stats = data.response;
+
+    setCachedData(cacheKey, stats);
+
+    return stats;
+
+  } catch (error) {
+
+    console.error("Error loading stats:", error);
+    return [];
+
+  }
+}
