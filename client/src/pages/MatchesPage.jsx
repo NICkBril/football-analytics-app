@@ -33,7 +33,8 @@ function MatchesPage() {
   );
 
   const matchesByRound = filteredMatches.reduce((acc, match) => {
-    const roundNumber = match.league.round.split("-")[1].trim();
+    const roundParts = match.league.round.split("-");
+    const roundNumber = roundParts[1] ? roundParts[1].trim() : "0";
     const round = `Round ${roundNumber}`;
 
     if (!acc[round]) {
@@ -102,18 +103,26 @@ function MatchesPage() {
                   </div>
 
                   {dateMatches.map((match) => (
-                    <div key={match.fixture.id} className="match-card">
+                    <div 
+                      key={match.fixture.id} 
+                      className="match-card clickable-match"
+                      onClick={() => navigate(`/match/${match.fixture.id}`)}
+                    >
 
                       <div className="match-row">
 
                         <div
                           className="team-home clickable-team"
-                          onClick={() => navigate(`/team/${match.teams.home.id}`)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/team/${match.teams.home.id}`);
+                          }}
                         >
                           <span>{match.teams.home.name}</span>
                           <img
                             src={match.teams.home.logo}
                             className="match-logo"
+                            alt="logo"
                           />
                         </div>
 
@@ -123,11 +132,15 @@ function MatchesPage() {
 
                         <div
                           className="team-away clickable-team"
-                          onClick={() => navigate(`/team/${match.teams.away.id}`)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/team/${match.teams.away.id}`);
+                          }}
                         >
                           <img
                             src={match.teams.away.logo}
                             className="match-logo"
+                            alt="logo"
                           />
                           <span>{match.teams.away.name}</span>
                         </div>
