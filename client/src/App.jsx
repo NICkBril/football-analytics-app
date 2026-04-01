@@ -5,6 +5,7 @@ import TeamsPage from "./pages/TeamsPage";
 import MatchesPage from "./pages/MatchesPage";
 import TablePage from "./pages/TablePage";
 import TeamDetailsPage from "./pages/TeamDetailsPage";
+import MatchDetailsPage from "./pages/MatchDetailsPage";
 import { FavoritesContext, FavoritesProvider } from "./context/FavoritesContext";
 import "./styles/index.css";
 import "./styles/layout.css";
@@ -41,6 +42,7 @@ function App() {
             <Route path="/matches" element={<MatchesPage />} />
             <Route path="/table" element={<TablePage />} />
             <Route path="/team/:id" element={<TeamDetailsPage />} />
+            <Route path="/match/:id" element={<MatchDetailsPage />} />
           </Routes>
         </div>
 
