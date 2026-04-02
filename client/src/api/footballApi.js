@@ -190,3 +190,29 @@ export async function getMatchStatistics(fixtureId) {
 
   }
 }
+
+export async function getMatchEvents(fixtureId) {
+  const cacheKey = `events_${fixtureId}`;
+  const cached = getCachedData(cacheKey);
+  if (cached) return cached;
+
+  try {
+    const response = await fetch(
+      `${BASE_URL}/fixtures/events?fixture=${fixtureId}`,
+      options
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch events");
+    }
+
+    const data = await response.json();
+    const events = data.response;
+
+    setCachedData(cacheKey, events);
+    return events;
+  } catch (error) {
+    console.error("Error loading events:", error);
+    return [];
+  }
+}
