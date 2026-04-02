@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getMatchStatistics, getMatchEvents } from "../api/footballApi";
+import { getMatchStatistics, getMatchEvents, getMatches } from "../api/footballApi";
 import "../styles/MatchDetails.css";
 
 function MatchDetailsPage() {
@@ -10,6 +10,7 @@ function MatchDetailsPage() {
 
   const [stats, setStats] = useState([]);
   const [events, setEvents] = useState([]);
+  const [matchInfo, setMatchInfo] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,8 +21,12 @@ function MatchDetailsPage() {
       const statsData = await getMatchStatistics(id);
       const eventsData = await getMatchEvents(id);
       
+      const allMatches = await getMatches();
+      const currentMatch = allMatches.find(m => m.fixture.id.toString() === id);
+      
       setStats(statsData);
       setEvents(eventsData);
+      setMatchInfo(currentMatch);
       
       setLoading(false);
     }
@@ -34,7 +39,7 @@ function MatchDetailsPage() {
     return <p className="page-container">Loading match details...</p>;
   }
 
-  if (!stats || stats.length === 0) {
+  if (!stats || stats.length === 0 || !matchInfo) {
     return (
       <div className="page-container">
         <button onClick={() => navigate(-1)} className="back-button">← Back</button>
@@ -68,7 +73,16 @@ function MatchDetailsPage() {
           <h2>{team1.team.name}</h2>
         </div>
 
-        <div className="vs-badge">VS</div>
+        <div className="score-container">
+          <div className="main-score">
+            <span>{matchInfo.goals.home}</span>
+            <span className="score-divider">-</span>
+            <span>{matchInfo.goals.away}</span>
+          </div>
+          <div className="match-status-badge">
+            {matchInfo.fixture.status.long === "Match Finished" ? "Full Time" : matchInfo.fixture.status.long}
+          </div>
+        </div>
 
         <div className="stat-team">
           <img src={team2.team.logo} alt={team2.team.name} />
