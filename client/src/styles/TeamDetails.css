@@ -160,3 +160,17 @@
   transform: translateY(-5px);
   border-color: #3498db !important;
 }
+
+.clickable-match {
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.clickable-match:active {
+  transform: scale(0.99);
+}
+
+.team-form .form-badge.clickable-match:hover {
+  opacity: 0.8;
+  transform: translateY(-1.7px);
+}
