@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getMatchStatistics } from "../api/footballApi";
+import { getMatchStatistics, getMatchEvents } from "../api/footballApi";
 import "../styles/MatchDetails.css";
 
 function MatchDetailsPage() {
@@ -9,23 +9,29 @@ function MatchDetailsPage() {
   const navigate = useNavigate();
 
   const [stats, setStats] = useState([]);
+  const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
 
-    async function loadStats() {
+    async function loadData() {
       setLoading(true);
-      const data = await getMatchStatistics(id);
-      setStats(data);
+      
+      const statsData = await getMatchStatistics(id);
+      const eventsData = await getMatchEvents(id);
+      
+      setStats(statsData);
+      setEvents(eventsData);
+      
       setLoading(false);
     }
 
-    loadStats();
+    loadData();
 
   }, [id]);
 
   if (loading) {
-    return <p className="page-container">Loading match statistics...</p>;
+    return <p className="page-container">Loading match details...</p>;
   }
 
   if (!stats || stats.length === 0) {
@@ -71,40 +77,86 @@ function MatchDetailsPage() {
 
       </div>
 
-      <div className="stats-container">
+      <div className="match-details-grid">
 
-        {allStatTypes.map((type) => {
+        <div className="stats-container">
 
-          const val1 = getStatValue(team1, type) || 0;
-          const val2 = getStatValue(team2, type) || 0;
+          <h3>Match Statistics</h3>
 
-          const num1 = parseFloat(val1);
-          const num2 = parseFloat(val2);
-          const total = num1 + num2;
-          const percentage = total === 0 ? 50 : (num1 / total) * 100;
+          {allStatTypes.map((type) => {
 
-          return (
+            const val1 = getStatValue(team1, type) || 0;
+            const val2 = getStatValue(team2, type) || 0;
 
-            <div key={type} className="stat-item">
+            const num1 = parseFloat(val1);
+            const num2 = parseFloat(val2);
+            const total = num1 + num2;
+            const percentage = total === 0 ? 50 : (num1 / total) * 100;
 
-              <div className="stat-info">
-                <span>{val1}</span>
-                <span className="stat-name">{type}</span>
-                <span>{val2}</span>
+            return (
+
+              <div key={type} className="stat-item">
+
+                <div className="stat-info">
+                  <span>{val1}</span>
+                  <span className="stat-name">{type}</span>
+                  <span>{val2}</span>
+                </div>
+
+                <div className="stat-bar-bg">
+                  <div 
+                    className="stat-bar-fill" 
+                    style={{ width: `${percentage}%` }}
+                  ></div>
+                </div>
+
               </div>
 
-              <div className="stat-bar-bg">
+            );
+
+          })}
+
+        </div>
+
+        <div className="events-container">
+
+          <h3>Match Timeline</h3>
+
+          <div className="events-list">
+
+            {events.map((event, index) => {
+              
+              const isTeam1 = event.team.id === team1.team.id;
+
+              return (
                 <div 
-                  className="stat-bar-fill" 
-                  style={{ width: `${percentage}%` }}
-                ></div>
-              </div>
+                  key={index} 
+                  className={`event-item ${isTeam1 ? "left" : "right"}`}
+                >
+                  
+                  <div className="event-time">{event.time.elapsed}'</div>
+                  
+                  <div className="event-icon">
+                    {event.type === "Goal" && "⚽"}
+                    {event.type === "Card" && (event.detail === "Yellow Card" ? "🟨" : "🟥")}
+                    {event.type === "subst" && "🔄"}
+                  </div>
 
-            </div>
+                  <div className="event-content">
+                    <div className="event-player">{event.player.name}</div>
+                    <div className="event-detail">
+                      {event.detail} 
+                      {event.assist.name && <span className="assist-name"> (Assist: {event.assist.name})</span>}
+                    </div>
+                  </div>
 
-          );
+                </div>
+              );
+            })}
 
-        })}
+          </div>
+
+        </div>
 
       </div>
 
