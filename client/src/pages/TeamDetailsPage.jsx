@@ -145,6 +145,7 @@ function TeamDetailsPage() {
             <img
               src={`https://flagcdn.com/w40/${getCountryCode(team.country)}.png`}
               className="country-flag"
+              alt="flag"
             />
 
             {team.country}
@@ -197,28 +198,23 @@ function TeamDetailsPage() {
             <p><strong>Country:</strong> {team.country}</p>
             <p><strong>Founded:</strong> {team.founded}</p>
             <p><strong>Code:</strong> {team.code}</p>
+                        
             <h3>Team form</h3>
-
-              <div className="team-form">
-
-                {lastMatches.map((match) => {
-
-                  const result = getMatchResult(match);
-
-                  return (
-
-                    <span
-                      key={match.fixture.id}
-                      className={`form-badge ${result}`}
-                    >
-                      {result}
-                    </span>
-
-                  );
-
-                })}
-
-              </div>
+            <div className="team-form">
+              {lastMatches.map((match) => {
+                const result = getMatchResult(match);
+                return (
+                  <span
+                    key={match.fixture.id}
+                    className={`form-badge ${result} clickable-match`}
+                    onClick={() => navigate(`/match/${match.fixture.id}`)}
+                    title="View match details"
+                  >
+                    {result}
+                  </span>
+                );
+              })}
+            </div>
 
             <h3>Last lineup</h3>
             <p>...</p>
@@ -234,7 +230,11 @@ function TeamDetailsPage() {
 
             {teamMatches.map((match) => (
 
-              <div key={match.fixture.id} className="match-card">
+              <div 
+                key={match.fixture.id} 
+                className="match-card clickable-match"
+                onClick={() => navigate(`/match/${match.fixture.id}`)}
+              >
 
                 <div className="match-header">
                   {new Date(match.fixture.date).toLocaleDateString("en-US", {
@@ -250,15 +250,14 @@ function TeamDetailsPage() {
 
                     <span
                       className="clickable-team"
-                      onClick={() => navigate(`/team/${match.teams.home.id}`)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/team/${match.teams.home.id}`);
+                      }}
                     >
                       {match.teams.home.name}
                     </span>
-
-                    <img
-                      src={match.teams.home.logo}
-                      className="match-logo"
-                    />
+                    <img src={match.teams.home.logo} className="match-logo" alt="logo" />
                   </div>
 
                   <div className="match-score">
@@ -266,14 +265,13 @@ function TeamDetailsPage() {
                   </div>
 
                   <div className="team-away">
-                    <img
-                      src={match.teams.away.logo}
-                      className="match-logo"
-                    />
-
+                    <img src={match.teams.away.logo} className="match-logo" alt="logo" />
                     <span
                       className="clickable-team"
-                      onClick={() => navigate(`/team/${match.teams.away.id}`)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/team/${match.teams.away.id}`);
+                      }}
                     >
                       {match.teams.away.name}
                     </span>
@@ -333,6 +331,7 @@ function TeamDetailsPage() {
                       <img
                         src={row.team.logo}
                         className="table-logo"
+                        alt="logo"
                       />
 
                       {row.team.name}
