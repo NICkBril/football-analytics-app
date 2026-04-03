@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getMatchStatistics, getMatchEvents, getMatches } from "../api/footballApi";
+import { getMatchStatistics, getMatchEvents, getMatches, getMatchLineups } from "../api/footballApi";
 import "../styles/MatchDetails.css";
 
 function MatchDetailsPage() {
@@ -10,6 +10,7 @@ function MatchDetailsPage() {
 
   const [stats, setStats] = useState([]);
   const [events, setEvents] = useState([]);
+  const [lineups, setLineups] = useState([]);
   const [matchInfo, setMatchInfo] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -20,12 +21,14 @@ function MatchDetailsPage() {
       
       const statsData = await getMatchStatistics(id);
       const eventsData = await getMatchEvents(id);
+      const lineupsData = await getMatchLineups(id);
       
       const allMatches = await getMatches();
       const currentMatch = allMatches.find(m => m.fixture.id.toString() === id);
       
       setStats(statsData);
       setEvents(eventsData);
+      setLineups(lineupsData);
       setMatchInfo(currentMatch);
       
       setLoading(false);
@@ -169,6 +172,52 @@ function MatchDetailsPage() {
             })}
 
           </div>
+
+        </div>
+
+      </div>
+
+      <div className="lineups-section">
+
+        <h3>Lineups</h3>
+
+        <div className="lineups-container">
+
+          {lineups.map((lineup, index) => (
+
+            <div key={index} className="team-lineup">
+
+              <div className="lineup-team-header">
+                <img src={lineup.team.logo} alt="logo" />
+                <h4>Formation: {lineup.formation}</h4>
+              </div>
+
+              <h5>Starting XI</h5>
+
+              <ul className="player-list">
+                {lineup.startXI.map((p) => (
+                  <li key={p.player.id}>
+                    <span className="player-number">{p.player.number}</span>
+                    <span className="player-name">{p.player.name}</span>
+                    <span className="player-pos">{p.player.pos}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <h5>Substitutes</h5>
+
+              <ul className="player-list subs">
+                {lineup.substitutes.map((p) => (
+                  <li key={p.player.id}>
+                    <span className="player-number">{p.player.number}</span>
+                    <span className="player-name">{p.player.name}</span>
+                  </li>
+                ))}
+              </ul>
+
+            </div>
+
+          ))}
 
         </div>
 
