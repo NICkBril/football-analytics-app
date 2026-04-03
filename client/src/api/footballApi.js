@@ -216,3 +216,27 @@ export async function getMatchEvents(fixtureId) {
     return [];
   }
 }
+
+export async function getMatchLineups(fixtureId) {
+  const cacheKey = `lineups_${fixtureId}`;
+  const cached = getCachedData(cacheKey);
+  if (cached) return cached;
+
+  try {
+    const response = await fetch(
+      `${BASE_URL}/fixtures/lineups?fixture=${fixtureId}`,
+      options
+    );
+
+    if (!response.ok) throw new Error("Failed to fetch lineups");
+
+    const data = await response.json();
+    const lineups = data.response;
+
+    setCachedData(cacheKey, lineups);
+    return lineups;
+  } catch (error) {
+    console.error("Error loading lineups:", error);
+    return [];
+  }
+}
