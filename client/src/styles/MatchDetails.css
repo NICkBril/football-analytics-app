@@ -239,3 +239,24 @@
 @media (max-width: 768px) {
   .lineups-container { flex-direction: column; }
 }
+
+.stat-team.clickable-team {
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.stat-team.clickable-team:hover {
+  transform: translateY(-5px);
+  background-color: #f8f9fa;
+}
+
+.lineup-team-header.clickable-team {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.lineup-team-header.clickable-team:hover {
+  opacity: 0.7;
+}
