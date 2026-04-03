@@ -71,7 +71,10 @@ function MatchDetailsPage() {
 
       <div className="match-stats-header">
 
-        <div className="stat-team">
+        <div 
+          className="stat-team clickable-team"
+          onClick={() => navigate(`/team/${team1.team.id}`)}
+        >
           <img src={team1.team.logo} alt={team1.team.name} />
           <h2>{team1.team.name}</h2>
         </div>
@@ -87,7 +90,10 @@ function MatchDetailsPage() {
           </div>
         </div>
 
-        <div className="stat-team">
+        <div 
+          className="stat-team clickable-team"
+          onClick={() => navigate(`/team/${team2.team.id}`)}
+        >
           <img src={team2.team.logo} alt={team2.team.name} />
           <h2>{team2.team.name}</h2>
         </div>
@@ -187,7 +193,10 @@ function MatchDetailsPage() {
 
             <div key={index} className="team-lineup">
 
-              <div className="lineup-team-header">
+              <div 
+                className="lineup-team-header clickable-team"
+                onClick={() => navigate(`/team/${lineup.team.id}`)}
+              >
                 <img src={lineup.team.logo} alt="logo" />
                 <h4>Formation: {lineup.formation}</h4>
               </div>
