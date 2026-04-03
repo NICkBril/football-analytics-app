@@ -177,3 +177,65 @@
   color: #bdc3c7;
   font-weight: 300;
 }
+
+.lineups-section {
+  margin-top: 30px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.lineups-container {
+  display: flex;
+  gap: 40px;
+  justify-content: space-between;
+}
+
+.team-lineup {
+  flex: 1;
+}
+
+.lineup-team-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #f0f3f5;
+  padding-bottom: 10px;
+}
+
+.lineup-team-header img { width: 40px; }
+
+.player-list {
+  list-style: none;
+  padding: 0;
+}
+
+.player-list li {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f9f9f9;
+  font-size: 14px;
+}
+
+.player-number {
+  width: 25px;
+  font-weight: bold;
+  color: #3498db;
+}
+
+.player-name { flex: 1; }
+
+.player-pos {
+  font-size: 11px;
+  color: #aaa;
+  text-transform: uppercase;
+}
+
+.subs li { color: #666; font-size: 13px; }
+
+@media (max-width: 768px) {
+  .lineups-container { flex-direction: column; }
+}
