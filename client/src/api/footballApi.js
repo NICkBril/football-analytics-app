@@ -240,3 +240,40 @@ export async function getMatchLineups(fixtureId) {
     return [];
   }
 }
+
+export async function getPlayerDetails(playerId) {
+  const cacheKey = `player_${playerId}`;
+  const cached = getCachedData(cacheKey);
+  if (cached) return cached;
+
+  try {
+    const response = await fetch(
+      `${BASE_URL}/players?id=${playerId}&season=2024`, 
+      options
+    );
+
+    const data = await response.json();
+
+    if (!data.response || data.response.length === 0) {
+      console.warn(`No data for season 2024, trying 2025...`);
+      const retryResponse = await fetch(
+        `${BASE_URL}/players?id=${playerId}&season=2025`,
+        options
+      );
+      const retryData = await retryResponse.json();
+      
+      if (!retryData.response || retryData.response.length === 0) {
+        return null;
+      }
+      
+      setCachedData(cacheKey, retryData.response[0]);
+      return retryData.response[0];
+    }
+
+    setCachedData(cacheKey, data.response[0]);
+    return data.response[0];
+  } catch (error) {
+    console.error("Error loading player details:", error);
+    return null;
+  }
+}
