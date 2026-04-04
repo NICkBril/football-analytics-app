@@ -6,6 +6,7 @@ import MatchesPage from "./pages/MatchesPage";
 import TablePage from "./pages/TablePage";
 import TeamDetailsPage from "./pages/TeamDetailsPage";
 import MatchDetailsPage from "./pages/MatchDetailsPage";
+import PlayerDetailsPage from "./pages/PlayerDetailsPage";
 import { FavoritesContext, FavoritesProvider } from "./context/FavoritesContext";
 import "./styles/index.css";
 import "./styles/layout.css";
@@ -43,6 +44,7 @@ function App() {
             <Route path="/table" element={<TablePage />} />
             <Route path="/team/:id" element={<TeamDetailsPage />} />
             <Route path="/match/:id" element={<MatchDetailsPage />} />
+            <Route path="/player/:id" element={<PlayerDetailsPage />} />.
           </Routes>
         </div>
 
