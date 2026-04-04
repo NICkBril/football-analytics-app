@@ -380,7 +380,12 @@ function TeamDetailsPage() {
                         
                         {players.map((player) => (
                           
-                          <div key={player.id} className="player-card" style={{ border: "1px solid #ddd", borderRadius: "8px", padding: "10px", textAlign: "center" }}>
+                          <div 
+                            key={player.id} 
+                            className="player-card clickable-player" 
+                            style={{ border: "1px solid #ddd", borderRadius: "8px", padding: "10px", textAlign: "center", cursor: "pointer" }}
+                            onClick={() => navigate(`/player/${player.id}`)}
+                          >
                             
                             <img 
                               src={player.photo} 
