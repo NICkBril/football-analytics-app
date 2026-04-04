@@ -166,10 +166,22 @@ function MatchDetailsPage() {
                   </div>
 
                   <div className="event-content">
-                    <div className="event-player">{event.player.name}</div>
+                    <div 
+                      className="event-player clickable-player"
+                      onClick={() => navigate(`/player/${event.player.id}`)}
+                    >
+                      {event.player.name}
+                    </div>
                     <div className="event-detail">
                       {event.detail} 
-                      {event.assist.name && <span className="assist-name"> (Assist: {event.assist.name})</span>}
+                      {event.assist.name && (
+                        <span 
+                          className="assist-name clickable-player"
+                          onClick={() => navigate(`/player/${event.assist.id}`)}
+                        > 
+                          (Assist: {event.assist.name})
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -205,7 +217,11 @@ function MatchDetailsPage() {
 
               <ul className="player-list">
                 {lineup.startXI.map((p) => (
-                  <li key={p.player.id}>
+                  <li 
+                    key={p.player.id} 
+                    className="clickable-player-row"
+                    onClick={() => navigate(`/player/${p.player.id}`)}
+                  >
                     <span className="player-number">{p.player.number}</span>
                     <span className="player-name">{p.player.name}</span>
                     <span className="player-pos">{p.player.pos}</span>
@@ -217,7 +233,11 @@ function MatchDetailsPage() {
 
               <ul className="player-list subs">
                 {lineup.substitutes.map((p) => (
-                  <li key={p.player.id}>
+                  <li 
+                    key={p.player.id}
+                    className="clickable-player-row"
+                    onClick={() => navigate(`/player/${p.player.id}`)}
+                  >
                     <span className="player-number">{p.player.number}</span>
                     <span className="player-name">{p.player.name}</span>
                   </li>
