@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getMatchStatistics, getMatchEvents, getMatches, getMatchLineups } from "../api/footballApi";
+import Skeleton from "../components/Skeleton";
 import "../styles/MatchDetails.css";
 
 function MatchDetailsPage() {
@@ -39,7 +40,23 @@ function MatchDetailsPage() {
   }, [id]);
 
   if (loading) {
-    return <p className="page-container">Loading match details...</p>;
+    return (
+      <div className="page-container">
+        <Skeleton type="title" />
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginBottom: '30px' }}>
+          <Skeleton type="avatar" />
+          <div style={{ width: '100px' }}><Skeleton type="title" /></div>
+          <Skeleton type="avatar" />
+        </div>
+        <div className="match-details-grid">
+          <Skeleton type="card" />
+          <Skeleton type="card" />
+        </div>
+        <div style={{ marginTop: '20px' }}>
+          <Skeleton type="card" />
+        </div>
+      </div>
+    );
   }
 
   if (!stats || stats.length === 0 || !matchInfo) {
