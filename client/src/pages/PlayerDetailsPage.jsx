@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getPlayerDetails } from "../api/footballApi";
+import Skeleton from "../components/Skeleton";
 import "../styles/PlayerDetails.css";
 
 function PlayerDetailsPage() {
@@ -24,7 +25,24 @@ function PlayerDetailsPage() {
 
   }, [id]);
 
-  if (loading) return <p className="page-container">Loading player info...</p>;
+  if (loading) {
+    return (
+      <div className="page-container">
+        <div className="player-profile-header" style={{ display: 'flex', gap: '30px', alignItems: 'center' }}>
+          <Skeleton type="avatar" />
+          <div style={{ flex: 1 }}>
+            <Skeleton type="title" />
+            <Skeleton type="text" />
+          </div>
+        </div>
+        <div className="player-details-grid">
+          <Skeleton type="card" />
+          <Skeleton type="card" />
+        </div>
+      </div>
+    );
+  }
+
   if (!data) return <p className="page-container">Player not found.</p>;
 
   const { player, statistics } = data;

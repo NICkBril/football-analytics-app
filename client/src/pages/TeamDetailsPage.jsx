@@ -2,6 +2,7 @@ import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { FavoritesContext } from "../context/FavoritesContext";
 import { getTeams, getMatches, getStandings, getSquad } from "../api/footballApi";
+import Skeleton from "../components/Skeleton";
 import "../styles/TeamDetails.css";
 
 function TeamDetailsPage() {
@@ -16,6 +17,7 @@ function TeamDetailsPage() {
   const [matches, setMatches] = useState([]);
   const [standings, setStandings] = useState([]);
   const [squad, setSquad] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [loadingSquad, setLoadingSquad] = useState(false);
 
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
@@ -29,6 +31,7 @@ function TeamDetailsPage() {
   useEffect(() => {
 
     async function loadData() {
+      setLoading(true);
 
       const teamsData = await getTeams();
 
@@ -44,6 +47,7 @@ function TeamDetailsPage() {
       const standingsData = await getStandings();
       setStandings(standingsData);
 
+      setLoading(false);
     }
 
     loadData();
@@ -67,8 +71,24 @@ function TeamDetailsPage() {
 
   }, [id, activeTab]);
 
+  if (loading) {
+    return (
+      <div className="page-container">
+        <div style={{ display: 'flex', gap: '20px', marginBottom: '30px' }}>
+          <Skeleton type="avatar" />
+          <div style={{ flex: 1 }}>
+            <Skeleton type="title" />
+            <Skeleton type="text" />
+          </div>
+        </div>
+        <Skeleton type="card" />
+        <Skeleton type="card" />
+      </div>
+    );
+  }
+
   if (!team) {
-    return <p className="page-container">Loading team data...</p>;
+    return <p className="page-container">Team not found.</p>;
   }
 
   function getMatchResult(match) {
@@ -362,7 +382,9 @@ function TeamDetailsPage() {
             <h2>Squad</h2>
             
             {loadingSquad ? (
-              <p>Loading squad players...</p>
+              <div className="squad-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: "20px" }}>
+                {[...Array(8)].map((_, i) => <Skeleton key={i} type="card" />)}
+              </div>
             ) : (
               <div className="squad-sections">
                 
