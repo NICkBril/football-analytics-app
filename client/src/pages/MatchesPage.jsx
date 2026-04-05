@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getMatches } from "../api/footballApi";
+import Skeleton from "../components/Skeleton";
 import "../styles/Matches.css";
 
 function MatchesPage() {
@@ -23,7 +24,17 @@ function MatchesPage() {
   }, []);
 
   if (loading) {
-    return <p className="page-container">Loading matches...</p>;
+    return (
+      <div className="page-container">
+        <Skeleton type="title" />
+        <div style={{ marginBottom: "20px" }}>
+           <Skeleton type="text" /> {/* Імітація інпуту пошуку */}
+        </div>
+        {[...Array(6)].map((_, i) => (
+          <Skeleton key={i} type="card" />
+        ))}
+      </div>
+    );
   }
 
   const filteredMatches = matches.filter(
