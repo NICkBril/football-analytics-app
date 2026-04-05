@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getStandings } from "../api/footballApi";
+import Skeleton from "../components/Skeleton";
 import "../styles/Table.css";
 
 function TablePage() {
@@ -56,7 +57,16 @@ function TablePage() {
   };
 
   if (loading) {
-    return <p className="page-container">Loading table...</p>;
+    return (
+      <div className="page-container">
+        <Skeleton type="title" />
+        <div style={{ marginTop: '20px' }}>
+          {[...Array(10)].map((_, i) => (
+            <Skeleton key={i} type="text" /> 
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (

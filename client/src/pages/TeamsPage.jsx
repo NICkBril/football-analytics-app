@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { FavoritesContext } from "../context/FavoritesContext";
 import { useNavigate } from "react-router-dom";
 import { getTeams } from "../api/footballApi";
+import Skeleton from "../components/Skeleton";
 import "../styles/Teams.css";
 
 function TeamsPage() {
@@ -29,7 +30,17 @@ function TeamsPage() {
     .sort((a, b) => a.team.name.localeCompare(b.team.name));
 
   if (loading) {
-    return <p className="page-container">Loading teams...</p>;
+    return (
+      <div className="page-container">
+        <Skeleton type="title" />
+        <div style={{ marginBottom: '20px' }}>
+          <Skeleton type="text" />
+        </div>
+        {[...Array(8)].map((_, i) => (
+          <Skeleton key={i} type="card" />
+        ))}
+      </div>
+    );
   }
 
   return (
