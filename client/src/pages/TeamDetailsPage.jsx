@@ -462,6 +462,12 @@ function TeamDetailsPage() {
                   );
                 })}
 
+                {filteredSquad.length === 0 && (
+                  <p style={{ textAlign: "center", marginTop: "20px", color: "#777" }}>
+                    No players found matching your criteria.
+                  </p>
+                )}
+
               </div>
             )}
 
