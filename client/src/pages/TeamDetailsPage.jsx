@@ -389,20 +389,22 @@ function TeamDetailsPage() {
           <div>
             <h2>Squad</h2>
 
-            <div className="squad-filters" style={{ marginBottom: "20px", display: "flex", gap: "15px", flexWrap: "wrap" }}>
+            <div className="squad-filters-container">
               
-              <input 
-                type="text" 
-                placeholder="Search player..." 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ flex: "1", minWidth: "200px" }}
-              />
+              <div className="search-wrapper">
+                <input 
+                  type="text" 
+                  className="search-input"
+                  placeholder="Search player by name..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
 
               <select 
+                className="position-select"
                 value={selectedPosition} 
                 onChange={(e) => setSelectedPosition(e.target.value)}
-                style={{ padding: "8px", borderRadius: "5px", border: "1px solid #ddd" }}
               >
                 <option value="All">All Positions</option>
                 <option value="Goalkeeper">Goalkeepers</option>
@@ -414,7 +416,7 @@ function TeamDetailsPage() {
             </div>
             
             {loadingSquad ? (
-              <div className="squad-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: "20px" }}>
+              <div className="squad-grid">
                 {[...Array(8)].map((_, i) => <Skeleton key={i} type="card" />)}
               </div>
             ) : (
@@ -430,26 +432,26 @@ function TeamDetailsPage() {
                       
                       <h3 className="position-title">{pos.title}</h3>
                       
-                      <div className="squad-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: "20px", marginBottom: "30px" }}>
+                      <div className="squad-grid">
                         
                         {players.map((player) => (
                           
                           <div 
                             key={player.id} 
                             className="player-card clickable-player" 
-                            style={{ border: "1px solid #ddd", borderRadius: "8px", padding: "10px", textAlign: "center", cursor: "pointer" }}
                             onClick={() => navigate(`/player/${player.id}`)}
                           >
                             
                             <img 
                               src={player.photo} 
                               alt={player.name} 
-                              style={{ width: "100%", borderRadius: "8px" }}
+                              className="player-photo"
                             />
                             
-                            <div style={{ marginTop: "10px" }}>
-                              <span style={{ fontSize: "12px", color: "#3498db", fontWeight: "bold" }}>#{player.number || "N/A"}</span>
-                              <p style={{ margin: "5px 0", fontWeight: "600" }}>{player.name}</p>
+                            <div className="player-info">
+                              <span className="player-number">#{player.number || "N/A"}</span>
+                              <p className="player-name">{player.name}</p>
+                              <p className="player-position">{player.position}</p>
                             </div>
 
                           </div>
@@ -463,9 +465,15 @@ function TeamDetailsPage() {
                 })}
 
                 {filteredSquad.length === 0 && (
-                  <p style={{ textAlign: "center", marginTop: "20px", color: "#777" }}>
-                    No players found matching your criteria.
-                  </p>
+                  <div className="no-results">
+                    <p> No players found matching "<strong>{searchQuery}</strong>"</p>
+                    <button 
+                      className="clear-btn"
+                      onClick={() => { setSearchQuery(""); setSelectedPosition("All"); }}
+                    >
+                      Clear filters
+                    </button>
+                  </div>
                 )}
 
               </div>
