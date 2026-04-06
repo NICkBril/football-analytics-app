@@ -19,6 +19,8 @@ function TeamDetailsPage() {
   const [squad, setSquad] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingSquad, setLoadingSquad] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedPosition, setSelectedPosition] = useState("All");
 
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
@@ -90,6 +92,12 @@ function TeamDetailsPage() {
   if (!team) {
     return <p className="page-container">Team not found.</p>;
   }
+
+  const filteredSquad = squad.filter((player) => {
+    const matchesSearch = player.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesPosition = selectedPosition === "All" || player.position === selectedPosition;
+    return matchesSearch && matchesPosition;
+  });
 
   function getMatchResult(match) {
 
@@ -389,7 +397,7 @@ function TeamDetailsPage() {
               <div className="squad-sections">
                 
                 {positions.map((pos) => {
-                  const players = squad.filter(p => p.position === pos.key);
+                  const players = filteredSquad.filter(p => p.position === pos.key);
                   
                   if (players.length === 0) return null;
 
