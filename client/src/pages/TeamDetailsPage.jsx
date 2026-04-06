@@ -388,6 +388,30 @@ function TeamDetailsPage() {
 
           <div>
             <h2>Squad</h2>
+
+            <div className="squad-filters" style={{ marginBottom: "20px", display: "flex", gap: "15px", flexWrap: "wrap" }}>
+              
+              <input 
+                type="text" 
+                placeholder="Search player..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{ flex: "1", minWidth: "200px" }}
+              />
+
+              <select 
+                value={selectedPosition} 
+                onChange={(e) => setSelectedPosition(e.target.value)}
+                style={{ padding: "8px", borderRadius: "5px", border: "1px solid #ddd" }}
+              >
+                <option value="All">All Positions</option>
+                <option value="Goalkeeper">Goalkeepers</option>
+                <option value="Defender">Defenders</option>
+                <option value="Midfielder">Midfielders</option>
+                <option value="Attacker">Attackers</option>
+              </select>
+
+            </div>
             
             {loadingSquad ? (
               <div className="squad-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))", gap: "20px" }}>
