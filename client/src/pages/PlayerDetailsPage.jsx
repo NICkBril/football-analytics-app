@@ -11,6 +11,7 @@ function PlayerDetailsPage() {
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedLeagueIndex, setSelectedLeagueIndex] = useState(0);
 
   useEffect(() => {
 
@@ -46,7 +47,27 @@ function PlayerDetailsPage() {
   if (!data) return <p className="page-container">Player not found.</p>;
 
   const { player, statistics } = data;
-  const stats = statistics[0]; 
+  
+  const stats = statistics[selectedLeagueIndex]; 
+
+  function getCountryCode(country) {
+
+    const map = {
+      England: "gb",
+      Spain: "es",
+      Germany: "de",
+      Italy: "it",
+      France: "fr",
+      Ukraine: "ua",
+      Brazil: "br",
+      Argentina: "ar",
+      Portugal: "pt",
+      Poland: "pl",
+      Netherlands: "nl"
+    };
+
+    return map[country] || "";
+  }
 
   return (
 
@@ -81,7 +102,16 @@ function PlayerDetailsPage() {
           
           <div className="bio-item">
             <span className="bio-label">Nationality</span>
-            <span className="bio-value">{player.nationality}</span>
+            <span className="bio-value" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {getCountryCode(player.nationality) && (
+                <img 
+                  src={`https://flagcdn.com/w20/${getCountryCode(player.nationality)}.png`} 
+                  alt="flag" 
+                  style={{ borderRadius: '2px' }}
+                />
+              )}
+              {player.nationality}
+            </span>
           </div>
 
           <div className="bio-item">
@@ -112,44 +142,72 @@ function PlayerDetailsPage() {
         </div>
 
         <div className="player-stats-card">
-          <h3>Season Stats ({stats.league.name})</h3>
           
-          <div className="player-stats-summary">
+          <div className="stats-header-row">
+            <h3>Season Stats</h3>
+            <select 
+              className="league-select"
+              value={selectedLeagueIndex}
+              onChange={(e) => setSelectedLeagueIndex(parseInt(e.target.value))}
+            >
+              {statistics.map((s, index) => (
+                <option key={index} value={index}>
+                  {s.league.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="player-stats-horizontal">
             
-            <div className="stat-pill">
-              <span className="stat-pill-label">Appearences</span>
-              <span className="stat-pill-value">{stats.games.appearences || 0}</span>
+            <div className="stat-block">
+              <span className="stat-number">{stats.goals.total || 0}</span>
+              <span className="stat-label">Goals</span>
             </div>
 
-            <div className="stat-pill">
-              <span className="stat-pill-label">Goals</span>
-              <span className="stat-pill-value">{stats.goals.total || 0}</span>
+            <div className="stat-block">
+              <span className="stat-number">{stats.goals.assists || 0}</span>
+              <span className="stat-label">Assists</span>
             </div>
 
-            <div className="stat-pill">
-              <span className="stat-pill-label">Assists</span>
-              <span className="stat-pill-value">{stats.goals.assists || 0}</span>
-            </div>
-
-            <div className="stat-pill">
-              <span className="stat-pill-label">Rating</span>
-              <span className="stat-pill-value">{stats.games.rating ? parseFloat(stats.games.rating).toFixed(1) : "N/A"}</span>
+            <div className="stat-block">
+              <div className="rating-badge" style={{ 
+                backgroundColor: stats.games.rating >= 7.5 ? '#2ecc71' : 
+                                stats.games.rating >= 6.5 ? '#f1c40f' : '#e67e22' 
+              }}>
+                {stats.games.rating ? parseFloat(stats.games.rating).toFixed(2) : "N/A"}
+              </div>
+              <span className="stat-label">Rating</span>
             </div>
 
           </div>
 
-          <div className="more-stats">
-            <div className="more-stat-row">
-              <span>Shots on target</span>
-              <span>{stats.shots.on || 0}</span>
+          <div className="secondary-stats-grid">
+            
+            <div className="stat-block-mini">
+              <span className="stat-number-small">{stats.games.appearences || 0}</span>
+              <span className="stat-label">Matches</span>
             </div>
-            <div className="more-stat-row">
-              <span>Yellow Cards</span>
-              <span>{stats.cards.yellow || 0}</span>
+
+            <div className="stat-block-mini">
+              <span className="stat-number-small">{stats.games.lineups || 0}</span>
+              <span className="stat-label">Started</span>
             </div>
-            <div className="more-stat-row">
-              <span>Red Cards</span>
-              <span>{stats.cards.red || 0}</span>
+
+            <div className="stat-block-mini">
+              <span className="stat-number-small">{stats.games.minutes || 0}</span>
+              <span className="stat-label">Minutes played</span>
+            </div>
+
+          </div>
+
+          <div className="more-stats-footer">
+            <div className="footer-stat">
+              <span>Shots on target: <strong>{stats.shots.on || 0}</strong></span>
+            </div>
+            <div className="footer-stat">
+              <span className="card-yellow">🟨 {stats.cards.yellow || 0}</span>
+              <span className="card-red">🟥 {stats.cards.red || 0}</span>
             </div>
           </div>
 
