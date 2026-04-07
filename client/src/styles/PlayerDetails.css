@@ -111,3 +111,110 @@
     grid-template-columns: 1fr;
   }
 }
+
+.stats-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.league-select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  background: #f9f9f9;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+}
+
+.player-stats-horizontal {
+  display: flex;
+  justify-content: space-around;
+  padding: 25px 0;
+  border-bottom: 1px solid #f0f3f5;
+}
+
+.stat-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.stat-number {
+  font-size: 26px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 8px;
+}
+
+.rating-badge {
+  color: white;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #95a5a6;
+  font-weight: 500;
+}
+
+.secondary-stats-row {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 25px;
+}
+
+.stat-block-mini {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-number-small {
+  font-size: 22px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 4px;
+}
+
+.more-stats-footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 15px;
+  border-top: 1px solid #f0f3f5;
+  font-size: 14px;
+}
+
+.footer-stat {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.card-yellow { color: #f1c40f; font-weight: bold; }
+.card-red { color: #e74c3c; font-weight: bold; }
+
+.back-button {
+  margin-bottom: 20px;
+  background: none;
+  border: none;
+  color: #000000;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.secondary-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px 0;
+  margin-bottom: 10px;
+}
