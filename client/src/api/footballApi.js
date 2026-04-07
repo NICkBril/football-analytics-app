@@ -277,3 +277,11 @@ export async function getPlayerDetails(playerId) {
     return null;
   }
 }
+
+export async function getPlayerTrophies(playerId) {
+  const response = await fetch(`${BASE_URL}/trophies?player=${playerId}`, {
+    headers: { "x-apisports-key": API_KEY }
+  });
+  const data = await response.json();
+  return data.response || [];
+}
