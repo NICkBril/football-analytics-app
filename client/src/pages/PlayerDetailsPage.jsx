@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getPlayerDetails } from "../api/footballApi";
+import { getPlayerDetails, getPlayerTrophies } from "../api/footballApi";
 import Skeleton from "../components/Skeleton";
 import "../styles/PlayerDetails.css";
 
@@ -10,19 +10,26 @@ function PlayerDetailsPage() {
   const navigate = useNavigate();
 
   const [data, setData] = useState(null);
+  const [trophies, setTrophies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedLeagueIndex, setSelectedLeagueIndex] = useState(0);
 
   useEffect(() => {
 
-    async function loadPlayer() {
+    async function loadPlayerData() {
       setLoading(true);
-      const playerInfo = await getPlayerDetails(id);
+
+      const [playerInfo, trophiesData] = await Promise.all([
+        getPlayerDetails(id),
+        getPlayerTrophies(id)
+      ]);
+
       setData(playerInfo);
+      setTrophies(trophiesData);
       setLoading(false);
     }
 
-    loadPlayer();
+    loadPlayerData();
 
   }, [id]);
 
@@ -68,6 +75,20 @@ function PlayerDetailsPage() {
 
     return map[country] || "";
   }
+
+  const trophiesSummary = trophies
+    .filter(t => t.place === "Winner" || t.place === "1st Place")
+    .reduce((acc, t) => {
+      const name = t.league;
+      if (!acc[name]) {
+        acc[name] = { count: 0, seasons: [] };
+      }
+      acc[name].count += 1;
+      acc[name].seasons.push(t.season);
+      return acc;
+    }, {});
+
+  const trophyNames = Object.keys(trophiesSummary);
 
   return (
 
@@ -214,6 +235,26 @@ function PlayerDetailsPage() {
         </div>
 
       </div>
+
+      {trophyNames.length > 0 && (
+        <div className="trophies-compact-card">
+          <h3>Trophies</h3>
+          <div className="trophy-rows-container">
+            {trophyNames.map((name) => (
+              <div key={name} className="trophy-row-compact">
+                <div className="trophy-count-badge">{trophiesSummary[name].count}</div>
+                <div className="trophy-main-info">
+                  <span className="trophy-icon-mini">🏆</span>
+                  <span className="trophy-league-name">{name}</span>
+                  <span className="trophy-seasons-list">
+                    ({trophiesSummary[name].seasons.join(' · ')})
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
     </div>
 
