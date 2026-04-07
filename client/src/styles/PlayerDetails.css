@@ -218,3 +218,61 @@
   padding: 20px 0;
   margin-bottom: 10px;
 }
+
+.trophies-compact-card {
+  margin-top: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.trophy-rows-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.trophy-row-compact {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f3f5;
+}
+
+.trophy-row-compact:last-child {
+  border-bottom: none;
+}
+
+.trophy-count-badge {
+  width: 30px;
+  font-weight: 800;
+  font-size: 18px;
+  color: #2c3e50;
+  text-align: center;
+}
+
+.trophy-main-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.trophy-icon-mini {
+  font-size: 16px;
+}
+
+.trophy-league-name {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.trophy-seasons-list {
+  color: #95a5a6;
+  font-size: 14px;
+  margin-left: 5px;
+}
+
+.bio-item {
+  padding: 8px 0;
+}
