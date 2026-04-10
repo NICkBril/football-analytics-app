@@ -54,7 +54,9 @@ export async function getTeams() {
     const data = await response.json();
     const teams = data.response;
 
-    setCachedData("teams", teams);
+    if (teams && teams.length > 0) {
+      setCachedData("teams", teams);
+    }
 
     return teams;
 
@@ -85,7 +87,9 @@ export async function getMatches() {
     const data = await response.json();
     const matches = data.response;
 
-    setCachedData("matches", matches);
+    if (matches && matches.length > 0) {
+      setCachedData("matches", matches);
+    }
 
     return matches;
 
@@ -114,11 +118,13 @@ export async function getStandings() {
     }
 
     const data = await response.json();
-    const standings = data.response[0].league.standings[0];
+    const standings = data.response[0]?.league?.standings[0];
 
-    setCachedData("standings", standings);
+    if (standings && standings.length > 0) {
+      setCachedData("standings", standings);
+    }
 
-    return standings;
+    return standings || [];
 
   } catch (error) {
 
@@ -148,7 +154,9 @@ export async function getSquad(teamId) {
     const data = await response.json();
     const squad = data.response[0]?.players || [];
 
-    setCachedData(cacheKey, squad);
+    if (squad.length > 0) {
+      setCachedData(cacheKey, squad);
+    }
 
     return squad;
 
@@ -179,7 +187,9 @@ export async function getMatchStatistics(fixtureId) {
     const data = await response.json();
     const stats = data.response;
 
-    setCachedData(cacheKey, stats);
+    if (stats && stats.length > 0) {
+      setCachedData(cacheKey, stats);
+    }
 
     return stats;
 
@@ -209,7 +219,10 @@ export async function getMatchEvents(fixtureId) {
     const data = await response.json();
     const events = data.response;
 
-    setCachedData(cacheKey, events);
+    if (events && events.length > 0) {
+      setCachedData(cacheKey, events);
+    }
+
     return events;
   } catch (error) {
     console.error("Error loading events:", error);
@@ -233,7 +246,10 @@ export async function getMatchLineups(fixtureId) {
     const data = await response.json();
     const lineups = data.response;
 
-    setCachedData(cacheKey, lineups);
+    if (lineups && lineups.length > 0) {
+      setCachedData(cacheKey, lineups);
+    }
+
     return lineups;
   } catch (error) {
     console.error("Error loading lineups:", error);
