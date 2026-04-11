@@ -128,4 +128,12 @@
   .form-col-data {
     display: none;
   }
+
+}
+.league-table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #f8f9fa;
+  z-index: 10;
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1); 
 }
