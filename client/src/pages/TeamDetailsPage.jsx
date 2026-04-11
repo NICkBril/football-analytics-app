@@ -1,6 +1,7 @@
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { FavoritesContext } from "../context/FavoritesContext";
+import { motion, AnimatePresence } from "framer-motion"; // Додав AnimatePresence для вкладок
 import { getTeams, getMatches, getStandings, getSquad } from "../api/footballApi";
 import Skeleton from "../components/Skeleton";
 import "../styles/TeamDetails.css";
@@ -144,7 +145,12 @@ function TeamDetailsPage() {
 
   return (
 
-    <div className="page-container">
+    <motion.div 
+      className="page-container"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
 
       <div className="team-header">
 
@@ -217,275 +223,287 @@ function TeamDetailsPage() {
 
       <div className="team-tab-content">
 
-        {activeTab === "overview" && (
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, x: 5 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -5 }}
+            transition={{ duration: 0.2 }}
+          >
 
-          <div>
+            {activeTab === "overview" && (
 
-            <h2>Overview</h2>
+              <div>
 
-            <p><strong>Country:</strong> {team.country}</p>
-            <p><strong>Founded:</strong> {team.founded}</p>
-            <p><strong>Code:</strong> {team.code}</p>
-                        
-            <h3>Team form</h3>
-            <div className="team-form">
-              {lastMatches.map((match) => {
-                const result = getMatchResult(match);
-                return (
-                  <span
-                    key={match.fixture.id}
-                    className={`form-badge ${result} clickable-match`}
-                    onClick={() => navigate(`/match/${match.fixture.id}`)}
-                    title="View match details"
-                  >
-                    {result}
-                  </span>
-                );
-              })}
-            </div>
+                <h2>Overview</h2>
 
-            <h3>Last lineup</h3>
-            <p>...</p>
-
-          </div>
-
-        )}
-
-        {activeTab === "matches" && (
-
-          <div>
-            <h2>Matches</h2>
-
-            {teamMatches.map((match) => (
-
-              <div 
-                key={match.fixture.id} 
-                className="match-card clickable-match"
-                onClick={() => navigate(`/match/${match.fixture.id}`)}
-              >
-
-                <div className="match-header">
-                  {new Date(match.fixture.date).toLocaleDateString("en-US", {
-                    weekday: "short",
-                    month: "short",
-                    day: "numeric",
+                <p><strong>Country:</strong> {team.country}</p>
+                <p><strong>Founded:</strong> {team.founded}</p>
+                <p><strong>Code:</strong> {team.code}</p>
+                            
+                <h3>Team form</h3>
+                <div className="team-form">
+                  {lastMatches.map((match) => {
+                    const result = getMatchResult(match);
+                    return (
+                      <span
+                        key={match.fixture.id}
+                        className={`form-badge ${result} clickable-match`}
+                        onClick={() => navigate(`/match/${match.fixture.id}`)}
+                        title="View match details"
+                      >
+                        {result}
+                      </span>
+                    );
                   })}
                 </div>
 
-                <div className="match-row">
-
-                  <div className="team-home">
-
-                    <span
-                      className="clickable-team"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/team/${match.teams.home.id}`);
-                      }}
-                    >
-                      {match.teams.home.name}
-                    </span>
-                    <img src={match.teams.home.logo} className="match-logo" alt="logo" />
-                  </div>
-
-                  <div className="match-score">
-                    {match.goals.home} - {match.goals.away}
-                  </div>
-
-                  <div className="team-away">
-                    <img src={match.teams.away.logo} className="match-logo" alt="logo" />
-                    <span
-                      className="clickable-team"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/team/${match.teams.away.id}`);
-                      }}
-                    >
-                      {match.teams.away.name}
-                    </span>
-
-                  </div>
-
-                </div>
+                <h3>Last lineup</h3>
+                <p>...</p>
 
               </div>
 
-            ))}
+            )}
 
-          </div>
+            {activeTab === "matches" && (
 
-        )}
+              <div>
+                <h2>Matches</h2>
 
-        {activeTab === "standings" && (
+                {teamMatches.map((match) => (
 
-          <div>
-            <h2>Standings</h2>
-
-            <table className="league-table">
-
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>Team</th>
-                  <th>P</th>
-                  <th>W</th>
-                  <th>D</th>
-                  <th>L</th>
-                  <th>GD</th>
-                  <th>Pts</th>
-                </tr>
-              </thead>
-
-              <tbody>
-
-                {standings.map((row) => (
-
-                  <tr
-                    key={row.team.id}
-                    className={
-                      row.team.id.toString() === id
-                        ? "highlight-team"
-                        : ""
-                    }
+                  <div 
+                    key={match.fixture.id} 
+                    className="match-card clickable-match"
+                    onClick={() => navigate(`/match/${match.fixture.id}`)}
                   >
 
-                    <td>{row.rank}</td>
+                    <div className="match-header">
+                      {new Date(match.fixture.date).toLocaleDateString("en-US", {
+                        weekday: "short",
+                        month: "short",
+                        day: "numeric",
+                      })}
+                    </div>
 
-                    <td
-                      className="table-team clickable-team"
-                      onClick={() => navigate(`/team/${row.team.id}`)}
-                    >
+                    <div className="match-row">
 
-                      <img
-                        src={row.team.logo}
-                        className="table-logo"
-                        alt="logo"
-                      />
+                      <div className="team-home">
 
-                      {row.team.name}
-                    </td>
+                        <span
+                          className="clickable-team"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/team/${match.teams.home.id}`);
+                          }}
+                        >
+                          {match.teams.home.name}
+                        </span>
+                        <img src={match.teams.home.logo} className="match-logo" alt="logo" />
+                      </div>
 
-                    <td>{row.all.played}</td>
-                    <td>{row.all.win}</td>
-                    <td>{row.all.draw}</td>
-                    <td>{row.all.lose}</td>
-                    <td>{row.goalsDiff}</td>
-                    <td>{row.points}</td>
+                      <div className="match-score">
+                        {match.goals.home} - {match.goals.away}
+                      </div>
 
-                  </tr>
-
-                ))}
-
-              </tbody>
-
-            </table>
-
-          </div>
-
-        )}
-
-        {activeTab === "squad" && (
-
-          <div>
-            <h2>Squad</h2>
-
-            <div className="squad-filters-container">
-              
-              <div className="search-wrapper">
-                <input 
-                  type="text" 
-                  className="search-input"
-                  placeholder="Search player by name..." 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-
-              <select 
-                className="position-select"
-                value={selectedPosition} 
-                onChange={(e) => setSelectedPosition(e.target.value)}
-              >
-                <option value="All">All Positions</option>
-                <option value="Goalkeeper">Goalkeepers</option>
-                <option value="Defender">Defenders</option>
-                <option value="Midfielder">Midfielders</option>
-                <option value="Attacker">Attackers</option>
-              </select>
-
-            </div>
-            
-            {loadingSquad ? (
-              <div className="squad-grid">
-                {[...Array(8)].map((_, i) => <Skeleton key={i} type="card" />)}
-              </div>
-            ) : (
-              <div className="squad-sections">
-                
-                {positions.map((pos) => {
-                  const players = filteredSquad.filter(p => p.position === pos.key);
-                  
-                  if (players.length === 0) return null;
-
-                  return (
-                    <div key={pos.key} className="squad-category">
-                      
-                      <h3 className="position-title">{pos.title}</h3>
-                      
-                      <div className="squad-grid">
-                        
-                        {players.map((player) => (
-                          
-                          <div 
-                            key={player.id} 
-                            className="player-card clickable-player" 
-                            onClick={() => navigate(`/player/${player.id}`)}
-                          >
-                            
-                            <img 
-                              src={player.photo} 
-                              alt={player.name} 
-                              className="player-photo"
-                            />
-                            
-                            <div className="player-info">
-                              <span className="player-number">#{player.number || "N/A"}</span>
-                              <p className="player-name">{player.name}</p>
-                              <p className="player-position">{player.position}</p>
-                            </div>
-
-                          </div>
-
-                        ))}
+                      <div className="team-away">
+                        <img src={match.teams.away.logo} className="match-logo" alt="logo" />
+                        <span
+                          className="clickable-team"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/team/${match.teams.away.id}`);
+                          }}
+                        >
+                          {match.teams.away.name}
+                        </span>
 
                       </div>
 
                     </div>
-                  );
-                })}
 
-                {filteredSquad.length === 0 && (
-                  <div className="no-results">
-                    <p> No players found matching "<strong>{searchQuery}</strong>"</p>
-                    <button 
-                      className="clear-btn"
-                      onClick={() => { setSearchQuery(""); setSelectedPosition("All"); }}
-                    >
-                      Clear filters
-                    </button>
+                  </div>
+
+                ))}
+
+              </div>
+
+            )}
+
+            {activeTab === "standings" && (
+
+              <div>
+                <h2>Standings</h2>
+
+                <table className="league-table">
+
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Team</th>
+                      <th>P</th>
+                      <th>W</th>
+                      <th>D</th>
+                      <th>L</th>
+                      <th>GD</th>
+                      <th>Pts</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+
+                    {standings.map((row) => (
+
+                      <tr
+                        key={row.team.id}
+                        className={
+                          row.team.id.toString() === id
+                            ? "highlight-team"
+                            : ""
+                        }
+                      >
+
+                        <td>{row.rank}</td>
+
+                        <td
+                          className="table-team clickable-team"
+                          onClick={() => navigate(`/team/${row.team.id}`)}
+                        >
+
+                          <img
+                            src={row.team.logo}
+                            className="table-logo"
+                            alt="logo"
+                          />
+
+                          {row.team.name}
+                        </td>
+
+                        <td>{row.all.played}</td>
+                        <td>{row.all.win}</td>
+                        <td>{row.all.draw}</td>
+                        <td>{row.all.lose}</td>
+                        <td>{row.goalsDiff}</td>
+                        <td>{row.points}</td>
+
+                      </tr>
+
+                    ))}
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+            )}
+
+            {activeTab === "squad" && (
+
+              <div>
+                <h2>Squad</h2>
+
+                <div className="squad-filters-container">
+                  
+                  <div className="search-wrapper">
+                    <input 
+                      type="text" 
+                      className="search-input"
+                      placeholder="Search player by name..." 
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+
+                  <select 
+                    className="position-select"
+                    value={selectedPosition} 
+                    onChange={(e) => setSelectedPosition(e.target.value)}
+                  >
+                    <option value="All">All Positions</option>
+                    <option value="Goalkeeper">Goalkeepers</option>
+                    <option value="Defender">Defenders</option>
+                    <option value="Midfielder">Midfielders</option>
+                    <option value="Attacker">Attackers</option>
+                  </select>
+
+                </div>
+                
+                {loadingSquad ? (
+                  <div className="squad-grid">
+                    {[...Array(8)].map((_, i) => <Skeleton key={i} type="card" />)}
+                  </div>
+                ) : (
+                  <div className="squad-sections">
+                    
+                    {positions.map((pos) => {
+                      const players = filteredSquad.filter(p => p.position === pos.key);
+                      
+                      if (players.length === 0) return null;
+
+                      return (
+                        <div key={pos.key} className="squad-category">
+                          
+                          <h3 className="position-title">{pos.title}</h3>
+                          
+                          <div className="squad-grid">
+                            
+                            {players.map((player) => (
+                              
+                              <div 
+                                key={player.id} 
+                                className="player-card clickable-player" 
+                                onClick={() => navigate(`/player/${player.id}`)}
+                              >
+                                
+                                <img 
+                                  src={player.photo} 
+                                  alt={player.name} 
+                                  className="player-photo"
+                                />
+                                
+                                <div className="player-info">
+                                  <span className="player-number">#{player.number || "N/A"}</span>
+                                  <p className="player-name">{player.name}</p>
+                                  <p className="player-position">{player.position}</p>
+                                </div>
+
+                              </div>
+
+                            ))}
+
+                          </div>
+
+                        </div>
+                      );
+                    })}
+
+                    {filteredSquad.length === 0 && (
+                      <div className="no-results">
+                        <p> No players found matching "<strong>{searchQuery}</strong>"</p>
+                        <button 
+                          className="clear-btn"
+                          onClick={() => { setSearchQuery(""); setSelectedPosition("All"); }}
+                        >
+                          Clear filters
+                        </button>
+                      </div>
+                    )}
+
                   </div>
                 )}
 
               </div>
+
             )}
 
-          </div>
-
-        )}
+          </motion.div>
+        </AnimatePresence>
 
       </div>
 
-    </div>
+    </motion.div>
 
   );
 }
