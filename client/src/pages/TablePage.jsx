@@ -56,6 +56,19 @@ function TablePage() {
     return "";
   };
 
+  const renderForm = (formString) => {
+    if (!formString) return null;
+    return (
+      <div className="form-container">
+        {formString.split('').map((char, index) => (
+          <span key={index} className={`form-badge form-${char.toLowerCase()}`}>
+            {char}
+          </span>
+        ))}
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <div className="page-container">
@@ -96,6 +109,7 @@ function TablePage() {
             <th onClick={() => requestSort("points")} className="sortable-header">
               Pts {sortConfig.key === "points" && (sortConfig.direction === "desc" ? "▼" : "▲")}
             </th>
+            <th>Form</th>
           </tr>
         </thead>
 
@@ -116,6 +130,7 @@ function TablePage() {
               <td>{row.all.lose}</td>
               <td>{row.goalsDiff}</td>
               <td>{row.points}</td>
+              <td>{renderForm(row.form)}</td>
             </tr>
           ))}
 
