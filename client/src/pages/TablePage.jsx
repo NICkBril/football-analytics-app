@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion"; 
 import { getStandings } from "../api/footballApi";
 import Skeleton from "../components/Skeleton";
 import "../styles/Table.css";
@@ -58,6 +59,7 @@ function TablePage() {
 
   const renderForm = (formString) => {
     if (!formString) return null;
+    
     return (
       <div className="form-container">
         {formString.split('').reverse().map((char, index) => (
@@ -83,7 +85,12 @@ function TablePage() {
   }
 
   return (
-    <div className="page-container">
+    <motion.div 
+      className="page-container"
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+    >
 
       <h1>Premier League Table</h1>
 
@@ -145,7 +152,7 @@ function TablePage() {
         <div className="legend-item"><span className="dot rel"></span> Relegation</div>
       </div>
 
-    </div>
+    </motion.div>
   );
 }
 
