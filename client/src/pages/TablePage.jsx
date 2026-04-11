@@ -60,7 +60,7 @@ function TablePage() {
     if (!formString) return null;
     return (
       <div className="form-container">
-        {formString.split('').map((char, index) => (
+        {formString.split('').reverse().map((char, index) => (
           <span key={index} className={`form-badge form-${char.toLowerCase()}`}>
             {char}
           </span>
@@ -109,7 +109,7 @@ function TablePage() {
             <th onClick={() => requestSort("points")} className="sortable-header">
               Pts {sortConfig.key === "points" && (sortConfig.direction === "desc" ? "▼" : "▲")}
             </th>
-            <th>Form</th>
+            <th className="form-col-header">Form</th>
           </tr>
         </thead>
 
@@ -130,7 +130,7 @@ function TablePage() {
               <td>{row.all.lose}</td>
               <td>{row.goalsDiff}</td>
               <td>{row.points}</td>
-              <td>{renderForm(row.form)}</td>
+              <td className="form-col-data">{renderForm(row.form)}</td>
             </tr>
           ))}
 
