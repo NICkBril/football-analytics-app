@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { getPlayerDetails, getPlayerTrophies } from "../api/footballApi";
 import Skeleton from "../components/Skeleton";
 import "../styles/PlayerDetails.css";
@@ -92,7 +93,12 @@ function PlayerDetailsPage() {
 
   return (
 
-    <div className="page-container">
+    <motion.div 
+      className="page-container"
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4 }}
+    >
 
       <button onClick={() => navigate(-1)} className="back-button">
         ← Back
@@ -256,7 +262,7 @@ function PlayerDetailsPage() {
         </div>
       )}
 
-    </div>
+    </motion.div>
 
   );
 }

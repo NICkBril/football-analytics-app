@@ -1,8 +1,14 @@
+import { motion } from "framer-motion";
 import "../styles/layout.css";
 
 function HomePage() {
   return (
-    <div className="page-container">
+    <motion.div 
+      className="page-container"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <h1>⚽ Football Analytics App</h1>
 
       <p>
@@ -18,7 +24,7 @@ function HomePage() {
         <li>📅 Browse matches</li>
       </ul>
 
-    </div>
+    </motion.div>
   );
 }
 

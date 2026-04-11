@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { FavoritesContext } from "../context/FavoritesContext";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { getTeams } from "../api/footballApi";
 import Skeleton from "../components/Skeleton";
 import "../styles/Teams.css";
@@ -44,7 +45,12 @@ function TeamsPage() {
   }
 
   return (
-    <div className="page-container">
+    <motion.div 
+      className="page-container"
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+    >
       <h1>Teams</h1>
 
       <input
@@ -108,7 +114,7 @@ function TeamsPage() {
           </div>
         );
       })}
-    </div>
+    </motion.div>
   );
 }
 

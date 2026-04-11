@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { getMatchStatistics, getMatchEvents, getMatches, getMatchLineups } from "../api/footballApi";
 import Skeleton from "../components/Skeleton";
 import "../styles/MatchDetails.css";
@@ -80,7 +81,12 @@ function MatchDetailsPage() {
 
   return (
 
-    <div className="page-container">
+    <motion.div 
+      className="page-container"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.4 }}
+    >
 
       <button onClick={() => navigate(-1)} className="back-button">
         ← Back to Matches
@@ -269,7 +275,7 @@ function MatchDetailsPage() {
 
       </div>
 
-    </div>
+    </motion.div>
 
   );
 }

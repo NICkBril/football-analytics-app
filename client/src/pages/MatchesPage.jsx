@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { getMatches } from "../api/footballApi";
 import Skeleton from "../components/Skeleton";
 import "../styles/Matches.css";
@@ -73,7 +74,12 @@ function MatchesPage() {
   };
 
   return (
-    <div className="page-container">
+    <motion.div 
+      className="page-container"
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.4 }}
+    >
       <h1>Matches</h1>
 
       <input
@@ -165,7 +171,7 @@ function MatchesPage() {
           </div>
         );
       })}
-    </div>
+    </motion.div>
   );
 }
 
