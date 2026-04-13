@@ -275,3 +275,40 @@
 .lineup-team-header.clickable-team:hover {
   opacity: 0.7;
 }
+
+.formation-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  background: #f8f9fa;
+  border-radius: 8px 8px 0 0;
+}
+
+.team-form-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.subs-grid {
+  display: flex;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .pitch-container {
+    height: 450px;
+  }
+  .player-on-field {
+    width: 40px;
+  }
+  .player-photo-wrapper {
+    width: 30px;
+    height: 30px;
+  }
+  .player-name-field {
+    display: none;
+  }
+}
