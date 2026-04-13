@@ -9,14 +9,14 @@ const FootballField = ({ lineup, teamType }) => {
   const getPosition = (gridPos) => {
     if (!gridPos) return { top: "50%", left: "50%" };
     const [y, x] = gridPos.split(":").map(Number);
-    
-    const top = (y / 9) * 90 + 5;
-    let left = (x / 4) * 45;
+
+    const top = (x / 4) * 80 + 10;
+    let left = (y / 9) * 90;
 
     if (teamType === "away") {
-      left = 100 - left - 10;
+        left = 100 - left - 10;
     } else {
-      left = left + 5;
+        left = left + 2;
     }
 
     return { top: `${top}%`, left: `${left}%` };
