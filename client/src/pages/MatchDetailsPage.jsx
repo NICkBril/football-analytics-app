@@ -3,7 +3,9 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { getMatchStatistics, getMatchEvents, getMatches, getMatchLineups } from "../api/footballApi";
 import Skeleton from "../components/Skeleton";
+import FootballField from "../components/FootballField";
 import "../styles/MatchDetails.css";
+import "../styles/FootballField.css";
 
 function MatchDetailsPage() {
 
@@ -220,58 +222,55 @@ function MatchDetailsPage() {
 
       <div className="lineups-section">
 
-        <h3>Lineups</h3>
+        <h3>Tactical Lineups</h3>
 
-        <div className="lineups-container">
-
-          {lineups.map((lineup, index) => (
-
-            <div key={index} className="team-lineup">
-
-              <div 
-                className="lineup-team-header clickable-team"
-                onClick={() => navigate(`/team/${lineup.team.id}`)}
-              >
-                <img src={lineup.team.logo} alt="logo" />
-                <h4>Formation: {lineup.formation}</h4>
+        {lineups && lineups.length >= 2 ? (
+          <div className="lineups-visual">
+            <div className="formation-header">
+              <div className="team-form-info">
+                <img src={lineups[0].team.logo} alt="logo" />
+                <span>{lineups[0].formation}</span>
               </div>
-
-              <h5>Starting XI</h5>
-
-              <ul className="player-list">
-                {lineup.startXI.map((p) => (
-                  <li 
-                    key={p.player.id} 
-                    className="clickable-player-row"
-                    onClick={() => navigate(`/player/${p.player.id}`)}
-                  >
-                    <span className="player-number">{p.player.number}</span>
-                    <span className="player-name">{p.player.name}</span>
-                    <span className="player-pos">{p.player.pos}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <h5>Substitutes</h5>
-
-              <ul className="player-list subs">
-                {lineup.substitutes.map((p) => (
-                  <li 
-                    key={p.player.id}
-                    className="clickable-player-row"
-                    onClick={() => navigate(`/player/${p.player.id}`)}
-                  >
-                    <span className="player-number">{p.player.number}</span>
-                    <span className="player-name">{p.player.name}</span>
-                  </li>
-                ))}
-              </ul>
-
+              <div className="team-form-info text-right">
+                <span>{lineups[1].formation}</span>
+                <img src={lineups[1].team.logo} alt="logo" />
+              </div>
             </div>
 
-          ))}
+            <div className="pitch-container">
+              <FootballField lineup={lineups[0]} teamType="home" />
+              <FootballField lineup={lineups[1]} teamType="away" />
+            </div>
 
-        </div>
+            <div className="substitutes-section">
+              <h3>Substitutes</h3>
+              <div className="subs-grid">
+                {lineups.map((lineup, idx) => (
+                  <div key={idx} className="team-subs">
+                    <div className="subs-team-name">
+                      <img src={lineup.team.logo} alt="logo" />
+                      <h4>{lineup.team.name}</h4>
+                    </div>
+                    <ul className="player-list subs">
+                      {lineup.substitutes.map((p) => (
+                        <li 
+                          key={p.player.id} 
+                          className="clickable-player-row"
+                          onClick={() => navigate(`/player/${p.player.id}`)}
+                        >
+                          <span className="player-number">{p.player.number}</span>
+                          <span className="player-name">{p.player.name}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <p>Tactical lineups are not available for this match.</p>
+        )}
 
       </div>
 
