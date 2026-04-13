@@ -137,3 +137,11 @@
   z-index: 10;
   box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1); 
 }
+
+.clickable-match-badge {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.clickable-match-badge:hover {
+  transform: scale(1.2);
+}

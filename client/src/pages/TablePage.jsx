@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion"; 
-import { getStandings } from "../api/footballApi";
+import { getStandings, getMatches } from "../api/footballApi";
 import Skeleton from "../components/Skeleton";
 import "../styles/Table.css";
 
@@ -9,13 +9,20 @@ function TablePage() {
   
   const navigate = useNavigate();
   const [standings, setStandings] = useState([]);
+  const [allMatches, setAllMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sortConfig, setSortConfig] = useState({ key: "points", direction: "desc" });
 
   useEffect(() => {
     async function loadData() {
-      const data = await getStandings();
-      setStandings(data || []);
+      setLoading(true);
+      const [standingsData, matchesData] = await Promise.all([
+        getStandings(),
+        getMatches()
+      ]);
+      
+      setStandings(standingsData || []);
+      setAllMatches(matchesData || []);
       setLoading(false);
     }
     loadData();
@@ -57,16 +64,45 @@ function TablePage() {
     return "";
   };
 
-  const renderForm = (formString) => {
-    if (!formString) return null;
+  const getTeamRecentMatches = (teamId) => {
+    return allMatches
+      .filter(m => m.teams.home.id === teamId || m.teams.away.id === teamId)
+      .sort((a, b) => new Date(b.fixture.date) - new Date(a.fixture.date))
+      .slice(0, 5);
+  };
+
+  const renderForm = (teamId) => {
+    const recentMatches = getTeamRecentMatches(teamId);
+    
+    if (recentMatches.length === 0) return null;
     
     return (
       <div className="form-container">
-        {formString.split('').reverse().map((char, index) => (
-          <span key={index} className={`form-badge form-${char.toLowerCase()}`}>
-            {char}
-          </span>
-        ))}
+        {recentMatches.reverse().map((match) => {
+          const isHome = match.teams.home.id === teamId;
+          const goalsHome = match.goals.home;
+          const goalsAway = match.goals.away;
+          
+          let result = "D";
+          if (isHome) {
+            if (goalsHome > goalsAway) result = "W";
+            if (goalsHome < goalsAway) result = "L";
+          } else {
+            if (goalsAway > goalsHome) result = "W";
+            if (goalsAway < goalsHome) result = "L";
+          }
+
+          return (
+            <span 
+              key={match.fixture.id} 
+              className={`form-badge form-${result.toLowerCase()} clickable-match-badge`}
+              onClick={() => navigate(`/match/${match.fixture.id}`)}
+              title={`${match.teams.home.name} ${goalsHome}-${goalsAway} ${match.teams.away.name}`}
+            >
+              {result}
+            </span>
+          );
+        })}
       </div>
     );
   };
@@ -137,7 +173,7 @@ function TablePage() {
               <td>{row.all.lose}</td>
               <td>{row.goalsDiff}</td>
               <td>{row.points}</td>
-              <td className="form-col-data">{renderForm(row.form)}</td>
+              <td className="form-col-data">{renderForm(row.team.id)}</td>
             </tr>
           ))}
 
