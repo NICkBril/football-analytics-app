@@ -278,3 +278,23 @@
     width: 95%;
   }
 }
+
+.clickable-player {
+  cursor: pointer;
+  color: #2c3e50;
+  transition: color 0.2s;
+}
+
+.clickable-player:hover {
+  color: #3498db;
+  text-decoration: underline;
+}
+
+.event-item {
+  transition: transform 0.2s ease;
+}
+
+.event-item:hover {
+  transform: translateX(5px);
+  background: #f0f4f8;
+}
