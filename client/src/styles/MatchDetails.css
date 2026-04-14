@@ -181,6 +181,53 @@
   object-fit: contain;
 }
 
+.coach-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 25px;
+  background: #ffffff;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  margin: 0;
+}
+
+.coach-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.coach-card.right {
+  justify-content: flex-end;
+}
+
+.coach-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #f0f3f5;
+  border: 1px solid #ddd;
+}
+
+.coach-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #2c3e50;
+}
+
+.coach-label {
+  flex: 0;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: #777;
+  letter-spacing: 1px;
+  padding: 0 20px;
+  font-weight: bold;
+}
+
 .substitutes-section {
   margin-top: 30px;
   background: #fff;
@@ -198,10 +245,10 @@
 .subs-team-name {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   margin-bottom: 12px;
   border-bottom: 2px solid #f0f3f5;
-  padding-bottom: 8px;
+  padding-bottom: 10px;
 }
 
 .subs-team-name img {
@@ -211,9 +258,10 @@
 }
 
 .team-subs h4 {
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   margin: 0;
   font-weight: 700;
+  color: #2c3e50;
 }
 
 .player-list {
@@ -276,6 +324,18 @@
 
   .event-item {
     width: 95%;
+  }
+
+  .coach-name {
+    font-size: 0.8rem;
+  }
+  .coach-photo {
+    width: 30px;
+    height: 30px;
+  }
+  .coach-label {
+    padding: 0 10px;
+    font-size: 0.7rem;
   }
 }
 
