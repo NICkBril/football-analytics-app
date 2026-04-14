@@ -20,7 +20,6 @@ const FootballField = ({ lineup, teamType }) => {
       .sort((a, b) => a - b);
 
     const totalCols = sortedCols.length;
-
     const result = {};
 
     sortedCols.forEach((col, colIndex) => {
@@ -38,13 +37,23 @@ const FootballField = ({ lineup, teamType }) => {
         leftPercent = 100 - leftPercent;
       }
 
+      let verticalSqueeze = 80; 
+      if (colIndex === 0) {
+        verticalSqueeze = 0; 
+      } else if (colIndex === 1) {
+        verticalSqueeze = 85; 
+      } else {
+        verticalSqueeze = 65; 
+      }
+
       playersInLine.forEach((p, playerIndex) => {
         let topPercent;
         if (count === 1) {
           topPercent = 50;
         } else {
-          const spacing = 80 / (count - 1);
-          topPercent = 10 + playerIndex * spacing;
+          const margin = (100 - verticalSqueeze) / 2;
+          const spacing = verticalSqueeze / (count - 1);
+          topPercent = margin + playerIndex * spacing;
         }
 
         result[p.player.id] = {
