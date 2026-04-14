@@ -195,20 +195,25 @@
   gap: 40px;
 }
 
-.team-subs h4 {
-  font-size: 0.9rem;
-  border-bottom: 2px solid #f0f3f5;
-  padding-bottom: 8px;
-  margin-bottom: 12px;
+.subs-team-name {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  margin-bottom: 12px;
+  border-bottom: 2px solid #f0f3f5;
+  padding-bottom: 8px;
 }
 
-.team-subs h4 img {
-  width: 22px;
-  height: 22px;
+.subs-team-name img {
+  width: 30px;
+  height: 30px;
   object-fit: contain;
+}
+
+.team-subs h4 {
+  font-size: 0.9rem;
+  margin: 0;
+  font-weight: 700;
 }
 
 .player-list {
