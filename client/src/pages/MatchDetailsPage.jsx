@@ -242,6 +242,30 @@ function MatchDetailsPage() {
               <FootballField lineup={lineups[1]} teamType="away" />
             </div>
 
+            <div className="coach-section">
+              <div className="coach-card left">
+                <img 
+                  src={`https://media.api-sports.io/football/coachs/${lineups[0].coach.id}.png`} 
+                  alt={lineups[0].coach.name}
+                  className="coach-photo"
+                  onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }}
+                />
+                <span className="coach-name">{lineups[0].coach.name}</span>
+              </div>
+              
+              <div className="coach-label">Coach</div>
+
+              <div className="coach-card right">
+                <span className="coach-name">{lineups[1].coach.name}</span>
+                <img 
+                  src={`https://media.api-sports.io/football/coachs/${lineups[1].coach.id}.png`} 
+                  alt={lineups[1].coach.name}
+                  className="coach-photo"
+                  onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }}
+                />
+              </div>
+            </div>
+
             <div className="substitutes-section">
               <h3>Substitutes</h3>
               <div className="subs-grid">
