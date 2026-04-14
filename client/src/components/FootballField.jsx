@@ -5,45 +5,89 @@ import "../styles/FootballField.css";
 const FootballField = ({ lineup, teamType }) => {
   const navigate = useNavigate();
   if (!lineup) return null;
-  
-  const getPosition = (gridPos) => {
-    if (!gridPos) return { top: "50%", left: "50%" };
-    const [y, x] = gridPos.split(":").map(Number);
 
-    const top = (x / 4) * 80 + 10;
-    let left = (y / 9) * 90;
+  const buildPositions = (players) => {
+    const lines = {};
+    players.forEach((p) => {
+      if (!p.player.grid) return;
+      const [col] = p.player.grid.split(":").map(Number);
+      if (!lines[col]) lines[col] = [];
+      lines[col].push(p);
+    });
 
-    if (teamType === "away") {
-        left = 100 - left - 10;
-    } else {
-        left = left + 2;
-    }
+    const sortedCols = Object.keys(lines)
+      .map(Number)
+      .sort((a, b) => a - b);
 
-    return { top: `${top}%`, left: `${left}%` };
+    const totalCols = sortedCols.length;
+
+    const result = {};
+
+    sortedCols.forEach((col, colIndex) => {
+      const playersInLine = lines[col];
+      const count = playersInLine.length;
+      
+      let leftPercent;
+      if (totalCols === 1) {
+        leftPercent = 50;
+      } else {
+        leftPercent = 10 + (colIndex / (totalCols - 1)) * 80;
+      }
+
+      if (teamType === "away") {
+        leftPercent = 100 - leftPercent;
+      }
+
+      playersInLine.forEach((p, playerIndex) => {
+        let topPercent;
+        if (count === 1) {
+          topPercent = 50;
+        } else {
+          const spacing = 80 / (count - 1);
+          topPercent = 10 + playerIndex * spacing;
+        }
+
+        result[p.player.id] = {
+          left: `${leftPercent}%`,
+          top: `${topPercent}%`,
+        };
+      });
+    });
+
+    return result;
   };
+
+  const positions = buildPositions(lineup.startXI);
 
   return (
     <div className="field-half">
-      {lineup.startXI.map((p) => (
-        <div
-          key={p.player.id}
-          className="player-on-field"
-          style={getPosition(p.player.grid)}
-          onClick={() => navigate(`/player/${p.player.id}`)}
-        >
-          <div className="player-photo-wrapper">
-             <img 
-               src={`https://media.api-sports.io/football/players/${p.player.id}.png`} 
-               alt={p.player.name}
-               onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png" }}
-             />
+      {lineup.startXI.map((p) => {
+        const pos = positions[p.player.id] || { top: "50%", left: "50%" };
+        return (
+          <div
+            key={p.player.id}
+            className="player-on-field"
+            style={pos}
+            onClick={() => navigate(`/player/${p.player.id}`)}
+          >
+            <div className="player-photo-wrapper">
+              <img
+                src={`https://media.api-sports.io/football/players/${p.player.id}.png`}
+                alt={p.player.name}
+                onError={(e) => {
+                  e.target.src = "https://cdn.sofifa.net/player_0.png";
+                }}
+              />
+            </div>
+            <div className="player-badge">
+              <span className="player-number-circle">{p.player.number}</span>
+              <span className="player-name-field">
+                {p.player.name.split(" ").pop()}
+              </span>
+            </div>
           </div>
-          <div className="player-badge">
-            <span className="player-number-circle">{p.player.number}</span>
-            <span className="player-name-field">{p.player.name.split(' ').pop()}</span>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };
