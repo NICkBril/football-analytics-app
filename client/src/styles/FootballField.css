@@ -160,9 +160,6 @@
   line-height: 1;
 }
 
-.player-event-icon.boot {
-}
-
 .player-event-icon.ball {
   font-size: 9px;
   font-weight: 800;
@@ -199,9 +196,6 @@
   font-weight: bold;
   font-size: 9px;
   flex-shrink: 0;
-}
-
-.player-name-field {
 }
 
 @media (max-width: 768px) {
