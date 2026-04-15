@@ -238,8 +238,8 @@ function MatchDetailsPage() {
             </div>
 
             <div className="pitch-container">
-              <FootballField lineup={lineups[0]} teamType="home" />
-              <FootballField lineup={lineups[1]} teamType="away" />
+              <FootballField lineup={lineups[0]} teamType="home" events={events} />
+              <FootballField lineup={lineups[1]} teamType="away" events={events} />
             </div>
 
             <div className="coach-section">
