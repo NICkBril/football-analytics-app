@@ -79,10 +79,10 @@ const FootballField = ({ lineup, teamType, events = [] }) => {
     return s ? s.time.elapsed : null;
   };
 
-  const getGoalCount = (evs) =>
-    evs.filter((e) => !e._isAssist && e.type === "Goal" && e.detail !== "Missed Penalty").length;
+  const getGoals = (evs) =>
+    evs.filter((e) => !e._isAssist && e.type === "Goal" && e.detail !== "Missed Penalty");
 
-  const isAssist = (evs) => evs.some((e) => e._isAssist);
+  const getAssists = (evs) => evs.filter((e) => e._isAssist);
 
   return (
     <div className="field-half">
@@ -91,8 +91,8 @@ const FootballField = ({ lineup, teamType, events = [] }) => {
         const evs = getEvs(p.player.id);
         const card = getCard(evs);
         const substTime = getSubst(evs);
-        const goalCount = getGoalCount(evs);
-        const assist = isAssist(evs);
+        const goals = getGoals(evs);
+        const assists = getAssists(evs);
 
         return (
           <div
@@ -125,14 +125,19 @@ const FootballField = ({ lineup, teamType, events = [] }) => {
                 />
               </div>
 
-              {(goalCount > 0 || assist) && (
-                <div className="player-events-floating">
-                  {assist && <span className="player-event-icon boot" title="Assist">👟</span>}
-                  {goalCount > 0 && (
-                    <span className="player-event-icon ball" title="Goal">
-                      ⚽{goalCount > 1 ? <small className="goal-multiplier">{goalCount}</small> : ""}
-                    </span>
-                  )}
+              {goals.length > 0 && (
+                <div className="player-events-stack goals">
+                  {goals.map((_, index) => (
+                    <span key={index} className="player-event-icon ball stacked">⚽</span>
+                  ))}
+                </div>
+              )}
+
+              {assists.length > 0 && (
+                <div className="player-events-stack assists">
+                  {assists.map((_, index) => (
+                    <span key={index} className="player-event-icon boot stacked">👟</span>
+                  ))}
                 </div>
               )}
             </div>
