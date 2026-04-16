@@ -81,6 +81,56 @@ function MatchDetailsPage() {
 
   const allStatTypes = team1.statistics.map((s) => s.type);
 
+  const buildEventMap = () => {
+    const map = {};
+    events.forEach((ev) => {
+      const pid = ev.player?.id;
+      if (pid) {
+        if (!map[pid]) map[pid] = [];
+        map[pid].push(ev);
+      }
+      const aid = ev.assist?.id;
+      if (aid && ev.type === "Goal") {
+        if (!map[aid]) map[aid] = [];
+        map[aid].push({ ...ev, _isAssist: true });
+      }
+    });
+    return map;
+  };
+
+  const eventMap = buildEventMap();
+
+  const getPlayerEvs = (pid) => eventMap[pid] || [];
+
+  const getSubstTime = (pid) => {
+    const ev = events.find(
+      (e) => e.type === "subst" && e.assist?.id === pid
+    );
+    return ev ? ev.time.elapsed : null;
+  };
+
+  const getCard = (evs) => {
+    if (evs.some(e => !e._isAssist && e.type === "Card" &&
+        (e.detail === "Red Card" || e.detail === "Yellow Red Card"))) return "red";
+    if (evs.some(e => !e._isAssist && e.type === "Card" && e.detail === "Yellow Card")) return "yellow";
+    return null;
+  };
+
+  const getGoalCount = (evs) =>
+    evs.filter(e => !e._isAssist && e.type === "Goal" && e.detail !== "Missed Penalty").length;
+
+  const getAssistCount = (evs) =>
+    evs.filter(e => e._isAssist).length;
+
+  const getPositionLabel = (pos) => {
+    if (!pos) return "";
+    const map = {
+      G: "Goalkeeper", D: "Defender",
+      M: "Midfielder", F: "Attacker",
+    };
+    return map[pos] || pos;
+  };
+
   return (
 
     <motion.div 
@@ -268,25 +318,72 @@ function MatchDetailsPage() {
 
             <div className="substitutes-section">
               <h3>Substitutes</h3>
-              <div className="subs-grid">
+              <div className="subs-columns">
                 {lineups.map((lineup, idx) => (
-                  <div key={idx} className="team-subs">
-                    <div className="subs-team-name">
-                      <img src={lineup.team.logo} alt="logo" />
-                      <h4>{lineup.team.name}</h4>
+                  <div key={idx} className="subs-column">
+
+                    <div className="subs-team-header">
+                      <img src={lineup.team.logo} alt={lineup.team.name} />
+                      <span>{lineup.team.name}</span>
                     </div>
-                    <ul className="player-list subs">
-                      {lineup.substitutes.map((p) => (
-                        <li 
-                          key={p.player.id} 
-                          className="clickable-player-row"
+
+                    {lineup.substitutes.map((p) => {
+                      const evs = getPlayerEvs(p.player.id);
+                      const substTime = getSubstTime(p.player.id);
+                      const card = getCard(evs);
+                      const goalCount = getGoalCount(evs);
+                      const assistCount = getAssistCount(evs);
+                      const didPlay = substTime !== null;
+
+                      return (
+                        <div
+                          key={p.player.id}
+                          className={`sub-player-row ${didPlay ? "sub-played" : ""}`}
                           onClick={() => navigate(`/player/${p.player.id}`)}
                         >
-                          <span className="player-number">{p.player.number}</span>
-                          <span className="player-name">{p.player.name}</span>
-                        </li>
-                      ))}
-                    </ul>
+                          <div className="sub-photo-wrap">
+                            <img
+                              src={`https://media.api-sports.io/football/players/${p.player.id}.png`}
+                              alt={p.player.name}
+                              onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }}
+                            />
+                          </div>
+
+                          <span className="sub-number">{p.player.number}</span>
+
+                          <div className="sub-info">
+                            <span className="sub-name">{p.player.name}</span>
+                            <span className="sub-pos">
+                              {getPositionLabel(p.player.pos)}
+                            </span>
+                          </div>
+
+                          <div className="sub-events">
+                            {card === "yellow" && <span className="sub-card sub-card-yellow" />}
+                            {card === "red" && <span className="sub-card sub-card-red" />}
+                            {assistCount > 0 && (
+                              <span className="sub-event-icon">👟</span>
+                            )}
+                            {goalCount > 0 && (
+                              <span className="sub-event-icon">
+                                ⚽{goalCount > 1 ? `×${goalCount}` : ""}
+                              </span>
+                            )}
+                          </div>
+
+                          {didPlay ? (
+                            <div className="sub-time-block">
+                              <span className="sub-time">{substTime}'</span>
+                              <span className="sub-arrow-in">→</span>
+                            </div>
+                          ) : (
+                            <div className="sub-time-block sub-did-not-play">
+                              <span className="sub-dnp">—</span>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 ))}
               </div>
