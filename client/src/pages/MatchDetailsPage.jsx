@@ -243,19 +243,22 @@ function MatchDetailsPage() {
                   </div>
 
                   <div className="event-content">
-                    <div 
+                    <div
                       className="event-player clickable-player"
-                      onClick={() => navigate(`/player/${event.player.id}`)}
+                      onClick={() => setModalPlayerId(event.player.id)}
                     >
                       {event.player.name}
                     </div>
+
                     <div className="event-detail">
-                      {event.detail} 
-                      {event.assist.name && (
-                        <span 
+                      {event.detail}
+
+                      {event.assist?.name && (
+                        <span
                           className="assist-name clickable-player"
-                          onClick={() => navigate(`/player/${event.assist.id}`)}
-                        > 
+                          onClick={() => setModalPlayerId(event.assist.id)}
+                        >
+                          {" "}
                           (Assist: {event.assist.name})
                         </span>
                       )}
