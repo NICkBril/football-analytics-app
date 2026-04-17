@@ -18,6 +18,18 @@ function PlayerMatchStatsModal({ playerId, fixtureId, onClose }) {
     });
   }, [playerId, fixtureId]);
 
+  useEffect(() => {
+    if (playerId) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [playerId]);
+
   const handleBackdrop = (e) => {
     if (e.target === e.currentTarget) onClose();
   };
@@ -71,7 +83,13 @@ function PlayerMatchStatsModal({ playerId, fixtureId, onClose }) {
           <div className="pmm-no-data">No stats available for this player.</div>
         ) : (
           <>
-            <div className="pmm-player-name">{player?.name}</div>
+            <div
+              className="pmm-player-name clickable-name"
+              onClick={() => { onClose(); navigate(`/player/${playerId}`); }}
+              title="Go to profile"
+            >
+              {player?.name}
+            </div>
 
             <div className="pmm-meta">
               <div className="pmm-meta-item">

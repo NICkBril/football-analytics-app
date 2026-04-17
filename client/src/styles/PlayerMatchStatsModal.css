@@ -247,6 +247,16 @@
   animation: pmm-spin 0.7s linear infinite;
 }
 
+.pmm-player-name.clickable-name {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.pmm-player-name.clickable-name:hover {
+  color: #3498db;
+  text-decoration: underline;
+}
+
 @keyframes pmm-spin {
   to { transform: rotate(360deg); }
 }
