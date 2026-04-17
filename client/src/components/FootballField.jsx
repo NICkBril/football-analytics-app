@@ -1,9 +1,7 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import "../styles/FootballField.css";
 
-const FootballField = ({ lineup, teamType, events = [] }) => {
-  const navigate = useNavigate();
+const FootballField = ({ lineup, teamType, events = [], onPlayerClick }) => {
   if (!lineup) return null;
 
   const eventMap = {};
@@ -99,7 +97,7 @@ const FootballField = ({ lineup, teamType, events = [] }) => {
             key={p.player.id}
             className="player-on-field"
             style={pos}
-            onClick={() => navigate(`/player/${p.player.id}`)}
+            onClick={() => onPlayerClick(p.player.id)}
           >
             <div className="player-top-row">
               {substTime !== null && (
