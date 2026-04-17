@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { getMatchStatistics, getMatchEvents, getMatches, getMatchLineups } from "../api/footballApi";
 import Skeleton from "../components/Skeleton";
 import FootballField from "../components/FootballField";
+import PlayerMatchStatsModal from "../components/PlayerMatchStatsModal";
 import "../styles/MatchDetails.css";
 import "../styles/FootballField.css";
 
@@ -17,6 +18,7 @@ function MatchDetailsPage() {
   const [lineups, setLineups] = useState([]);
   const [matchInfo, setMatchInfo] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [modalPlayerId, setModalPlayerId] = useState(null);
 
   useEffect(() => {
 
@@ -288,8 +290,18 @@ function MatchDetailsPage() {
             </div>
 
             <div className="pitch-container">
-              <FootballField lineup={lineups[0]} teamType="home" events={events} />
-              <FootballField lineup={lineups[1]} teamType="away" events={events} />
+              <FootballField
+                lineup={lineups[0]}
+                teamType="home"
+                events={events}
+                onPlayerClick={(pid) => setModalPlayerId(pid)}
+              />
+              <FootballField
+                lineup={lineups[1]}
+                teamType="away"
+                events={events}
+                onPlayerClick={(pid) => setModalPlayerId(pid)}
+              />
             </div>
 
             <div className="coach-section">
@@ -339,7 +351,7 @@ function MatchDetailsPage() {
                         <div
                           key={p.player.id}
                           className={`sub-player-row ${didPlay ? "sub-played" : ""}`}
-                          onClick={() => navigate(`/player/${p.player.id}`)}
+                          onClick={() => setModalPlayerId(p.player.id)}
                         >
                           <div className="sub-photo-wrap">
                             <img
@@ -394,6 +406,14 @@ function MatchDetailsPage() {
         )}
 
       </div>
+
+      {modalPlayerId && (
+        <PlayerMatchStatsModal
+          playerId={modalPlayerId}
+          fixtureId={id}
+          onClose={() => setModalPlayerId(null)}
+        />
+      )}
 
     </motion.div>
 
