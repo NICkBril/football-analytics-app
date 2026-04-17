@@ -301,3 +301,24 @@ export async function getPlayerTrophies(playerId) {
   const data = await response.json();
   return data.response || [];
 }
+
+export async function getPlayerMatchStats(fixtureId, playerId) {
+  const res = await fetch(
+    `https://v3.football.api-sports.io/fixtures/players?fixture=${fixtureId}`,
+    {
+      headers: {
+        "x-apisports-key": API_KEY,
+      },
+    }
+  );
+  const data = await res.json();
+  const teams = data.response || [];
+
+  for (const teamData of teams) {
+    const found = teamData.players.find((p) => p.player.id === playerId);
+    if (found) {
+      return { ...found, teamLogo: teamData.team.logo };
+    }
+  }
+  return null;
+}
