@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/FootballField.css";
 
 const FootballField = ({ lineup, teamType, events = [], onPlayerClick }) => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handler);
+    return () => window.removeEventListener("resize", handler);
+  }, []);
+
   if (!lineup) return null;
 
   const eventMap = {};
@@ -18,7 +26,7 @@ const FootballField = ({ lineup, teamType, events = [], onPlayerClick }) => {
     }
   });
 
-  const buildPositions = (players) => {
+  const buildPositionsDesktop = (players) => {
     const lines = {};
     players.forEach((p) => {
       if (!p.player.grid) return;
@@ -61,7 +69,53 @@ const FootballField = ({ lineup, teamType, events = [], onPlayerClick }) => {
     return result;
   };
 
-  const positions = buildPositions(lineup.startXI);
+  const buildPositionsMobile = (players) => {
+    const lines = {};
+    players.forEach((p) => {
+      if (!p.player.grid) return;
+      const [col] = p.player.grid.split(":").map(Number);
+      if (!lines[col]) lines[col] = [];
+      lines[col].push(p);
+    });
+
+    const sortedCols = Object.keys(lines).map(Number).sort((a, b) => a - b);
+    const totalCols = sortedCols.length;
+    const result = {};
+
+    sortedCols.forEach((col, colIndex) => {
+      const playersInLine = lines[col];
+      const count = playersInLine.length;
+
+      let topPercent =
+        totalCols === 1 ? 50 : 8 + (colIndex / (totalCols - 1)) * 84;
+
+      if (teamType === "away") topPercent = 100 - topPercent;
+
+      const horizontalSqueeze = 70;
+
+      playersInLine.forEach((p, playerIndex) => {
+        let leftPercent;
+        if (count === 1) {
+          leftPercent = 50;
+        } else {
+          const margin = (100 - horizontalSqueeze) / 2;
+          const spacing = horizontalSqueeze / (count - 1);
+          leftPercent = margin + playerIndex * spacing;
+        }
+
+        result[p.player.id] = {
+          top: `${topPercent}%`,
+          left: `${leftPercent}%`,
+        };
+      });
+    });
+
+    return result;
+  };
+
+  const positions = isMobile
+    ? buildPositionsMobile(lineup.startXI)
+    : buildPositionsDesktop(lineup.startXI);
 
   const getEvs = (id) => eventMap[id] || [];
 
