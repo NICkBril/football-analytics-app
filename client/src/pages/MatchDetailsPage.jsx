@@ -292,19 +292,35 @@ function MatchDetailsPage() {
               </div>
             </div>
 
-            <div className="pitch-container">
-              <FootballField
-                lineup={lineups[0]}
-                teamType="home"
-                events={events}
-                onPlayerClick={(pid) => setModalPlayerId(pid)}
-              />
-              <FootballField
-                lineup={lineups[1]}
-                teamType="away"
-                events={events}
-                onPlayerClick={(pid) => setModalPlayerId(pid)}
-              />
+            <div className="pitch-container-mobile-wrap">
+
+              <div className="mobile-team-label home-label">
+                <img src={lineups[0].team.logo} alt={lineups[0].team.name} />
+                <span>{lineups[0].team.name}</span>
+                <span className="formation-badge">{lineups[0].formation}</span>
+              </div>
+
+              <div className="pitch-container">
+                <FootballField
+                  lineup={lineups[0]}
+                  teamType="home"
+                  events={events}
+                  onPlayerClick={(pid) => setModalPlayerId(pid)}
+                />
+                <FootballField
+                  lineup={lineups[1]}
+                  teamType="away"
+                  events={events}
+                  onPlayerClick={(pid) => setModalPlayerId(pid)}
+                />
+              </div>
+
+              <div className="mobile-team-label away-label">
+                <img src={lineups[1].team.logo} alt={lineups[1].team.name} />
+                <span>{lineups[1].team.name}</span>
+                <span className="formation-badge">{lineups[1].formation}</span>
+              </div>
+
             </div>
 
             <div className="coach-section">
