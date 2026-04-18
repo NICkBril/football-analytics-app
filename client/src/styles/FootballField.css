@@ -1,3 +1,8 @@
+/* ================================================================
+   FootballField.css
+   ================================================================ */
+
+/* ── Desktop: горизонтальне поле (дві половини поруч) ─────────── */
 .pitch-container {
   position: relative;
   width: 100%;
@@ -18,6 +23,7 @@
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
+/* Центральна лінія — вертикальна */
 .pitch-container::before {
   content: "";
   position: absolute;
@@ -29,6 +35,7 @@
   z-index: 1;
 }
 
+/* Центральне коло */
 .pitch-container::after {
   content: "";
   position: absolute;
@@ -42,6 +49,7 @@
   z-index: 1;
 }
 
+/* Половини поля */
 .field-half {
   position: relative;
   flex: 1;
@@ -49,6 +57,7 @@
   z-index: 2;
 }
 
+/* Штрафна площа */
 .field-half::before {
   content: "";
   position: absolute;
@@ -60,6 +69,7 @@
   z-index: 1;
 }
 
+/* Воротарська площа */
 .field-half::after {
   content: "";
   position: absolute;
@@ -103,6 +113,7 @@
   );
 }
 
+/* ── Гравець на полі ────────────────────────────────────────────── */
 .player-on-field {
   position: absolute;
   display: flex;
@@ -169,13 +180,8 @@
   box-shadow: 0 1px 4px rgba(0,0,0,0.4);
 }
 
-.card-yellow {
-  background: #f1c40f;
-}
-
-.card-red {
-  background: #e74c3c;
-}
+.card-yellow { background: #f1c40f; }
+.card-red    { background: #e74c3c; }
 
 .player-photo-wrapper {
   width: 45px;
@@ -262,12 +268,19 @@
   flex-shrink: 0;
 }
 
+/* ================================================================
+   MOBILE — вертикальне поле (дві половини одна під одною)
+   ================================================================ */
 @media (max-width: 768px) {
+
+  /* Контейнер тепер вертикальний */
   .pitch-container {
     flex-direction: column;
     height: auto;
+    /* Кожна половина матиме фіксовану висоту — разом ~700px */
   }
 
+  /* Центральна лінія — горизонтальна */
   .pitch-container::before {
     top: 50%;
     left: 0;
@@ -275,17 +288,22 @@
     height: 2px;
   }
 
+  /* Центральне коло залишається по центру */
   .pitch-container::after {
     width: 90px;
     height: 90px;
   }
 
+  /* Кожна половина — повна ширина, фіксована висота */
   .field-half {
     width: 100%;
     flex: none;
     height: 340px;
   }
 
+  /* ── Штрафні площі: тепер горизонтальні смуги зверху/знизу ── */
+
+  /* home: ворота зверху */
   .field-half:first-child::before {
     left: 50%;
     top: -2px;
@@ -310,6 +328,7 @@
     border-bottom: 2px solid rgba(255,255,255,0.7);
   }
 
+  /* Кут penalty spot для home */
   .field-half:first-child {
     background-image: radial-gradient(
       circle at 50% 14%,
@@ -320,6 +339,7 @@
     );
   }
 
+  /* away: ворота знизу */
   .field-half:last-child::before {
     left: 50%;
     bottom: -2px;
@@ -358,6 +378,7 @@
     );
   }
 
+  /* Гравці трохи менші */
   .player-on-field {
     width: 50px;
   }
