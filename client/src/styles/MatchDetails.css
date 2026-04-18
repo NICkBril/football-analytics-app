@@ -130,6 +130,7 @@
   border-radius: 8px;
   background: #f9f9f9;
   width: 85%;
+  transition: transform 0.2s ease;
 }
 
 .event-item.left {
@@ -150,6 +151,11 @@
   min-width: 30px;
 }
 
+.event-item:hover {
+  transform: translateX(5px);
+  background: #f0f4f8;
+}
+
 .lineups-section {
   margin-top: 30px;
   background: white;
@@ -167,6 +173,10 @@
   background: #1a1a1a;
   color: white;
   border-radius: 8px 8px 0 0;
+}
+
+.mobile-team-label {
+  display: none;
 }
 
 .team-form-info {
@@ -189,7 +199,6 @@
   background: #ffffff;
   border-top: 1px solid #eee;
   border-bottom: 1px solid #eee;
-  margin: 0;
 }
 
 .coach-card {
@@ -248,10 +257,6 @@
 .subs-columns {
   display: grid;
   grid-template-columns: 1fr 1fr;
-}
-
-.subs-column {
-  padding: 0;
 }
 
 .subs-column:first-child {
@@ -357,11 +362,9 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  flex-shrink: 0;
 }
 
 .sub-card {
-  display: inline-block;
   width: 9px;
   height: 13px;
   border-radius: 2px;
@@ -369,19 +372,16 @@
 }
 
 .sub-card-yellow { background: #f1c40f; }
-
-.sub-card-red    { background: #e74c3c; }
+.sub-card-red { background: #e74c3c; }
 
 .sub-event-icon {
   font-size: 13px;
-  line-height: 1;
 }
 
 .sub-time-block {
   display: flex;
   align-items: center;
   gap: 4px;
-  flex-shrink: 0;
   min-width: 44px;
   justify-content: flex-end;
 }
@@ -393,17 +393,15 @@
 }
 
 .sub-arrow-in {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 20px;
   height: 20px;
   background: #27ae60;
   color: white;
   border-radius: 50%;
   font-size: 11px;
-  font-weight: bold;
-  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .sub-did-not-play .sub-dnp {
@@ -411,24 +409,15 @@
   font-size: 0.85rem;
 }
 
-.clickable-player { 
-  cursor: pointer; 
-  color: #2c3e50; 
-  transition: color 0.2s; 
+.clickable-player {
+  cursor: pointer;
+  color: #2c3e50;
+  transition: color 0.2s;
 }
 
-.clickable-player:hover { 
-  color: #3498db; 
-  text-decoration: underline; 
-}
-
-.event-item {
-  transition: transform 0.2s ease;
-}
-
-.event-item:hover {
-  transform: translateX(5px);
-  background: #f0f4f8;
+.clickable-player:hover {
+  color: #3498db;
+  text-decoration: underline;
 }
 
 @media (min-width: 1024px) {
@@ -437,16 +426,57 @@
 }
 
 @media (max-width: 768px) {
+  .formation-header { display: none; }
+
+  .pitch-container-mobile-wrap {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-team-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    background: #1a1a1a;
+    color: white;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
+  .mobile-team-label img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .mobile-team-label .formation-badge {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: #aaa;
+  }
+
+  .mobile-team-label.home-label {
+    border-radius: 8px 8px 0 0;
+  }
+
+  .mobile-team-label.away-label {
+    border-radius: 0 0 8px 8px;
+  }
+
   .match-stats-header { padding: 20px 10px; }
   .main-score { font-size: 32px; gap: 10px; }
   .stat-team img { width: 50px; height: 50px; }
   .event-item { width: 95%; }
+
   .coach-name { font-size: 0.8rem; }
   .coach-photo { width: 30px; height: 30px; }
   .coach-label { padding: 0 10px; font-size: 0.7rem; }
 
   .subs-columns { grid-template-columns: 1fr; }
-  .subs-column:first-child { border-right: none; border-bottom: 2px solid #f0f3f5; }
+  .subs-column:first-child {
+    border-right: none;
+    border-bottom: 2px solid #f0f3f5;
+  }
 
   .sub-player-row { padding: 8px 12px; gap: 8px; }
   .sub-photo-wrap { width: 32px; height: 32px; }
