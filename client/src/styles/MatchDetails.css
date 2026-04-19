@@ -15,7 +15,7 @@
 .match-stats-header {
   display: flex;
   justify-content: space-around;
-  align-items: center;
+  align-items: flex-start;
   padding: 30px;
   background: #fff;
   border-radius: 12px;
@@ -23,9 +23,18 @@
   margin-bottom: 30px;
 }
 
+.header-team-section {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+}
+
+.header-team-section.left { align-items: center; }
+.header-team-section.right { align-items: center; }
+
 .stat-team {
   text-align: center;
-  width: 40%;
+  width: 100%;
 }
 
 .stat-team img {
@@ -44,6 +53,20 @@
 .stat-team.clickable-team:hover {
   transform: translateY(-5px);
   background-color: #f8f9fa;
+}
+
+.scorers-list {
+  margin-top: 10px;
+  font-size: 11px;
+  color: #777;
+  width: 100%;
+}
+
+.scorers-list.left { text-align: right; padding-right: 20px; }
+.scorers-list.right { text-align: left; padding-left: 20px; }
+
+.scorer-item {
+  margin-bottom: 2px;
 }
 
 .score-container {
@@ -463,9 +486,12 @@
     border-radius: 0 0 8px 8px;
   }
 
-  .match-stats-header { padding: 20px 10px; }
+  .match-stats-header { padding: 20px 10px; flex-wrap: wrap; }
+  .header-team-section { width: 100%; order: 1; margin-bottom: 10px; }
+  .score-container { width: 100%; order: 0; margin-bottom: 15px; }
   .main-score { font-size: 32px; gap: 10px; }
   .stat-team img { width: 50px; height: 50px; }
+  .scorers-list { text-align: center !important; padding: 0 !important; }
   .event-item { width: 95%; }
 
   .coach-name { font-size: 0.8rem; }
