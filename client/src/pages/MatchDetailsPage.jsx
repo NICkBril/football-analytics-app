@@ -76,6 +76,10 @@ function MatchDetailsPage() {
   const team1 = stats[0];
   const team2 = stats[1];
 
+  const goalEvents = events.filter(ev => ev.type === "Goal" && ev.detail !== "Missed Penalty");
+  const homeScorers = goalEvents.filter(ev => ev.team.id === team1.team.id);
+  const awayScorers = goalEvents.filter(ev => ev.team.id === team2.team.id);
+
   function getStatValue(teamStats, type) {
     const stat = teamStats.statistics.find((s) => s.type === type);
     return stat ? stat.value : 0;
@@ -148,12 +152,21 @@ function MatchDetailsPage() {
 
       <div className="match-stats-header">
 
-        <div 
-          className="stat-team clickable-team"
-          onClick={() => navigate(`/team/${team1.team.id}`)}
-        >
-          <img src={team1.team.logo} alt={team1.team.name} />
-          <h2>{team1.team.name}</h2>
+        <div className="header-team-section left">
+          <div 
+            className="stat-team clickable-team"
+            onClick={() => navigate(`/team/${team1.team.id}`)}
+          >
+            <img src={team1.team.logo} alt={team1.team.name} />
+            <h2>{team1.team.name}</h2>
+          </div>
+          <div className="scorers-list left">
+            {homeScorers.map((s, i) => (
+              <div key={i} className="scorer-item">
+                {s.player.name} {s.time.elapsed}'{s.detail === "Penalty" && " (P)"}
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="score-container">
@@ -167,12 +180,21 @@ function MatchDetailsPage() {
           </div>
         </div>
 
-        <div 
-          className="stat-team clickable-team"
-          onClick={() => navigate(`/team/${team2.team.id}`)}
-        >
-          <img src={team2.team.logo} alt={team2.team.name} />
-          <h2>{team2.team.name}</h2>
+        <div className="header-team-section right">
+          <div 
+            className="stat-team clickable-team"
+            onClick={() => navigate(`/team/${team2.team.id}`)}
+          >
+            <img src={team2.team.logo} alt={team2.team.name} />
+            <h2>{team2.team.name}</h2>
+          </div>
+          <div className="scorers-list right">
+            {awayScorers.map((s, i) => (
+              <div key={i} className="scorer-item">
+                {s.player.name} {s.time.elapsed}'{s.detail === "Penalty" && " (P)"}
+              </div>
+            ))}
+          </div>
         </div>
 
       </div>
