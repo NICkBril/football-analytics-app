@@ -491,25 +491,59 @@
   }
 
   .match-stats-header {
-    padding: 20px 10px;
-    flex-wrap: wrap;
+    padding: 15px 5px;
+    justify-content: space-between;
+    gap: 5px;
   }
 
   .header-team-section {
-    width: 100%;
-    order: 1;
-    margin-bottom: 10px;
+    width: 32%;
   }
 
   .score-container {
-    width: 100%;
-    order: 0;
-    margin-bottom: 15px;
+    width: 30%;
+    justify-content: center;
   }
 
-  .main-score { font-size: 32px; gap: 10px; }
-  .stat-team img { width: 50px; height: 50px; }
-  .scorers-list { text-align: center !important; padding: 0 !important; }
+  .main-score { 
+    font-size: 24px; 
+    gap: 8px; 
+  }
+
+  .stat-team img { 
+    width: 45px; 
+    height: 45px; 
+  }
+
+  .stat-team h2 {
+    font-size: 0.75rem;
+    margin-top: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .scorers-list { 
+    font-size: 9px;
+    margin-top: 5px;
+  }
+
+  .scorers-list.left { 
+    text-align: center; 
+    padding-right: 0; 
+  }
+
+  .scorers-list.right { 
+    text-align: center; 
+    padding-left: 0; 
+  }
+
+  .match-status-badge {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+
   .event-item { width: 95%; }
   .coach-name { font-size: 0.8rem; }
   .coach-photo { width: 30px; height: 30px; }
