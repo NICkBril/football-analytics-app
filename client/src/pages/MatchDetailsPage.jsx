@@ -372,7 +372,6 @@ function MatchDetailsPage() {
             <div className="substitutes-section">
               <h3>Substitutes</h3>
 
-              {/* Desktop - List view */}
               <div className="subs-columns">
                 {lineups.map((lineup, idx) => (
                   <div key={idx} className="subs-column">
@@ -443,7 +442,6 @@ function MatchDetailsPage() {
                 ))}
               </div>
 
-              {/* Mobile - Grid cards */}
               <div className="subs-card-grid">
                 {lineups.map((lineup, idx) => (
                   <div key={idx} className="subs-card-col">
