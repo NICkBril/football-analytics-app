@@ -371,6 +371,8 @@ function MatchDetailsPage() {
 
             <div className="substitutes-section">
               <h3>Substitutes</h3>
+
+              {/* Desktop - List view */}
               <div className="subs-columns">
                 {lineups.map((lineup, idx) => (
                   <div key={idx} className="subs-column">
@@ -440,7 +442,67 @@ function MatchDetailsPage() {
                   </div>
                 ))}
               </div>
+
+              {/* Mobile - Grid cards */}
+              <div className="subs-card-grid">
+                {lineups.map((lineup, idx) => (
+                  <div key={idx} className="subs-card-col">
+
+                    <div className="subs-card-team-header">
+                      <img src={lineup.team.logo} alt={lineup.team.name} />
+                      <span>{lineup.team.name}</span>
+                    </div>
+
+                    <div className="subs-card-list">
+                      {lineup.substitutes.map((p) => {
+                        const evs = getPlayerEvs(p.player.id);
+                        const substTime = getSubstTime(p.player.id);
+                        const card = getCard(evs);
+                        const goalCount = getGoalCount(evs);
+                        const assistCount = getAssistCount(evs);
+                        const didPlay = substTime !== null;
+
+                        return (
+                          <div
+                            key={p.player.id}
+                            className="sub-card-item"
+                            onClick={() => setModalPlayerId(p.player.id)}
+                          >
+                            <div className="sub-card-photo-area">
+                              {substTime !== null && (
+                                <span className="sub-card-subst-badge">↑{substTime}'</span>
+                              )}
+                              {card && (
+                                <span className={`sub-card-badge-card ${card}`} />
+                              )}
+                              <div className={`sub-card-photo-wrapper ${didPlay ? "played" : ""}`}>
+                                <img
+                                  src={`https://media.api-sports.io/football/players/${p.player.id}.png`}
+                                  alt={p.player.name}
+                                  onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }}
+                                />
+                              </div>
+                              {(goalCount > 0 || assistCount > 0) && (
+                                <div className="sub-card-events-stack">
+                                  {goalCount > 0 && <span className="sub-card-event-icon">⚽</span>}
+                                  {assistCount > 0 && <span className="sub-card-event-icon">👟</span>}
+                                </div>
+                              )}
+                            </div>
+                            <span className="sub-card-name-badge">
+                              {p.player.name.split(" ").pop()}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                  </div>
+                ))}
+              </div>
+
             </div>
+
           </div>
         ) : (
           <p>Tactical lineups are not available for this match.</p>
