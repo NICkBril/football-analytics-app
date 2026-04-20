@@ -443,6 +443,10 @@
   text-decoration: underline;
 }
 
+.subs-card-grid {
+  display: none;
+}
+
 @media (min-width: 1024px) {
   .match-details-grid { flex-direction: row; }
   .stats-container, .events-container { flex: 1; }
@@ -486,27 +490,188 @@
     border-radius: 0 0 8px 8px;
   }
 
-  .match-stats-header { padding: 20px 10px; flex-wrap: wrap; }
-  .header-team-section { width: 100%; order: 1; margin-bottom: 10px; }
-  .score-container { width: 100%; order: 0; margin-bottom: 15px; }
+  .match-stats-header {
+    padding: 20px 10px;
+    flex-wrap: wrap;
+  }
+
+  .header-team-section {
+    width: 100%;
+    order: 1;
+    margin-bottom: 10px;
+  }
+
+  .score-container {
+    width: 100%;
+    order: 0;
+    margin-bottom: 15px;
+  }
+
   .main-score { font-size: 32px; gap: 10px; }
   .stat-team img { width: 50px; height: 50px; }
   .scorers-list { text-align: center !important; padding: 0 !important; }
   .event-item { width: 95%; }
-
   .coach-name { font-size: 0.8rem; }
   .coach-photo { width: 30px; height: 30px; }
   .coach-label { padding: 0 10px; font-size: 0.7rem; }
 
-  .subs-columns { grid-template-columns: 1fr; }
-  .subs-column:first-child {
-    border-right: none;
-    border-bottom: 2px solid #f0f3f5;
+  .subs-columns {
+    display: none;
   }
 
-  .sub-player-row { padding: 8px 12px; gap: 8px; }
-  .sub-photo-wrap { width: 32px; height: 32px; }
-  .sub-name { font-size: 0.82rem; }
-  .sub-pos { font-size: 0.7rem; }
-  .sub-number { font-size: 0.78rem; min-width: 18px; }
+  .subs-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid #f0f3f5;
+  }
+
+  .subs-card-col {
+    padding: 12px 8px 16px;
+  }
+
+  .subs-card-col:first-child {
+    border-right: 1px solid #f0f3f5;
+  }
+
+  .subs-card-team-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 4px 10px;
+    border-bottom: 1px solid #f0f3f5;
+    margin-bottom: 14px;
+  }
+
+  .subs-card-team-header img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+  }
+
+  .subs-card-team-header span {
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: #2c3e50;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .subs-card-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .sub-card-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    width: 68px;
+  }
+
+  .sub-card-item:active {
+    opacity: 0.75;
+  }
+
+  .sub-card-photo-area {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sub-card-photo-wrapper {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: #f0f3f5;
+    border: 2px solid #dce3eb;
+    overflow: hidden;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+    flex-shrink: 0;
+  }
+
+  .sub-card-photo-wrapper.played {
+    border-color: #27ae60;
+  }
+
+  .sub-card-photo-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sub-card-badge-card {
+    position: absolute;
+    left: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 11px;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    z-index: 3;
+  }
+
+  .sub-card-badge-card.yellow { background: #f1c40f; }
+  .sub-card-badge-card.red    { background: #e74c3c; }
+
+  .sub-card-events-stack {
+    position: absolute;
+    right: -8px;
+    top: -2px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 3;
+  }
+
+  .sub-card-event-icon {
+    font-size: 10px;
+    background: white;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    border: 1px solid #eee;
+    line-height: 1;
+  }
+
+  .sub-card-subst-badge {
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(39,174,96,0.95);
+    color: white;
+    font-size: 7px;
+    font-weight: 700;
+    padding: 1px 4px;
+    border-radius: 4px;
+    white-space: nowrap;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    z-index: 4;
+  }
+
+  .sub-card-name-badge {
+    background: rgba(255,255,255,0.95);
+    color: #1a1a1a;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 700;
+    white-space: nowrap;
+    max-width: 68px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    text-align: center;
+  }
 }
