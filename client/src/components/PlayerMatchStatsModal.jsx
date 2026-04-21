@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPlayerMatchStats } from "../api/footballApi";
+import Skeleton from "./Skeleton";
 import "../styles/PlayerMatchStatsModal.css";
 
 function PlayerMatchStatsModal({ playerId, fixtureId, onClose }) {
@@ -60,25 +61,46 @@ function PlayerMatchStatsModal({ playerId, fixtureId, onClose }) {
 
         <div className="pmm-header">
           <div className="pmm-photo-wrap">
-            <img
-              src={`https://media.api-sports.io/football/players/${playerId}.png`}
-              alt={player?.name}
-              onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }}
-            />
-            {!loading && rating > 0 && (
-              <span className="pmm-rating" style={{ background: ratingColor }}>
-                {rating.toFixed(1)}
-              </span>
+            {loading ? (
+              <div className="pmm-avatar-skeleton">
+                <Skeleton type="avatar" />
+              </div>
+            ) : (
+              <>
+                <img
+                  src={`https://media.api-sports.io/football/players/${playerId}.png`}
+                  alt={player?.name}
+                  onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }}
+                />
+                {rating > 0 && (
+                  <span className="pmm-rating" style={{ background: ratingColor }}>
+                    {rating.toFixed(1)}
+                  </span>
+                )}
+              </>
             )}
           </div>
           <button className="pmm-close-btn" onClick={onClose}>✕</button>
         </div>
 
         {loading ? (
-          <div className="pmm-loading">
-            <div className="pmm-spinner" />
-            <span>Loading stats...</span>
-          </div>
+          <>
+            <div className="pmm-skeleton-name">
+              <Skeleton type="title" />
+            </div>
+
+            <div className="pmm-skeleton-meta">
+              <Skeleton type="thumbnail" />
+              <Skeleton type="thumbnail" />
+              <Skeleton type="thumbnail" />
+            </div>
+
+            <div className="pmm-body pmm-skeleton-body">
+              <Skeleton type="text" />
+              <Skeleton type="text" />
+              <Skeleton type="text" />
+            </div>
+          </>
         ) : !s ? (
           <div className="pmm-no-data">No stats available for this player.</div>
         ) : (
@@ -108,7 +130,7 @@ function PlayerMatchStatsModal({ playerId, fixtureId, onClose }) {
 
             <div className="pmm-body">
 
-              <div className="pmm-section-title">⭐ Top stats</div>
+              <div className="pmm-section-title">⭐️ Top stats</div>
               {statRow("Minutes played", s.games?.minutes)}
               {statRow("Goals", s.goals?.total ?? 0)}
               {statRow("Assists", s.goals?.assists ?? 0)}
@@ -138,7 +160,7 @@ function PlayerMatchStatsModal({ playerId, fixtureId, onClose }) {
 
               {!isGoalkeeper && (
                 <>
-                  <div className="pmm-section-title">🛡️ Defence</div>
+                  <div className="pmm-section-title">🛡 Defence</div>
                   {statRow("Tackles", s.tackles?.total ?? 0)}
                   {statRow("Interceptions", s.tackles?.interceptions ?? 0)}
                   {statRow("Clearances", s.tackles?.blocks ?? 0)}
