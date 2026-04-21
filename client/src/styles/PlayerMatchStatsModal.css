@@ -59,6 +59,14 @@
   display: block;
 }
 
+.pmm-avatar-skeleton {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  opacity: 0.5;
+}
+
 .pmm-rating {
   position: absolute;
   top: -8px;
@@ -94,6 +102,24 @@
 
 .pmm-close-btn:hover {
   background: rgba(255, 255, 255, 0.28);
+}
+
+.pmm-skeleton-name {
+  padding: 16px 40px 0;
+  flex-shrink: 0;
+}
+
+.pmm-skeleton-meta {
+  display: flex;
+  justify-content: space-around;
+  padding: 14px 20px 12px;
+  border-bottom: 1.5px solid #f0f3f5;
+  flex-shrink: 0;
+  gap: 12px;
+}
+
+.pmm-skeleton-body {
+  padding-top: 16px;
 }
 
 .pmm-player-name {
@@ -228,23 +254,11 @@
   opacity: 0.75;
 }
 
-.pmm-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  padding: 40px 20px;
+.pmm-no-data {
+  text-align: center;
   color: #aaa;
   font-size: 0.9rem;
-}
-
-.pmm-spinner {
-  width: 32px;
-  height: 32px;
-  border: 3px solid #e8ecf0;
-  border-top-color: #3498db;
-  border-radius: 50%;
-  animation: pmm-spin 0.7s linear infinite;
+  padding: 30px 20px 40px;
 }
 
 .pmm-player-name.clickable-name {
@@ -255,17 +269,6 @@
 .pmm-player-name.clickable-name:hover {
   color: #3498db;
   text-decoration: underline;
-}
-
-@keyframes pmm-spin {
-  to { transform: rotate(360deg); }
-}
-
-.pmm-no-data {
-  text-align: center;
-  color: #aaa;
-  font-size: 0.9rem;
-  padding: 30px 20px 40px;
 }
 
 @media (max-width: 480px) {
