@@ -138,7 +138,7 @@ const FootballField = ({ lineup, teamType, events = [], onPlayerClick }) => {
 
   return (
     <div className="field-half">
-      {lineup.startXI.map((p) => {
+      {lineup.startXI.map((p, index) => {
         const pos = positions[p.player.id] || { top: "50%", left: "50%" };
         const evs = getEvs(p.player.id);
         const card = getCard(evs);
@@ -150,7 +150,10 @@ const FootballField = ({ lineup, teamType, events = [], onPlayerClick }) => {
           <div
             key={p.player.id}
             className="player-on-field"
-            style={pos}
+            style={{ 
+              ...pos, 
+              "--delay": `${index * 0.06}s` 
+            }}
             onClick={() => onPlayerClick(p.player.id)}
           >
             <div className="player-top-row">
@@ -179,16 +182,16 @@ const FootballField = ({ lineup, teamType, events = [], onPlayerClick }) => {
 
               {goals.length > 0 && (
                 <div className="player-events-stack goals">
-                  {goals.map((_, index) => (
-                    <span key={index} className="player-event-icon ball stacked">⚽</span>
+                  {goals.map((_, i) => (
+                    <span key={i} className="player-event-icon ball stacked">⚽</span>
                   ))}
                 </div>
               )}
 
               {assists.length > 0 && (
                 <div className="player-events-stack assists">
-                  {assists.map((_, index) => (
-                    <span key={index} className="player-event-icon boot stacked">👟</span>
+                  {assists.map((_, i) => (
+                    <span key={i} className="player-event-icon boot stacked">👟</span>
                   ))}
                 </div>
               )}
