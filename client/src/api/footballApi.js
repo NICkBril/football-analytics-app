@@ -322,3 +322,31 @@ export async function getPlayerMatchStats(fixtureId, playerId) {
   }
   return null;
 }
+
+export async function getMatchInjuries(fixtureId) {
+  const cacheKey = `injuries_${fixtureId}`;
+  const cached = getCachedData(cacheKey);
+  if (cached) return cached;
+
+  try {
+    const response = await fetch(
+      `${BASE_URL}/injuries?fixture=${fixtureId}`,
+      options
+    );
+
+    if (!response.ok) throw new Error("Failed to fetch injuries");
+
+    const data = await response.json();
+    const injuries = data.response;
+
+    if (injuries && injuries.length > 0) {
+      setCachedData(cacheKey, injuries);
+    }
+
+    return injuries;
+
+  } catch (error) {
+    console.error("Error loading injuries:", error);
+    return [];
+  }
+}
