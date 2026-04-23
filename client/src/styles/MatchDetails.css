@@ -719,3 +719,49 @@
     text-align: center;
   }
 }
+
+.injured-section {
+  margin-top: 30px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border: 1px solid #edf2f7;
+}
+
+.injured-section h3 {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #2d3748;
+  border-bottom: 2px solid #f7fafc;
+  padding-bottom: 10px;
+}
+
+.injury-status-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.icon-medical {
+  background: #fff5f5;
+  color: #e53e3e;
+  border: 1px solid #feb2b2;
+}
+
+.icon-suspension {
+  background: #fffaf0;
+  color: #dd6b20;
+  border: 1px solid #fbd38d;
+}
+
+.sub-reason {
+  font-size: 0.85rem;
+  color: #718096;
+  font-style: italic;
+}
