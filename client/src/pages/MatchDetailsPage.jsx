@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { getMatchStatistics, getMatchEvents, getMatches, getMatchLineups } from "../api/footballApi";
+import { getMatchStatistics, getMatchEvents, getMatches, getMatchLineups, getMatchInjuries } from "../api/footballApi";
 import Skeleton from "../components/Skeleton";
 import FootballField from "../components/FootballField";
 import PlayerMatchStatsModal from "../components/PlayerMatchStatsModal";
@@ -16,6 +16,7 @@ function MatchDetailsPage() {
   const [stats, setStats] = useState([]);
   const [events, setEvents] = useState([]);
   const [lineups, setLineups] = useState([]);
+  const [injuries, setInjuries] = useState([]);
   const [matchInfo, setMatchInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [modalPlayerId, setModalPlayerId] = useState(null);
@@ -28,6 +29,7 @@ function MatchDetailsPage() {
       const statsData = await getMatchStatistics(id);
       const eventsData = await getMatchEvents(id);
       const lineupsData = await getMatchLineups(id);
+      const injuriesData = await getMatchInjuries(id);
       
       const allMatches = await getMatches();
       const currentMatch = allMatches.find(m => m.fixture.id.toString() === id);
@@ -35,6 +37,7 @@ function MatchDetailsPage() {
       setStats(statsData);
       setEvents(eventsData);
       setLineups(lineupsData);
+      setInjuries(injuriesData);
       setMatchInfo(currentMatch);
       
       setLoading(false);
@@ -79,6 +82,9 @@ function MatchDetailsPage() {
   const goalEvents = events.filter(ev => ev.type === "Goal" && ev.detail !== "Missed Penalty");
   const homeScorers = goalEvents.filter(ev => ev.team.id === team1.team.id);
   const awayScorers = goalEvents.filter(ev => ev.team.id === team2.team.id);
+
+  const homeInjured = injuries.filter(p => p.team.id === lineups?.[0]?.team?.id);
+  const awayInjured = injuries.filter(p => p.team.id === lineups?.[1]?.team?.id);
 
   function getStatValue(teamStats, type) {
     const stat = teamStats.statistics.find((s) => s.type === type);
@@ -500,6 +506,70 @@ function MatchDetailsPage() {
               </div>
 
             </div>
+
+            {injuries.length > 0 && (
+              <div className="injured-section">
+                <h3>Injured & Suspended Players</h3>
+
+                <div className="subs-columns">
+                  {[homeInjured, awayInjured].map((teamList, idx) => (
+                    <div key={idx} className="subs-column">
+                      
+                      <div className="subs-team-header">
+                        <img src={lineups[idx].team.logo} alt="logo" />
+                        <span>{lineups[idx].team.name}</span>
+                      </div>
+
+                      {teamList.length > 0 ? (
+                        teamList.map((p) => {
+                          const reason = p.player.reason?.toLowerCase() || "";
+                          const isSuspended = reason.includes("susp") || reason.includes("red card");
+
+                          return (
+                            <div
+                              key={p.player.id}
+                              className="sub-player-row"
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => setModalPlayerId(p.player.id)}
+                            >
+                              <div className="sub-photo-wrap">
+                                <img
+                                  src={`https://media.api-sports.io/football/players/${p.player.id}.png`}
+                                  alt={p.player.name}
+                                  onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }}
+                                />
+                              </div>
+
+                              {/* Якщо номера немає, показуємо прочерк гарним кольором */}
+                              <span className="sub-number" style={{ color: '#cbd5e0' }}>
+                                {p.player.number || "—"}
+                              </span>
+
+                              <div className="sub-info">
+                                <span className="sub-name">{p.player.name}</span>
+                                <span className="sub-reason">{p.player.reason}</span>
+                              </div>
+
+                              <div className="sub-events">
+                                {isSuspended ? (
+                                  <div className="injury-status-icon icon-suspension" title="Suspended">R</div>
+                                ) : (
+                                  <div className="injury-status-icon icon-medical" title="Injured">✚</div>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <div className="sub-player-row" style={{ opacity: 0.6, justifyContent: 'center' }}>
+                          <span className="sub-reason">No missing players reported</span>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
           </div>
         ) : (
