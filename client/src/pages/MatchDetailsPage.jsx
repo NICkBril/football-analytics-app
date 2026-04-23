@@ -511,7 +511,7 @@ function MatchDetailsPage() {
               <div className="injured-section">
                 <h3>Injured & Suspended Players</h3>
 
-                <div className="subs-columns">
+                <div className="subs-columns desktop-only-list">
                   {[homeInjured, awayInjured].map((teamList, idx) => (
                     <div key={idx} className="subs-column">
                       
@@ -521,50 +521,59 @@ function MatchDetailsPage() {
                       </div>
 
                       {teamList.length > 0 ? (
-                        teamList.map((p) => {
-                          const reason = p.player.reason?.toLowerCase() || "";
-                          const isSuspended = reason.includes("susp") || reason.includes("red card");
-
-                          return (
-                            <div
-                              key={p.player.id}
-                              className="sub-player-row"
-                              style={{ cursor: 'pointer' }}
-                              onClick={() => setModalPlayerId(p.player.id)}
-                            >
-                              <div className="sub-photo-wrap">
-                                <img
-                                  src={`https://media.api-sports.io/football/players/${p.player.id}.png`}
-                                  alt={p.player.name}
-                                  onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }}
-                                />
-                              </div>
-
-                              {/* Якщо номера немає, показуємо прочерк гарним кольором */}
-                              <span className="sub-number" style={{ color: '#cbd5e0' }}>
-                                {p.player.number || "—"}
-                              </span>
-
-                              <div className="sub-info">
-                                <span className="sub-name">{p.player.name}</span>
-                                <span className="sub-reason">{p.player.reason}</span>
-                              </div>
-
-                              <div className="sub-events">
-                                {isSuspended ? (
-                                  <div className="injury-status-icon icon-suspension" title="Suspended">R</div>
-                                ) : (
-                                  <div className="injury-status-icon icon-medical" title="Injured">✚</div>
-                                )}
-                              </div>
+                        teamList.map((p) => (
+                          <div key={p.player.id} className="sub-player-row" onClick={() => setModalPlayerId(p.player.id)}>
+                            <div className="sub-photo-wrap">
+                              <img src={`https://media.api-sports.io/football/players/${p.player.id}.png`} alt={p.player.name} onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }} />
                             </div>
-                          );
-                        })
+                            <span className="sub-number" style={{ color: '#cbd5e0' }}>{p.player.number || "—"}</span>
+                            <div className="sub-info">
+                              <span className="sub-name">{p.player.name}</span>
+                              <span className="sub-reason">{p.player.reason}</span>
+                            </div>
+                            <div className="sub-events">
+                              {p.player.reason?.toLowerCase().includes("susp") ? (
+                                <div className="injury-status-icon icon-suspension">R</div>
+                              ) : (
+                                <div className="injury-status-icon icon-medical">✚</div>
+                              )}
+                            </div>
+                          </div>
+                        ))
                       ) : (
-                        <div className="sub-player-row" style={{ opacity: 0.6, justifyContent: 'center' }}>
+                        <div className="sub-player-row empty-row">
                           <span className="sub-reason">No missing players reported</span>
                         </div>
                       )}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="injured-card-grid">
+                  {[homeInjured, awayInjured].map((teamList, idx) => (
+                    <div key={idx} className="injured-card-col">
+                      <div className="subs-card-team-header">
+                        <img src={lineups[idx].team.logo} alt="logo" />
+                        <span>{lineups[idx].team.name}</span>
+                      </div>
+                      <div className="injured-mobile-list">
+                        {teamList.map((p) => (
+                          <div key={p.player.id} className="injured-mobile-card" onClick={() => setModalPlayerId(p.player.id)}>
+                            <div className="injured-photo-container">
+                              <div className="injured-photo-wrapper">
+                                <img src={`https://media.api-sports.io/football/players/${p.player.id}.png`} alt={p.player.name} onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }} />
+                              </div>
+                              <div className={`injury-badge-overlap ${p.player.reason?.toLowerCase().includes("susp") ? "suspension" : "medical"}`}>
+                                {p.player.reason?.toLowerCase().includes("susp") ? "R" : "✚"}
+                              </div>
+                            </div>
+                            <div className="injured-mobile-info">
+                              <span className="injured-mobile-name">{p.player.name.split(" ").pop()}</span>
+                              <span className="injured-mobile-reason">{p.player.reason}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>
