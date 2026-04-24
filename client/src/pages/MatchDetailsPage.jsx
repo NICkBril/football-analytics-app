@@ -121,6 +121,30 @@ function MatchDetailsPage() {
     return ev ? ev.time.elapsed : null;
   };
 
+  const handlePlayerClick = (playerId) => {
+    // 1. Перевірка на травмованих
+    const isInjured = injuries.some(p => p.player.id === playerId);
+    if (isInjured) {
+      navigate(`/player/${playerId}`);
+      return;
+    }
+
+    // 2. Перевірка на запасних, що не вийшли (DNP)
+    const allSubstitutes = lineups.flatMap(l => l.substitutes);
+    const subInfo = allSubstitutes.find(s => s.player.id === playerId);
+    
+    if (subInfo) {
+      const played = getSubstTime(playerId) !== null;
+      if (!played) {
+        navigate(`/player/${playerId}`);
+        return;
+      }
+    }
+
+    // 3. В інших випадках (старт або заміна, що грала) — модалка
+    setModalPlayerId(playerId);
+  };
+
   const getCard = (evs) => {
     if (evs.some(e => !e._isAssist && e.type === "Card" &&
         (e.detail === "Red Card" || e.detail === "Yellow Red Card"))) return "red";
@@ -273,7 +297,7 @@ function MatchDetailsPage() {
                   <div className="event-content">
                     <div
                       className="event-player clickable-player"
-                      onClick={() => setModalPlayerId(event.player.id)}
+                      onClick={() => handlePlayerClick(event.player.id)}
                     >
                       {event.player.name}
                     </div>
@@ -284,7 +308,7 @@ function MatchDetailsPage() {
                       {event.assist?.name && (
                         <span
                           className="assist-name clickable-player"
-                          onClick={() => setModalPlayerId(event.assist.id)}
+                          onClick={() => handlePlayerClick(event.assist.id)}
                         >
                           {" "}
                           (Assist: {event.assist.name})
@@ -333,13 +357,13 @@ function MatchDetailsPage() {
                   lineup={lineups[0]}
                   teamType="home"
                   events={events}
-                  onPlayerClick={(pid) => setModalPlayerId(pid)}
+                  onPlayerClick={(pid) => handlePlayerClick(pid)}
                 />
                 <FootballField
                   lineup={lineups[1]}
                   teamType="away"
                   events={events}
-                  onPlayerClick={(pid) => setModalPlayerId(pid)}
+                  onPlayerClick={(pid) => handlePlayerClick(pid)}
                 />
               </div>
 
@@ -399,7 +423,7 @@ function MatchDetailsPage() {
                         <div
                           key={p.player.id}
                           className={`sub-player-row ${didPlay ? "sub-played" : ""}`}
-                          onClick={() => setModalPlayerId(p.player.id)}
+                          onClick={() => handlePlayerClick(p.player.id)}
                         >
                           <div className="sub-photo-wrap">
                             <img
@@ -470,7 +494,7 @@ function MatchDetailsPage() {
                           <div
                             key={p.player.id}
                             className="sub-card-item"
-                            onClick={() => setModalPlayerId(p.player.id)}
+                            onClick={() => handlePlayerClick(p.player.id)}
                           >
                             <div className="sub-card-photo-area">
                               {substTime !== null && (
@@ -522,7 +546,7 @@ function MatchDetailsPage() {
 
                       {teamList.length > 0 ? (
                         teamList.map((p) => (
-                          <div key={p.player.id} className="sub-player-row" onClick={() => setModalPlayerId(p.player.id)}>
+                          <div key={p.player.id} className="sub-player-row" onClick={() => handlePlayerClick(p.player.id)}>
                             <div className="sub-photo-wrap">
                               <img src={`https://media.api-sports.io/football/players/${p.player.id}.png`} alt={p.player.name} onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }} />
                             </div>
@@ -558,7 +582,7 @@ function MatchDetailsPage() {
                       </div>
                       <div className="injured-mobile-list">
                         {teamList.map((p) => (
-                          <div key={p.player.id} className="injured-mobile-card" onClick={() => setModalPlayerId(p.player.id)}>
+                          <div key={p.player.id} className="injured-mobile-card" onClick={() => handlePlayerClick(p.player.id)}>
                             <div className="injured-photo-container">
                               <div className="injured-photo-wrapper">
                                 <img src={`https://media.api-sports.io/football/players/${p.player.id}.png`} alt={p.player.name} onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }} />
