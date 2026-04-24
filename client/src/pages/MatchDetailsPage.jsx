@@ -122,14 +122,12 @@ function MatchDetailsPage() {
   };
 
   const handlePlayerClick = (playerId) => {
-    // 1. Перевірка на травмованих
     const isInjured = injuries.some(p => p.player.id === playerId);
     if (isInjured) {
       navigate(`/player/${playerId}`);
       return;
     }
 
-    // 2. Перевірка на запасних, що не вийшли (DNP)
     const allSubstitutes = lineups.flatMap(l => l.substitutes);
     const subInfo = allSubstitutes.find(s => s.player.id === playerId);
     
@@ -141,7 +139,6 @@ function MatchDetailsPage() {
       }
     }
 
-    // 3. В інших випадках (старт або заміна, що грала) — модалка
     setModalPlayerId(playerId);
   };
 
