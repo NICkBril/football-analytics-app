@@ -8,6 +8,13 @@ import PlayerMatchStatsModal from "../components/PlayerMatchStatsModal";
 import "../styles/MatchDetails.css";
 import "../styles/FootballField.css";
 
+const MOBILE_KEY_STATS = [
+  "Ball Possession",
+  "expected_goals",
+  "Total Shots",
+  "Shots on Goal",
+];
+
 function MatchDetailsPage() {
 
   const { id } = useParams();
@@ -20,26 +27,27 @@ function MatchDetailsPage() {
   const [matchInfo, setMatchInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [modalPlayerId, setModalPlayerId] = useState(null);
+  const [mobileTab, setMobileTab] = useState("overview");
 
   useEffect(() => {
 
     async function loadData() {
       setLoading(true);
-      
+
       const statsData = await getMatchStatistics(id);
       const eventsData = await getMatchEvents(id);
       const lineupsData = await getMatchLineups(id);
       const injuriesData = await getMatchInjuries(id);
-      
+
       const allMatches = await getMatches();
       const currentMatch = allMatches.find(m => m.fixture.id.toString() === id);
-      
+
       setStats(statsData);
       setEvents(eventsData);
       setLineups(lineupsData);
       setInjuries(injuriesData);
       setMatchInfo(currentMatch);
-      
+
       setLoading(false);
     }
 
@@ -130,7 +138,7 @@ function MatchDetailsPage() {
 
     const allSubstitutes = lineups.flatMap(l => l.substitutes);
     const subInfo = allSubstitutes.find(s => s.player.id === playerId);
-    
+
     if (subInfo) {
       const played = getSubstTime(playerId) !== null;
       if (!played) {
@@ -164,9 +172,370 @@ function MatchDetailsPage() {
     return map[pos] || pos;
   };
 
+  const renderStatItem = (type) => {
+    const val1 = getStatValue(team1, type) || 0;
+    const val2 = getStatValue(team2, type) || 0;
+    const num1 = parseFloat(val1);
+    const num2 = parseFloat(val2);
+    const total = num1 + num2;
+    const percentage = total === 0 ? 50 : (num1 / total) * 100;
+
+    return (
+      <div key={type} className="stat-item">
+
+        <div className="stat-info">
+          <span>{val1}</span>
+          <span className="stat-name">{type}</span>
+          <span>{val2}</span>
+        </div>
+
+        <div className="stat-bar-bg">
+          <div
+            className="stat-bar-fill"
+            style={{ width: `${percentage}%` }}
+          ></div>
+        </div>
+
+      </div>
+    );
+  };
+
+  const renderTimeline = () => (
+    <div className="events-list">
+      {events.map((event, index) => {
+
+        const isTeam1 = event.team.id === team1.team.id;
+
+        return (
+          <div
+            key={index}
+            className={`event-item ${isTeam1 ? "left" : "right"}`}
+          >
+
+            <div className="event-time">{event.time.elapsed}'</div>
+
+            <div className="event-icon">
+              {event.type === "Goal" && "⚽"}
+              {event.type === "Card" && (event.detail === "Yellow Card" ? "🟨" : "🟥")}
+              {event.type === "subst" && "🔄"}
+            </div>
+
+            <div className="event-content">
+              <div
+                className="event-player clickable-player"
+                onClick={() => handlePlayerClick(event.player.id)}
+              >
+                {event.player.name}
+              </div>
+
+              <div className="event-detail">
+                {event.detail}
+
+                {event.assist?.name && (
+                  <span
+                    className="assist-name clickable-player"
+                    onClick={() => handlePlayerClick(event.assist.id)}
+                  >
+                    {" "}
+                    (Assist: {event.assist.name})
+                  </span>
+                )}
+              </div>
+            </div>
+
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  const renderLineupsContent = () => (
+    <>
+      {lineups && lineups.length >= 2 ? (
+        <div className="lineups-visual">
+
+          <div className="formation-header">
+            <div className="team-form-info">
+              <img src={lineups[0].team.logo} alt="logo" />
+              <span>{lineups[0].formation}</span>
+            </div>
+            <div className="team-form-info text-right">
+              <span>{lineups[1].formation}</span>
+              <img src={lineups[1].team.logo} alt="logo" />
+            </div>
+          </div>
+
+          <div className="pitch-container-mobile-wrap">
+
+            <div className="mobile-team-label home-label">
+              <img src={lineups[0].team.logo} alt={lineups[0].team.name} />
+              <span>{lineups[0].team.name}</span>
+              <span className="formation-badge">{lineups[0].formation}</span>
+            </div>
+
+            <div className="pitch-container">
+              <FootballField
+                lineup={lineups[0]}
+                teamType="home"
+                events={events}
+                onPlayerClick={(pid) => handlePlayerClick(pid)}
+              />
+              <FootballField
+                lineup={lineups[1]}
+                teamType="away"
+                events={events}
+                onPlayerClick={(pid) => handlePlayerClick(pid)}
+              />
+            </div>
+
+            <div className="mobile-team-label away-label">
+              <img src={lineups[1].team.logo} alt={lineups[1].team.name} />
+              <span>{lineups[1].team.name}</span>
+              <span className="formation-badge">{lineups[1].formation}</span>
+            </div>
+
+          </div>
+
+          <div className="coach-section">
+            <div className="coach-card left">
+              <img
+                src={`https://media.api-sports.io/football/coachs/${lineups[0].coach.id}.png`}
+                alt={lineups[0].coach.name}
+                className="coach-photo"
+                onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }}
+              />
+              <span className="coach-name">{lineups[0].coach.name}</span>
+            </div>
+
+            <div className="coach-label">Coach</div>
+
+            <div className="coach-card right">
+              <span className="coach-name">{lineups[1].coach.name}</span>
+              <img
+                src={`https://media.api-sports.io/football/coachs/${lineups[1].coach.id}.png`}
+                alt={lineups[1].coach.name}
+                className="coach-photo"
+                onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }}
+              />
+            </div>
+          </div>
+
+          <div className="substitutes-section">
+            <h3>Substitutes</h3>
+
+            <div className="subs-columns">
+              {lineups.map((lineup, idx) => (
+                <div key={idx} className="subs-column">
+
+                  <div className="subs-team-header">
+                    <img src={lineup.team.logo} alt={lineup.team.name} />
+                    <span>{lineup.team.name}</span>
+                  </div>
+
+                  {lineup.substitutes.map((p) => {
+                    const evs = getPlayerEvs(p.player.id);
+                    const substTime = getSubstTime(p.player.id);
+                    const card = getCard(evs);
+                    const goalCount = getGoalCount(evs);
+                    const assistCount = getAssistCount(evs);
+                    const didPlay = substTime !== null;
+
+                    return (
+                      <div
+                        key={p.player.id}
+                        className={`sub-player-row ${didPlay ? "sub-played" : ""}`}
+                        onClick={() => handlePlayerClick(p.player.id)}
+                      >
+                        <div className="sub-photo-wrap">
+                          <img
+                            src={`https://media.api-sports.io/football/players/${p.player.id}.png`}
+                            alt={p.player.name}
+                            onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }}
+                          />
+                        </div>
+
+                        <span className="sub-number">{p.player.number}</span>
+
+                        <div className="sub-info">
+                          <span className="sub-name">{p.player.name}</span>
+                          <span className="sub-pos">
+                            {getPositionLabel(p.player.pos)}
+                          </span>
+                        </div>
+
+                        <div className="sub-events">
+                          {card === "yellow" && <span className="sub-card sub-card-yellow" />}
+                          {card === "red" && <span className="sub-card sub-card-red" />}
+                          {assistCount > 0 && (
+                            <span className="sub-event-icon">👟</span>
+                          )}
+                          {goalCount > 0 && (
+                            <span className="sub-event-icon">
+                              ⚽{goalCount > 1 ? `×${goalCount}` : ""}
+                            </span>
+                          )}
+                        </div>
+
+                        {didPlay ? (
+                          <div className="sub-time-block">
+                            <span className="sub-time">{substTime}'</span>
+                            <span className="sub-arrow-in">→</span>
+                          </div>
+                        ) : (
+                          <div className="sub-time-block sub-did-not-play">
+                            <span className="sub-dnp">—</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+
+            <div className="subs-card-grid">
+              {lineups.map((lineup, idx) => (
+                <div key={idx} className="subs-card-col">
+
+                  <div className="subs-card-team-header">
+                    <img src={lineup.team.logo} alt={lineup.team.name} />
+                    <span>{lineup.team.name}</span>
+                  </div>
+
+                  <div className="subs-card-list">
+                    {lineup.substitutes.map((p) => {
+                      const evs = getPlayerEvs(p.player.id);
+                      const substTime = getSubstTime(p.player.id);
+                      const card = getCard(evs);
+                      const goalCount = getGoalCount(evs);
+                      const assistCount = getAssistCount(evs);
+                      const didPlay = substTime !== null;
+
+                      return (
+                        <div
+                          key={p.player.id}
+                          className="sub-card-item"
+                          onClick={() => handlePlayerClick(p.player.id)}
+                        >
+                          <div className="sub-card-photo-area">
+                            {substTime !== null && (
+                              <span className="sub-card-subst-badge">↑{substTime}'</span>
+                            )}
+                            {card && (
+                              <span className={`sub-card-badge-card ${card}`} />
+                            )}
+                            <div className={`sub-card-photo-wrapper ${didPlay ? "played" : ""}`}>
+                              <img
+                                src={`https://media.api-sports.io/football/players/${p.player.id}.png`}
+                                alt={p.player.name}
+                                onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }}
+                              />
+                            </div>
+                            {(goalCount > 0 || assistCount > 0) && (
+                              <div className="sub-card-events-stack">
+                                {goalCount > 0 && <span className="sub-card-event-icon">⚽</span>}
+                                {assistCount > 0 && <span className="sub-card-event-icon">👟</span>}
+                              </div>
+                            )}
+                          </div>
+                          <span className="sub-card-name-badge">
+                            {p.player.name.split(" ").pop()}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                </div>
+              ))}
+            </div>
+
+          </div>
+
+          {injuries.length > 0 && (
+            <div className="injured-section">
+              <h3>Injured & Suspended Players</h3>
+
+              <div className="subs-columns desktop-only-list">
+                {[homeInjured, awayInjured].map((teamList, idx) => (
+                  <div key={idx} className="subs-column">
+
+                    <div className="subs-team-header">
+                      <img src={lineups[idx].team.logo} alt="logo" />
+                      <span>{lineups[idx].team.name}</span>
+                    </div>
+
+                    {teamList.length > 0 ? (
+                      teamList.map((p) => (
+                        <div key={p.player.id} className="sub-player-row" onClick={() => handlePlayerClick(p.player.id)}>
+                          <div className="sub-photo-wrap">
+                            <img src={`https://media.api-sports.io/football/players/${p.player.id}.png`} alt={p.player.name} onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }} />
+                          </div>
+                          <span className="sub-number" style={{ color: '#cbd5e0' }}>{p.player.number || "—"}</span>
+                          <div className="sub-info">
+                            <span className="sub-name">{p.player.name}</span>
+                            <span className="sub-reason">{p.player.reason}</span>
+                          </div>
+                          <div className="sub-events">
+                            {p.player.reason?.toLowerCase().includes("susp") ? (
+                              <div className="injury-status-icon icon-suspension">R</div>
+                            ) : (
+                              <div className="injury-status-icon icon-medical">✚</div>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="sub-player-row">
+                        <span className="sub-reason">No missing players reported</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <div className="injured-card-grid">
+                {[homeInjured, awayInjured].map((teamList, idx) => (
+                  <div key={idx} className="injured-card-col">
+                    <div className="subs-card-team-header">
+                      <img src={lineups[idx].team.logo} alt="logo" />
+                      <span>{lineups[idx].team.name}</span>
+                    </div>
+                    <div className="injured-mobile-list">
+                      {teamList.map((p) => (
+                        <div key={p.player.id} className="injured-mobile-card" onClick={() => handlePlayerClick(p.player.id)}>
+                          <div className="injured-photo-container">
+                            <div className="injured-photo-wrapper">
+                              <img src={`https://media.api-sports.io/football/players/${p.player.id}.png`} alt={p.player.name} onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }} />
+                            </div>
+                            <div className={`injury-badge-overlap ${p.player.reason?.toLowerCase().includes("susp") ? "suspension" : "medical"}`}>
+                              {p.player.reason?.toLowerCase().includes("susp") ? "R" : "✚"}
+                            </div>
+                          </div>
+                          <div className="injured-mobile-info">
+                            <span className="injured-mobile-name">{p.player.name.split(" ").pop()}</span>
+                            <span className="injured-mobile-reason">{p.player.reason}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+          )}
+
+        </div>
+      ) : (
+        <p>Tactical lineups are not available for this match.</p>
+      )}
+    </>
+  );
+
   return (
 
-    <motion.div 
+    <motion.div
       className="page-container"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -180,7 +549,7 @@ function MatchDetailsPage() {
       <div className="match-stats-header">
 
         <div className="header-team-section left">
-          <div 
+          <div
             className="stat-team clickable-team"
             onClick={() => navigate(`/team/${team1.team.id}`)}
           >
@@ -208,7 +577,7 @@ function MatchDetailsPage() {
         </div>
 
         <div className="header-team-section right">
-          <div 
+          <div
             className="stat-team clickable-team"
             onClick={() => navigate(`/team/${team2.team.id}`)}
           >
@@ -226,44 +595,69 @@ function MatchDetailsPage() {
 
       </div>
 
-      <div className="match-details-grid">
+      <div className="mobile-tabs">
+        <button
+          className={mobileTab === "overview" ? "mobile-tab active" : "mobile-tab"}
+          onClick={() => setMobileTab("overview")}
+        >
+          Overview
+        </button>
+        <button
+          className={mobileTab === "stats" ? "mobile-tab active" : "mobile-tab"}
+          onClick={() => setMobileTab("stats")}
+        >
+          Stats
+        </button>
+        <button
+          className={mobileTab === "lineups" ? "mobile-tab active" : "mobile-tab"}
+          onClick={() => setMobileTab("lineups")}
+        >
+          Lineups
+        </button>
+      </div>
+
+      <div className={`mobile-tab-panel ${mobileTab === "overview" ? "visible" : ""}`}>
+
+        <div className="stats-container">
+          <h3>Key Stats</h3>
+          {MOBILE_KEY_STATS.map(type => {
+            const found = allStatTypes.find(t => t === type || t.toLowerCase() === type.toLowerCase());
+            return found ? renderStatItem(found) : null;
+          })}
+        </div>
+
+        <div className="events-container" style={{ marginTop: '16px' }}>
+          <h3>Match Timeline</h3>
+          {renderTimeline()}
+        </div>
+
+      </div>
+
+      <div className={`mobile-tab-panel ${mobileTab === "stats" ? "visible" : ""}`}>
+
+        <div className="stats-container">
+          <h3>Match Statistics</h3>
+          {allStatTypes.map(type => renderStatItem(type))}
+        </div>
+
+      </div>
+
+      <div className={`mobile-tab-panel ${mobileTab === "lineups" ? "visible" : ""}`}>
+
+        <div className="lineups-section" style={{ marginTop: 0 }}>
+          <h3>Tactical Lineups</h3>
+          {renderLineupsContent()}
+        </div>
+
+      </div>
+
+      <div className="match-details-grid desktop-grid">
 
         <div className="stats-container">
 
           <h3>Match Statistics</h3>
 
-          {allStatTypes.map((type) => {
-
-            const val1 = getStatValue(team1, type) || 0;
-            const val2 = getStatValue(team2, type) || 0;
-
-            const num1 = parseFloat(val1);
-            const num2 = parseFloat(val2);
-            const total = num1 + num2;
-            const percentage = total === 0 ? 50 : (num1 / total) * 100;
-
-            return (
-
-              <div key={type} className="stat-item">
-
-                <div className="stat-info">
-                  <span>{val1}</span>
-                  <span className="stat-name">{type}</span>
-                  <span>{val2}</span>
-                </div>
-
-                <div className="stat-bar-bg">
-                  <div 
-                    className="stat-bar-fill" 
-                    style={{ width: `${percentage}%` }}
-                  ></div>
-                </div>
-
-              </div>
-
-            );
-
-          })}
+          {allStatTypes.map(type => renderStatItem(type))}
 
         </div>
 
@@ -271,340 +665,17 @@ function MatchDetailsPage() {
 
           <h3>Match Timeline</h3>
 
-          <div className="events-list">
-
-            {events.map((event, index) => {
-              
-              const isTeam1 = event.team.id === team1.team.id;
-
-              return (
-                <div 
-                  key={index} 
-                  className={`event-item ${isTeam1 ? "left" : "right"}`}
-                >
-                  
-                  <div className="event-time">{event.time.elapsed}'</div>
-                  
-                  <div className="event-icon">
-                    {event.type === "Goal" && "⚽"}
-                    {event.type === "Card" && (event.detail === "Yellow Card" ? "🟨" : "🟥")}
-                    {event.type === "subst" && "🔄"}
-                  </div>
-
-                  <div className="event-content">
-                    <div
-                      className="event-player clickable-player"
-                      onClick={() => handlePlayerClick(event.player.id)}
-                    >
-                      {event.player.name}
-                    </div>
-
-                    <div className="event-detail">
-                      {event.detail}
-
-                      {event.assist?.name && (
-                        <span
-                          className="assist-name clickable-player"
-                          onClick={() => handlePlayerClick(event.assist.id)}
-                        >
-                          {" "}
-                          (Assist: {event.assist.name})
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                </div>
-              );
-            })}
-
-          </div>
+          {renderTimeline()}
 
         </div>
 
       </div>
 
-      <div className="lineups-section">
+      <div className="lineups-section desktop-lineups">
 
         <h3>Tactical Lineups</h3>
 
-        {lineups && lineups.length >= 2 ? (
-          <div className="lineups-visual">
-            <div className="formation-header">
-              <div className="team-form-info">
-                <img src={lineups[0].team.logo} alt="logo" />
-                <span>{lineups[0].formation}</span>
-              </div>
-              <div className="team-form-info text-right">
-                <span>{lineups[1].formation}</span>
-                <img src={lineups[1].team.logo} alt="logo" />
-              </div>
-            </div>
-
-            <div className="pitch-container-mobile-wrap">
-
-              <div className="mobile-team-label home-label">
-                <img src={lineups[0].team.logo} alt={lineups[0].team.name} />
-                <span>{lineups[0].team.name}</span>
-                <span className="formation-badge">{lineups[0].formation}</span>
-              </div>
-
-              <div className="pitch-container">
-                <FootballField
-                  lineup={lineups[0]}
-                  teamType="home"
-                  events={events}
-                  onPlayerClick={(pid) => handlePlayerClick(pid)}
-                />
-                <FootballField
-                  lineup={lineups[1]}
-                  teamType="away"
-                  events={events}
-                  onPlayerClick={(pid) => handlePlayerClick(pid)}
-                />
-              </div>
-
-              <div className="mobile-team-label away-label">
-                <img src={lineups[1].team.logo} alt={lineups[1].team.name} />
-                <span>{lineups[1].team.name}</span>
-                <span className="formation-badge">{lineups[1].formation}</span>
-              </div>
-
-            </div>
-
-            <div className="coach-section">
-              <div className="coach-card left">
-                <img 
-                  src={`https://media.api-sports.io/football/coachs/${lineups[0].coach.id}.png`} 
-                  alt={lineups[0].coach.name}
-                  className="coach-photo"
-                  onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }}
-                />
-                <span className="coach-name">{lineups[0].coach.name}</span>
-              </div>
-              
-              <div className="coach-label">Coach</div>
-
-              <div className="coach-card right">
-                <span className="coach-name">{lineups[1].coach.name}</span>
-                <img 
-                  src={`https://media.api-sports.io/football/coachs/${lineups[1].coach.id}.png`} 
-                  alt={lineups[1].coach.name}
-                  className="coach-photo"
-                  onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }}
-                />
-              </div>
-            </div>
-
-            <div className="substitutes-section">
-              <h3>Substitutes</h3>
-
-              <div className="subs-columns">
-                {lineups.map((lineup, idx) => (
-                  <div key={idx} className="subs-column">
-
-                    <div className="subs-team-header">
-                      <img src={lineup.team.logo} alt={lineup.team.name} />
-                      <span>{lineup.team.name}</span>
-                    </div>
-
-                    {lineup.substitutes.map((p) => {
-                      const evs = getPlayerEvs(p.player.id);
-                      const substTime = getSubstTime(p.player.id);
-                      const card = getCard(evs);
-                      const goalCount = getGoalCount(evs);
-                      const assistCount = getAssistCount(evs);
-                      const didPlay = substTime !== null;
-
-                      return (
-                        <div
-                          key={p.player.id}
-                          className={`sub-player-row ${didPlay ? "sub-played" : ""}`}
-                          onClick={() => handlePlayerClick(p.player.id)}
-                        >
-                          <div className="sub-photo-wrap">
-                            <img
-                              src={`https://media.api-sports.io/football/players/${p.player.id}.png`}
-                              alt={p.player.name}
-                              onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }}
-                            />
-                          </div>
-
-                          <span className="sub-number">{p.player.number}</span>
-
-                          <div className="sub-info">
-                            <span className="sub-name">{p.player.name}</span>
-                            <span className="sub-pos">
-                              {getPositionLabel(p.player.pos)}
-                            </span>
-                          </div>
-
-                          <div className="sub-events">
-                            {card === "yellow" && <span className="sub-card sub-card-yellow" />}
-                            {card === "red" && <span className="sub-card sub-card-red" />}
-                            {assistCount > 0 && (
-                              <span className="sub-event-icon">👟</span>
-                            )}
-                            {goalCount > 0 && (
-                              <span className="sub-event-icon">
-                                ⚽{goalCount > 1 ? `×${goalCount}` : ""}
-                              </span>
-                            )}
-                          </div>
-
-                          {didPlay ? (
-                            <div className="sub-time-block">
-                              <span className="sub-time">{substTime}'</span>
-                              <span className="sub-arrow-in">→</span>
-                            </div>
-                          ) : (
-                            <div className="sub-time-block sub-did-not-play">
-                              <span className="sub-dnp">—</span>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                ))}
-              </div>
-
-              <div className="subs-card-grid">
-                {lineups.map((lineup, idx) => (
-                  <div key={idx} className="subs-card-col">
-
-                    <div className="subs-card-team-header">
-                      <img src={lineup.team.logo} alt={lineup.team.name} />
-                      <span>{lineup.team.name}</span>
-                    </div>
-
-                    <div className="subs-card-list">
-                      {lineup.substitutes.map((p) => {
-                        const evs = getPlayerEvs(p.player.id);
-                        const substTime = getSubstTime(p.player.id);
-                        const card = getCard(evs);
-                        const goalCount = getGoalCount(evs);
-                        const assistCount = getAssistCount(evs);
-                        const didPlay = substTime !== null;
-
-                        return (
-                          <div
-                            key={p.player.id}
-                            className="sub-card-item"
-                            onClick={() => handlePlayerClick(p.player.id)}
-                          >
-                            <div className="sub-card-photo-area">
-                              {substTime !== null && (
-                                <span className="sub-card-subst-badge">↑{substTime}'</span>
-                              )}
-                              {card && (
-                                <span className={`sub-card-badge-card ${card}`} />
-                              )}
-                              <div className={`sub-card-photo-wrapper ${didPlay ? "played" : ""}`}>
-                                <img
-                                  src={`https://media.api-sports.io/football/players/${p.player.id}.png`}
-                                  alt={p.player.name}
-                                  onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }}
-                                />
-                              </div>
-                              {(goalCount > 0 || assistCount > 0) && (
-                                <div className="sub-card-events-stack">
-                                  {goalCount > 0 && <span className="sub-card-event-icon">⚽</span>}
-                                  {assistCount > 0 && <span className="sub-card-event-icon">👟</span>}
-                                </div>
-                              )}
-                            </div>
-                            <span className="sub-card-name-badge">
-                              {p.player.name.split(" ").pop()}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                  </div>
-                ))}
-              </div>
-
-            </div>
-
-            {injuries.length > 0 && (
-              <div className="injured-section">
-                <h3>Injured & Suspended Players</h3>
-
-                <div className="subs-columns desktop-only-list">
-                  {[homeInjured, awayInjured].map((teamList, idx) => (
-                    <div key={idx} className="subs-column">
-                      
-                      <div className="subs-team-header">
-                        <img src={lineups[idx].team.logo} alt="logo" />
-                        <span>{lineups[idx].team.name}</span>
-                      </div>
-
-                      {teamList.length > 0 ? (
-                        teamList.map((p) => (
-                          <div key={p.player.id} className="sub-player-row" onClick={() => handlePlayerClick(p.player.id)}>
-                            <div className="sub-photo-wrap">
-                              <img src={`https://media.api-sports.io/football/players/${p.player.id}.png`} alt={p.player.name} onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }} />
-                            </div>
-                            <span className="sub-number" style={{ color: '#cbd5e0' }}>{p.player.number || "—"}</span>
-                            <div className="sub-info">
-                              <span className="sub-name">{p.player.name}</span>
-                              <span className="sub-reason">{p.player.reason}</span>
-                            </div>
-                            <div className="sub-events">
-                              {p.player.reason?.toLowerCase().includes("susp") ? (
-                                <div className="injury-status-icon icon-suspension">R</div>
-                              ) : (
-                                <div className="injury-status-icon icon-medical">✚</div>
-                              )}
-                            </div>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="sub-player-row empty-row">
-                          <span className="sub-reason">No missing players reported</span>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="injured-card-grid">
-                  {[homeInjured, awayInjured].map((teamList, idx) => (
-                    <div key={idx} className="injured-card-col">
-                      <div className="subs-card-team-header">
-                        <img src={lineups[idx].team.logo} alt="logo" />
-                        <span>{lineups[idx].team.name}</span>
-                      </div>
-                      <div className="injured-mobile-list">
-                        {teamList.map((p) => (
-                          <div key={p.player.id} className="injured-mobile-card" onClick={() => handlePlayerClick(p.player.id)}>
-                            <div className="injured-photo-container">
-                              <div className="injured-photo-wrapper">
-                                <img src={`https://media.api-sports.io/football/players/${p.player.id}.png`} alt={p.player.name} onError={(e) => { e.target.src = "https://cdn.sofifa.net/player_0.png"; }} />
-                              </div>
-                              <div className={`injury-badge-overlap ${p.player.reason?.toLowerCase().includes("susp") ? "suspension" : "medical"}`}>
-                                {p.player.reason?.toLowerCase().includes("susp") ? "R" : "✚"}
-                              </div>
-                            </div>
-                            <div className="injured-mobile-info">
-                              <span className="injured-mobile-name">{p.player.name.split(" ").pop()}</span>
-                              <span className="injured-mobile-reason">{p.player.reason}</span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-          </div>
-        ) : (
-          <p>Tactical lineups are not available for this match.</p>
-        )}
+        {renderLineupsContent()}
 
       </div>
 
