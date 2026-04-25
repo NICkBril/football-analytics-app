@@ -451,12 +451,120 @@
   display: none;
 }
 
+.injured-section {
+  margin-top: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  overflow: visible;
+}
+
+.injured-section h3 {
+  padding: 16px 20px 12px;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2c3e50;
+  border-bottom: 2px solid #f0f3f5;
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.injury-status-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.icon-medical {
+  background: #fff5f5;
+  color: #e53e3e;
+  border: 1px solid #feb2b2;
+}
+
+.icon-suspension {
+  background: #fffaf0;
+  color: #dd6b20;
+  border: 1px solid #fbd38d;
+}
+
+.sub-reason {
+  font-size: 0.75rem;
+  color: #999;
+  margin-top: 1px;
+}
+
+.injured-card-grid {
+  display: none;
+}
+
+/* ── Mobile tabs ────────────────────────────────────── */
+.mobile-tabs {
+  display: none;
+}
+
+.mobile-tab-content {
+  display: none;
+}
+
+.desktop-only {
+  display: block;
+}
+
 @media (min-width: 1024px) {
   .match-details-grid { flex-direction: row; }
   .stats-container, .events-container { flex: 1; }
 }
 
 @media (max-width: 768px) {
+  .mobile-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 16px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    overflow: hidden;
+  }
+
+  .mobile-tab {
+    flex: 1;
+    padding: 11px 4px;
+    border: none;
+    background: transparent;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #888;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .mobile-tab.active {
+    color: #2c3e50;
+    border-bottom: 3px solid #3498db;
+    background: #f8fafc;
+  }
+
+  .mobile-tab-content {
+    display: none;
+  }
+
+  .mobile-tab-content.active {
+    display: block;
+  }
+
+  .desktop-only {
+    display: none !important;
+  }
+
   .formation-header { display: none; }
 
   .pitch-container-mobile-wrap {
@@ -475,10 +583,7 @@
     font-size: 0.9rem;
   }
 
-  .mobile-team-label img {
-    width: 22px;
-    height: 22px;
-  }
+  .mobile-team-label img { width: 22px; height: 22px; }
 
   .mobile-team-label .formation-badge {
     margin-left: auto;
@@ -486,38 +591,20 @@
     color: #aaa;
   }
 
-  .mobile-team-label.home-label {
-    border-radius: 8px 8px 0 0;
-  }
-
-  .mobile-team-label.away-label {
-    border-radius: 0 0 8px 8px;
-  }
+  .mobile-team-label.home-label { border-radius: 8px 8px 0 0; }
+  .mobile-team-label.away-label { border-radius: 0 0 8px 8px; }
 
   .match-stats-header {
     padding: 15px 5px;
     justify-content: space-between;
     gap: 5px;
+    margin-bottom: 16px;
   }
 
-  .header-team-section {
-    width: 32%;
-  }
-
-  .score-container {
-    width: 30%;
-    justify-content: center;
-  }
-
-  .main-score { 
-    font-size: 24px; 
-    gap: 8px; 
-  }
-
-  .stat-team img { 
-    width: 45px; 
-    height: 45px; 
-  }
+  .header-team-section { width: 32%; }
+  .score-container { width: 30%; justify-content: center; }
+  .main-score { font-size: 24px; gap: 8px; }
+  .stat-team img { width: 45px; height: 45px; }
 
   .stat-team h2 {
     font-size: 0.75rem;
@@ -527,34 +614,17 @@
     overflow: hidden;
   }
 
-  .scorers-list { 
-    font-size: 9px;
-    margin-top: 5px;
-  }
-
-  .scorers-list.left { 
-    text-align: center; 
-    padding-right: 0; 
-  }
-
-  .scorers-list.right { 
-    text-align: center; 
-    padding-left: 0; 
-  }
-
-  .match-status-badge {
-    font-size: 9px;
-    padding: 2px 6px;
-  }
+  .scorers-list { font-size: 9px; margin-top: 5px; }
+  .scorers-list.left { text-align: center; padding-right: 0; }
+  .scorers-list.right { text-align: center; padding-left: 0; }
+  .match-status-badge { font-size: 9px; padding: 2px 6px; }
 
   .event-item { width: 95%; }
   .coach-name { font-size: 0.8rem; }
   .coach-photo { width: 30px; height: 30px; }
   .coach-label { padding: 0 10px; font-size: 0.7rem; }
 
-  .subs-columns {
-    display: none;
-  }
+  .subs-columns { display: none; }
 
   .subs-card-grid {
     display: grid;
@@ -564,7 +634,7 @@
   }
 
   .subs-card-col {
-    padding: 0; 
+    padding: 0;
     position: relative;
   }
 
@@ -585,11 +655,7 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   }
 
-  .subs-card-team-header img {
-    width: 18px;
-    height: 18px;
-    object-fit: contain;
-  }
+  .subs-card-team-header img { width: 18px; height: 18px; object-fit: contain; }
 
   .subs-card-team-header span {
     font-weight: 700;
@@ -617,9 +683,7 @@
     width: 68px;
   }
 
-  .sub-card-item:active {
-    opacity: 0.75;
-  }
+  .sub-card-item:active { opacity: 0.75; }
 
   .sub-card-photo-area {
     position: relative;
@@ -639,15 +703,9 @@
     flex-shrink: 0;
   }
 
-  .sub-card-photo-wrapper.played {
-    border-color: #27ae60;
-  }
+  .sub-card-photo-wrapper.played { border-color: #27ae60; }
 
-  .sub-card-photo-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  .sub-card-photo-wrapper img { width: 100%; height: 100%; object-fit: cover; }
 
   .sub-card-badge-card {
     position: absolute;
@@ -718,62 +776,6 @@
     box-shadow: 0 1px 4px rgba(0,0,0,0.12);
     text-align: center;
   }
-}
-
-.injured-section {
-  margin-top: 30px;
-  background: #fff;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  border: 1px solid #edf2f7;
-}
-
-.injured-section h3 {
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-  color: #2d3748;
-  border-bottom: 2px solid #f7fafc;
-  padding-bottom: 10px;
-}
-
-.injury-status-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.icon-medical {
-  background: #fff5f5;
-  color: #e53e3e;
-  border: 1px solid #feb2b2;
-}
-
-.icon-suspension {
-  background: #fffaf0;
-  color: #dd6b20;
-  border: 1px solid #fbd38d;
-}
-
-.sub-reason {
-  font-size: 0.85rem;
-  color: #718096;
-  font-style: italic;
-}
-
-.injured-card-grid {
-  display: none;
-}
-
-@media (max-width: 768px) {
-  .injured-section .desktop-only-list {
-    display: none;
-  }
 
   .injured-card-grid {
     display: grid;
@@ -789,12 +791,16 @@
     border-right: none;
   }
 
+  .injured-section .desktop-only-list {
+    display: none;
+  }
+
   .injured-mobile-list {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    padding: 15px 0;
+    gap: 16px;
+    padding: 14px 8px;
   }
 
   .injured-mobile-card {
@@ -802,30 +808,26 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    width: 80px;
+    width: 68px;
     cursor: pointer;
   }
 
   .injured-photo-container {
     position: relative;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
   .injured-photo-wrapper {
-    width: 54px;
-    height: 54px;
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
-    background: #f7fafc;
-    border: 2px solid #edf2f7;
+    background: #f0f3f5;
+    border: 2px solid #dce3eb;
     overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
   }
 
-  .injured-photo-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  .injured-photo-wrapper img { width: 100%; height: 100%; object-fit: cover; }
 
   .injury-badge-overlap {
     position: absolute;
@@ -845,16 +847,18 @@
     border: 1px solid #f0f0f0;
   }
 
-  .injury-badge-overlap.medical {
-    color: #e53e3e;
-  }
+  .injury-badge-overlap.medical { color: #e53e3e; }
+  .injury-badge-overlap.suspension { color: #dd6b20; }
 
-  .injury-badge-overlap.suspension {
-    color: #dd6b20;
+  .injured-mobile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
   }
 
   .injured-mobile-name {
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     font-weight: 700;
     color: #2d3748;
     display: block;
@@ -864,60 +868,10 @@
   .injured-mobile-reason {
     font-size: 0.65rem;
     color: #718096;
-    margin-top: 2px;
     line-height: 1.1;
-    display: block;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-align: center;
   }
-
-.injured-section {
-  margin-top: 30px;
-  background: #fff;
-  border-radius: 16px;
-  padding: 0; 
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-  border: 1px solid #edf2f7;
-  overflow: visible;
-}
-
-.injured-section h3 {
-  padding: 16px 20px 12px;
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #2d3748;
-  border-bottom: 2px solid #f7fafc;
-  background: white;
-  border-radius: 16px 16px 0 0;
-  position: sticky;
-  top: 0;
-  z-index: 25;
-}
-
-.injured-section .subs-team-header {
-  position: sticky;
-  top: 48px;
-  z-index: 20;
-  background: #fafbfc;
-}
-
-@media (max-width: 768px) {
-  .injured-section {
-    padding: 0;
-  }
-
-  .injured-card-grid .subs-card-team-header {
-    position: sticky;
-    top: 48px;
-    z-index: 20;
-    background: #fafbfc;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  }
-
-  .injured-mobile-list {
-    padding: 15px 10px;
-  }
-}
 }
