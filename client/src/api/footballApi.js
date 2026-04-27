@@ -303,16 +303,31 @@ export async function getPlayerTrophies(playerId) {
 }
 
 export async function getPlayerMatchStats(fixtureId, playerId) {
-  const res = await fetch(
-    `https://v3.football.api-sports.io/fixtures/players?fixture=${fixtureId}`,
-    {
-      headers: {
-        "x-apisports-key": API_KEY,
-      },
+
+  const cacheKey = `match_players_${fixtureId}`;
+  let teams = getCachedData(cacheKey);
+
+  if (!teams) {
+    try {
+      const res = await fetch(
+        `${BASE_URL}/fixtures/players?fixture=${fixtureId}`,
+        options
+      );
+
+      if (!res.ok) throw new Error("Failed to fetch player stats");
+      
+      const data = await res.json();
+      teams = data.response || [];
+
+      if (teams.length > 0) {
+        setCachedData(cacheKey, teams);
+      }
+
+    } catch (error) {
+      console.error("Error loading player match stats:", error);
+      return null;
     }
-  );
-  const data = await res.json();
-  const teams = data.response || [];
+  }
 
   for (const teamData of teams) {
     const found = teamData.players.find((p) => p.player.id === playerId);
@@ -339,9 +354,7 @@ export async function getMatchInjuries(fixtureId) {
     const data = await response.json();
     const injuries = data.response;
 
-    if (injuries && injuries.length > 0) {
-      setCachedData(cacheKey, injuries);
-    }
+    setCachedData(cacheKey, injuries);
 
     return injuries;
 
