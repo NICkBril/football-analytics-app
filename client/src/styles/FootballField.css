@@ -78,13 +78,7 @@
 }
 
 .field-half:first-child {
-  background-image: radial-gradient(
-    circle at 18% 50%,
-    transparent 45px,
-    rgba(255, 255, 255, 0.7) 45px,
-    rgba(255, 255, 255, 0.7) 47px,
-    transparent 47px
-  );
+  background-image: none;
 }
 
 .field-half:last-child::before,
@@ -94,13 +88,7 @@
 }
 
 .field-half:last-child {
-  background-image: radial-gradient(
-    circle at 82% 50%,
-    transparent 45px,
-    rgba(255, 255, 255, 0.7) 45px,
-    rgba(255, 255, 255, 0.7) 47px,
-    transparent 47px
-  );
+  background-image: none;
 }
 
 @keyframes player-pop {
@@ -278,6 +266,13 @@
   .pitch-container {
     flex-direction: column;
     height: auto;
+    background: repeating-linear-gradient(
+      0deg,
+      #4caf50,
+      #4caf50 10%,
+      #43a047 10%,
+      #43a047 20%
+    );
   }
 
   .pitch-container::before {
@@ -296,6 +291,11 @@
     width: 100%;
     flex: none;
     height: 340px;
+  }
+
+  .field-half:first-child,
+  .field-half:last-child {
+    background-image: none;
   }
 
   .field-half:first-child::before {
@@ -320,16 +320,6 @@
     border-top: none;
     border-right: 2px solid rgba(255,255,255,0.7);
     border-bottom: 2px solid rgba(255,255,255,0.7);
-  }
-
-  .field-half:first-child {
-    background-image: radial-gradient(
-      circle at 50% 14%,
-      transparent 45px,
-      rgba(255,255,255,0.7) 45px,
-      rgba(255,255,255,0.7) 47px,
-      transparent 47px
-    );
   }
 
   .field-half:last-child::before {
@@ -358,16 +348,6 @@
     border-right: 2px solid rgba(255,255,255,0.7);
     border-top: 2px solid rgba(255,255,255,0.7);
     right: auto;
-  }
-
-  .field-half:last-child {
-    background-image: radial-gradient(
-      circle at 50% 86%,
-      transparent 45px,
-      rgba(255,255,255,0.7) 45px,
-      rgba(255,255,255,0.7) 47px,
-      transparent 47px
-    );
   }
 
   .player-on-field {
