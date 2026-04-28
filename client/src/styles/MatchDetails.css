@@ -511,6 +511,19 @@
 
 .mobile-tab-panel {
   display: none;
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+@keyframes tab-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (min-width: 1024px) {
@@ -519,6 +532,7 @@
 }
 
 @media (max-width: 768px) {
+
   .mobile-tabs {
     display: flex;
     margin-bottom: 16px;
@@ -548,7 +562,13 @@
   }
 
   .mobile-tab-panel {
-    display: none;
+    display: block;
+    opacity: 0;
+    transform: translateY(6px);
+    pointer-events: none;
+    max-height: 0;
+    overflow: hidden;
+    transition: none;
   }
 
   .mobile-tab-panel.visible {
