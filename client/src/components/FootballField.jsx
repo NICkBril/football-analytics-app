@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../styles/FootballField.css";
 
-const FootballField = ({ lineup, teamType, events = [], onPlayerClick }) => {
+const FootballField = ({ lineup, teamType, events = [], onPlayerClick, loading }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
@@ -9,22 +9,6 @@ const FootballField = ({ lineup, teamType, events = [], onPlayerClick }) => {
     window.addEventListener("resize", handler);
     return () => window.removeEventListener("resize", handler);
   }, []);
-
-  if (!lineup) return null;
-
-  const eventMap = {};
-  events.forEach((ev) => {
-    const pid = ev.player?.id;
-    if (pid) {
-      if (!eventMap[pid]) eventMap[pid] = [];
-      eventMap[pid].push(ev);
-    }
-    const aid = ev.assist?.id;
-    if (aid && ev.type === "Goal") {
-      if (!eventMap[aid]) eventMap[aid] = [];
-      eventMap[aid].push({ ...ev, _isAssist: true });
-    }
-  });
 
   const buildPositionsDesktop = (players) => {
     const lines = {};
@@ -112,6 +96,58 @@ const FootballField = ({ lineup, teamType, events = [], onPlayerClick }) => {
 
     return result;
   };
+
+  if (loading) {
+    const dummyPlayers = Array.from({ length: 11 }, (_, i) => ({
+      player: { 
+        id: `loading-${teamType}-${i}`, 
+        grid: i === 0 ? "1:1" : i < 5 ? "2:1" : i < 8 ? "3:1" : "4:1",
+        name: "" 
+      }
+    }));
+    
+    const dummyPositions = isMobile 
+      ? buildPositionsMobile(dummyPlayers) 
+      : buildPositionsDesktop(dummyPlayers);
+
+    return (
+      <div className="field-half">
+        {dummyPlayers.map((p, index) => (
+          <div 
+            key={p.player.id} 
+            className="player-on-field" 
+            style={{ 
+              ...dummyPositions[p.player.id], 
+              "--delay": `${index * 0.05}s` 
+            }}
+          >
+            <div className="skeleton-player-pitch">
+              <div className="skeleton-shimmer" />
+            </div>
+            <div className="skeleton-badge-line">
+              <div className="skeleton-shimmer" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (!lineup) return null;
+
+  const eventMap = {};
+  events.forEach((ev) => {
+    const pid = ev.player?.id;
+    if (pid) {
+      if (!eventMap[pid]) eventMap[pid] = [];
+      eventMap[pid].push(ev);
+    }
+    const aid = ev.assist?.id;
+    if (aid && ev.type === "Goal") {
+      if (!eventMap[aid]) eventMap[aid] = [];
+      eventMap[aid].push({ ...ev, _isAssist: true });
+    }
+  });
 
   const positions = isMobile
     ? buildPositionsMobile(lineup.startXI)
