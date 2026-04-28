@@ -115,3 +115,34 @@
   overflow: hidden;
   border-radius: 8px;
 }
+
+.skeleton-player-pitch {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: var(--sk-base);
+  border: 2px solid #e8e8e8;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-badge-line {
+  width: 50px;
+  height: 14px;
+  background: var(--sk-base);
+  border-radius: 4px;
+  margin-top: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .skeleton-player-pitch {
+    width: 34px;
+    height: 34px;
+  }
+  .skeleton-badge-line {
+    width: 40px;
+    height: 12px;
+  }
+}
