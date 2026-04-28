@@ -538,7 +538,7 @@
     color: #888;
     cursor: pointer;
     border-bottom: 3px solid transparent;
-    transition: color 0.2s, border-color 0.2s;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
   }
 
   .mobile-tab.active {
@@ -552,7 +552,12 @@
   }
 
   .mobile-tab-panel.visible {
-    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    max-height: none;
+    overflow: visible;
+    animation: tab-in 0.22s ease forwards;
   }
 
   .desktop-grid {
@@ -629,9 +634,10 @@
   .stat-team h2 {
     font-size: 0.75rem;
     margin-top: 4px;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
+    white-space: nowrap;
     overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
   }
 
   .scorers-list {
