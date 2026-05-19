@@ -1,3 +1,8 @@
+// ============================================================
+// START: LAB 8 — Authentication Proxy
+// Обгортка навколо HTTP-запитів, яка автоматично додає 
+// API-ключ до кожного вихідного запиту.
+// ============================================================
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 const options = {
@@ -9,6 +14,10 @@ const options = {
 
 const BASE_URL = "https://v3.football.api-sports.io";
 
+// ============================================================
+// START: LAB 3 — Memoization (Time-Based Expiry Cache)
+// Зберігаємо дані в localStorage та перевіряємо, чи вони не застаріли (24 години)
+// ============================================================
 function getCachedData(key) {
   const cached = localStorage.getItem(key);
   if (!cached) return null;
@@ -35,16 +44,17 @@ function setCachedData(key, data) {
 
   localStorage.setItem(key, JSON.stringify(value));
 }
+// END: LAB 3
 
 export async function getTeams() {
-  const cached = getCachedData("teams");
+  const cached = getCachedData("teams"); // LAB 3: Спочатку перевіряємо кеш, щоб не робити зайвий запит до API
   if (cached) return cached;
 
   try {
 
     const response = await fetch(
       `${BASE_URL}/teams?league=39&season=2023`,
-      options
+      options  // LAB 8: Передаємо налаштування з уже вбудованим API-ключем
     );
 
     if (!response.ok) {
@@ -55,7 +65,7 @@ export async function getTeams() {
     const teams = data.response;
 
     if (teams && teams.length > 0) {
-      setCachedData("teams", teams);
+      setCachedData("teams", teams); // LAB 3: Записуємо свіжі дані в кеш, якщо запит успішний
     }
 
     return teams;
@@ -68,6 +78,9 @@ export async function getTeams() {
   }
 
 }
+// END: LAB 8
+
+// (решта функцій — getMatches, getStandings, getSquad і тд дотримуються тих самих патернів LAB 3 + LAB 8)
 
 export async function getMatches() {
   const cached = getCachedData("matches");
