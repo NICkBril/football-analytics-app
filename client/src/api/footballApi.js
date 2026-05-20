@@ -46,7 +46,7 @@ function setCachedData(key, data) {
 }
 // END: LAB 3
 
-export async function getTeams() {
+async function getTeams() {
   const cached = getCachedData("teams"); // LAB 3: Спочатку перевіряємо кеш, щоб не робити зайвий запит до API
   if (cached) return cached;
 
@@ -80,9 +80,7 @@ export async function getTeams() {
 }
 // END: LAB 8
 
-// (решта функцій — getMatches, getStandings, getSquad і тд дотримуються тих самих патернів LAB 3 + LAB 8)
-
-export async function getMatches() {
+async function getMatches() {
   const cached = getCachedData("matches");
   if (cached) return cached;
 
@@ -115,7 +113,7 @@ export async function getMatches() {
 
 }
 
-export async function getStandings() {
+async function getStandings() {
   const cached = getCachedData("standings");
   if (cached) return cached;
 
@@ -148,7 +146,7 @@ export async function getStandings() {
 
 }
 
-export async function getSquad(teamId) {
+async function getSquad(teamId) {
   const cacheKey = `squad_${teamId}`;
   const cached = getCachedData(cacheKey);
   if (cached) return cached;
@@ -181,7 +179,7 @@ export async function getSquad(teamId) {
   }
 }
 
-export async function getMatchStatistics(fixtureId) {
+async function getMatchStatistics(fixtureId) {
   const cacheKey = `stats_${fixtureId}`;
   const cached = getCachedData(cacheKey);
   if (cached) return cached;
@@ -214,7 +212,7 @@ export async function getMatchStatistics(fixtureId) {
   }
 }
 
-export async function getMatchEvents(fixtureId) {
+async function getMatchEvents(fixtureId) {
   const cacheKey = `events_${fixtureId}`;
   const cached = getCachedData(cacheKey);
   if (cached) return cached;
@@ -243,7 +241,7 @@ export async function getMatchEvents(fixtureId) {
   }
 }
 
-export async function getMatchLineups(fixtureId) {
+async function getMatchLineups(fixtureId) {
   const cacheKey = `lineups_${fixtureId}`;
   const cached = getCachedData(cacheKey);
   if (cached) return cached;
@@ -270,7 +268,7 @@ export async function getMatchLineups(fixtureId) {
   }
 }
 
-export async function getPlayerDetails(playerId) {
+async function getPlayerDetails(playerId) {
   const cacheKey = `player_${playerId}`;
   const cached = getCachedData(cacheKey);
   if (cached) return cached;
@@ -307,7 +305,7 @@ export async function getPlayerDetails(playerId) {
   }
 }
 
-export async function getPlayerTrophies(playerId) {
+async function getPlayerTrophies(playerId) {
   const response = await fetch(`${BASE_URL}/trophies?player=${playerId}`, {
     headers: { "x-apisports-key": API_KEY }
   });
@@ -315,7 +313,7 @@ export async function getPlayerTrophies(playerId) {
   return data.response || [];
 }
 
-export async function getPlayerMatchStats(fixtureId, playerId) {
+async function getPlayerMatchStats(fixtureId, playerId) {
 
   const cacheKey = `match_players_${fixtureId}`;
   let teams = getCachedData(cacheKey);
@@ -351,7 +349,7 @@ export async function getPlayerMatchStats(fixtureId, playerId) {
   return null;
 }
 
-export async function getMatchInjuries(fixtureId) {
+async function getMatchInjuries(fixtureId) {
   const cacheKey = `injuries_${fixtureId}`;
   const cached = getCachedData(cacheKey);
   if (cached) return cached;
@@ -376,3 +374,28 @@ export async function getMatchInjuries(fixtureId) {
     return [];
   }
 }
+
+// ============================================================
+// START: LAB 9 — Logging Decorator
+// ============================================================
+import { withLogging } from "../utils/logger";
+
+const loggedGetTeams = withLogging(getTeams, "INFO");
+const loggedGetMatches = withLogging(getMatches, "DEBUG");
+const loggedGetStandings = withLogging(getStandings, "ERROR");
+const loggedGetSquad = withLogging(getSquad, "DEBUG");
+
+export {
+  loggedGetTeams as getTeams,
+  loggedGetMatches as getMatches,
+  loggedGetStandings as getStandings,
+  loggedGetSquad as getSquad,
+  getMatchStatistics,
+  getMatchEvents,
+  getMatchLineups,
+  getPlayerDetails,
+  getPlayerTrophies,
+  getPlayerMatchStats,
+  getMatchInjuries
+};
+// END: LAB 9
