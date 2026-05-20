@@ -1,10 +1,13 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { FavoritesContext } from "../context/FavoritesContext";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { getTeams } from "../api/footballApi";
 import Skeleton from "../components/Skeleton";
 import "../styles/Teams.css";
+
+import { roundRobinGenerator, consumeWithTimeout } from "../utils/generators";
+import { filterWithPromise } from "../utils/asyncFilter";
 
 function TeamsPage() {
   const [teams, setTeams] = useState([]);
@@ -14,15 +17,62 @@ function TeamsPage() {
 
   const navigate = useNavigate();
 
+  const [featuredTeam, setFeaturedTeam] = useState(null);
+  const generatorRef = useRef(null);
+
+  const [asyncResults, setAsyncResults] = useState([]);
+  const [asyncSearchDone, setAsyncSearchDone] = useState(false);
+
   useEffect(() => {
     async function loadTeams() {
       const data = await getTeams();
       setTeams(data);
       setLoading(false);
-    }
+      // ============================================================
+      // START: LAB 1 — ініціалізуємо генератор після завантаження
+      // ============================================================
+      const teamNames = data.map((t) => { return t.team.name; });
+      generatorRef.current = roundRobinGenerator(teamNames);
 
+      const first = generatorRef.current.next();
+      if (!first.done) {
+        setFeaturedTeam(first.value);
+      }
+
+      const testGen = roundRobinGenerator(teamNames);
+      const testResult = consumeWithTimeout(testGen, 1);
+      console.log("Lab 1 — consumeWithTimeout test execution:", testResult);
+    }
     loadTeams();
   }, []);
+
+  // LAB 1 — функція для "Next Team"
+  function handleNextFeatured() {
+    if (!generatorRef.current) {
+      return;
+    }
+    const next = generatorRef.current.next();
+    if (!next.done) {
+      setFeaturedTeam(next.value);
+    }
+  }
+  // END: LAB 1
+
+  
+  // ============================================================
+  // START: LAB 5 — async filter через Promise-based
+  // ============================================================
+  function handleAsyncFilter() {
+    const predicate = (item) => {
+      return Promise.resolve(favorites.includes(item.team.name));
+    };
+
+    filterWithPromise(teams, predicate).then((result) => {
+      setAsyncResults(result);
+      setAsyncSearchDone(true);
+    });
+  }
+  // END: LAB 5
 
   const filteredTeams = teams
     .filter((team) =>
@@ -52,6 +102,27 @@ function TeamsPage() {
       transition={{ duration: 0.4 }}
     >
       <h1>Teams</h1>
+
+      {featuredTeam && (
+        <div className="featured-team-banner">
+          <span>⚡ Featured team: <strong>{featuredTeam}</strong></span>
+          <button onClick={handleNextFeatured}>
+            Next →
+          </button>
+        </div>
+      )}
+
+      <div className="async-filter-box">
+        <button className="async-filter-btn" onClick={handleAsyncFilter}>
+          🔍 Show my favorites (async filter)
+        </button>
+        {asyncSearchDone && (
+          <p className="async-filter-results">
+            Async filter found <strong>{asyncResults.length}</strong> favorite team(s):{" "}
+            {asyncResults.map((t) => { return t.team.name; }).join(", ") || "none"}
+          </p>
+        )}
+      </div>
 
       <input
         type="text"
@@ -87,10 +158,8 @@ function TeamsPage() {
         return (
           <div
             key={team.id}
-            className={`team-card ${
-              favorites.includes(team.name) ? "favorite" : ""
-            }`}
-            onClick={() => navigate(`/team/${team.id}`)}
+            className={`team-card ${favorites.includes(team.name) ? "favorite" : ""}`}
+            onClick={() => { return navigate(`/team/${team.id}`); }}
           >
             <img src={team.logo} alt={team.name} className="team-logo" />
 
@@ -98,9 +167,7 @@ function TeamsPage() {
               <strong>{team.name}</strong>
 
               <button
-                className={`team-fav-button ${
-                  favorites.includes(team.name) ? "remove" : "add"
-                }`}
+                className={`team-fav-button ${favorites.includes(team.name) ? "remove" : "add"}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleFavorite(team.name);
