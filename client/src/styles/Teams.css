@@ -81,3 +81,63 @@
   background-color: #fffbe6;
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
 }
+
+.featured-team-banner {
+  margin-bottom: 20px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-left: 5px solid #2ecc71;
+  border-radius: 8px;
+  background-color: #fafafa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.featured-team-banner span {
+  font-size: 15px;
+  color: #333;
+}
+
+.featured-team-banner button {
+  padding: 6px 12px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.featured-team-banner button:hover {
+  background-color: #eee;
+}
+
+.async-filter-box {
+  margin-bottom: 20px;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-left: 5px solid #3498db;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.async-filter-btn {
+  padding: 6px 12px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s ease;
+}
+
+.async-filter-btn:hover {
+  background-color: #eee;
+}
+
+.async-filter-results {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #333;
+}
