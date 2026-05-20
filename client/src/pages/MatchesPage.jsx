@@ -5,6 +5,8 @@ import { getMatches } from "../api/footballApi";
 import Skeleton from "../components/Skeleton";
 import "../styles/Matches.css";
 
+import { matchStreamGenerator } from "../utils/matchStream";
+
 function MatchesPage() {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,13 +17,42 @@ function MatchesPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    let isMounted = true;
+
     async function loadMatches() {
-      const data = await getMatches();
-      setMatches(data);
-      setLoading(false);
+      try {
+        const rawData = await getMatches();
+
+        if (!isMounted) return;
+
+        setMatches([]);
+        setLoading(false);
+
+        // ============================================================
+        // START: LAB 6
+        // ============================================================
+        const stream = matchStreamGenerator(rawData, 15);
+
+        for await (const chunk of stream) {
+          if (!isMounted) break;
+
+          setMatches((prevMatches) => {
+            return [...prevMatches, ...chunk];
+          });
+        }
+        // END: LAB 6
+
+      } catch (error) {
+        console.error("Error loading matches via stream:", error);
+        if (isMounted) setLoading(false);
+      }
     }
 
     loadMatches();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   if (loading) {
