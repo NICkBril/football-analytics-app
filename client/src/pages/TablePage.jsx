@@ -5,6 +5,8 @@ import { getStandings, getMatches } from "../api/footballApi";
 import Skeleton from "../components/Skeleton";
 import "../styles/Table.css";
 
+import { PriorityQueue } from "../utils/priorityQueue";
+
 function TablePage() {
   
   const navigate = useNavigate();
@@ -12,6 +14,8 @@ function TablePage() {
   const [allMatches, setAllMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sortConfig, setSortConfig] = useState({ key: "points", direction: "desc" });
+
+  const [topMatches, setTopMatches] = useState([]);
 
   useEffect(() => {
     async function loadData() {
@@ -23,6 +27,27 @@ function TablePage() {
       
       setStandings(standingsData || []);
       setAllMatches(matchesData || []);
+
+      // ============================================================
+      // START: LAB 4
+      // ============================================================
+      const queue = new PriorityQueue();
+
+      (matchesData || []).forEach((match) => {
+        const homeGoals = match.goals.home ?? 0;
+        const awayGoals = match.goals.away ?? 0;
+        const totalGoals = homeGoals + awayGoals;
+        
+        queue.enqueue(match, totalGoals);
+      });
+
+      const top = [];
+      for (let i = 0; i < 3 && queue.size > 0; i++) {
+        top.push(queue.dequeue("highest"));
+      }
+      setTopMatches(top);
+      // END: LAB 4
+
       setLoading(false);
     }
     loadData();
@@ -129,6 +154,37 @@ function TablePage() {
     >
 
       <h1>Premier League Table</h1>
+
+      {topMatches.length > 0 && (
+        <div className="exciting-matches-container">
+          <h3>🔥 The best Matches of a season</h3>
+          {topMatches.map((match, i) => {
+            const homeGoals = match.goals.home ?? 0;
+            const awayGoals = match.goals.away ?? 0;
+            const totalGoals = homeGoals + awayGoals;
+
+            return (
+              <div
+                key={match.fixture.id}
+                className="exciting-match-card"
+                onClick={() => {
+                  return navigate(`/match/${match.fixture.id}`);
+                }}
+              >
+                <span className="match-rank">#{i + 1}</span>
+                <img src={match.teams.home.logo} alt="logo" className="match-mini-logo" />
+                <span className="match-team-name">{match.teams.home.name}</span>
+                <strong className="match-score-badge">{match.goals.home} - {match.goals.away}</strong>
+                <img src={match.teams.away.logo} alt="logo" className="match-mini-logo" />
+                <span className="match-team-name">{match.teams.away.name}</span>
+                <span className="match-goals-count">
+                  {totalGoals} goals
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       <table className="league-table">
 
